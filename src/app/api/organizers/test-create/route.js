@@ -17,59 +17,14 @@ export async function POST(request) {
     // Step 1: Get the default region, division, and city IDs for Boston/New England/Northeast
     console.log('Fetching default location IDs for organizer creation...');
     
-    // First, get a valid user ID to use for the linkedUserLogin
-    let sampleUserId = '';
-    let sampleFirebaseId = '';
+    // We no longer need to fetch user IDs for organizer creation
+    // Organizers can be created without user connections
     let targetRegionId = '';
     let targetDivisionId = '';
     let targetCityId = '';
     
-    try {
-      // First try the /api/userlogins endpoint (as used by the API client)
-      try {
-        console.log('Attempting to fetch users from /api/userlogins...');
-        const userListResponse = await axios.get(`${BE_URL}/api/userlogins?appId=1&limit=1`);
-        
-        if (userListResponse.data && userListResponse.data.length > 0) {
-          // Use the first user's ID 
-          sampleUserId = userListResponse.data[0]._id;
-          sampleFirebaseId = userListResponse.data[0].firebaseUserId || 'sample_firebase_id';
-          console.log(`Using sample user ID: ${sampleUserId} for organizer creation`);
-        } else {
-          console.log('No users found from /api/userlogins, trying other endpoints...');
-        }
-      } catch (firstEndpointError) {
-        console.error('Error fetching from first users endpoint:', firstEndpointError.message);
-      }
-      
-      // If first attempt failed, try another endpoint
-      if (!sampleUserId) {
-        try {
-          console.log('Attempting to fetch users from /api/users...');
-          const altUserResponse = await axios.get(`/api/users?appId=1&limit=1`);
-          
-          if (altUserResponse.data && altUserResponse.data.length > 0) {
-            sampleUserId = altUserResponse.data[0]._id;
-            sampleFirebaseId = altUserResponse.data[0].firebaseUserId || 'sample_firebase_id';
-            console.log(`Using sample user ID from alternate endpoint: ${sampleUserId}`);
-          } else {
-            console.log('No users found from alternate endpoint');
-          }
-        } catch (secondEndpointError) {
-          console.error('Error fetching from second users endpoint:', secondEndpointError.message);
-        }
-      }
-      
-      // If we still don't have a user ID, fake one
-      if (!sampleUserId) {
-        // As a last resort, use a fake MongoDB ObjectId format
-        sampleUserId = new mongoose.Types.ObjectId().toString();
-        sampleFirebaseId = `fake_firebase_${Date.now()}`;
-        console.log(`No users found in system, using generated ObjectId: ${sampleUserId}`);
-      }
-    } catch (userError) {
-      console.error('Error in user fetch process:', userError);
-    }
+    // Skip user fetching - organizers don't need to be linked to users at creation time
+    console.log('Skipping user fetching - organizers can be created without user connections');
 
     // Now get location data
     try {
@@ -159,9 +114,8 @@ export async function POST(request) {
       shortName: data.shortName || '',
       description: data.description || '',
       appId: data.appId || '1',
-      // Required fields with valid ObjectIDs
-      firebaseUserId: sampleFirebaseId,
-      linkedUserLogin: sampleUserId,
+      // We now only use firebaseUserId - linkedUserLogin is deprecated
+      firebaseUserId: null, // No fake IDs - will be set when connected to a real user
       organizerRegion: targetRegionId,
       // Add division and city if available
       ...(targetDivisionId && { organizerDivision: targetDivisionId }),
@@ -198,13 +152,8 @@ export async function POST(request) {
     
     console.log('Sending organizer creation request with data:', organizerData);
     
-    // Validate required fields before sending
-    if (!organizerData.linkedUserLogin) {
-      return NextResponse.json({
-        error: 'Missing required field',
-        details: 'Could not find a valid user ID for linkedUserLogin'
-      }, { status: 400 });
-    }
+    // No longer requiring user linkage for organizer creation
+    // Organizers can be created without a user connection and linked later
 
     if (!organizerData.organizerRegion) {
       return NextResponse.json({

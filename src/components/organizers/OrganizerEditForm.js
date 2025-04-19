@@ -10,8 +10,16 @@ import {
   Typography,
   Divider,
   Button,
+  Paper,
+  Autocomplete,
+  CircularProgress,
+  Chip,
+  Alert,
 } from '@mui/material';
 import SaveIcon from '@mui/icons-material/Save';
+import LinkIcon from '@mui/icons-material/Link';
+import LinkOffIcon from '@mui/icons-material/LinkOff';
+import { usersApi } from '@/lib/api-client';
 
 export default function OrganizerEditForm({ organizer, onSubmit }) {
   const [formData, setFormData] = useState({
@@ -19,8 +27,8 @@ export default function OrganizerEditForm({ organizer, onSubmit }) {
     shortName: '',
     description: '',
     isActive: true,
-    isApproved: false,
     isEnabled: false,
+    wantRender: true,
     contactInfo: {
       email: '',
       phone: '',
@@ -34,8 +42,20 @@ export default function OrganizerEditForm({ organizer, onSubmit }) {
       country: '',
     },
   });
+  
+  // User connection state
+  const [users, setUsers] = useState([]);
+  const [selectedUserId, setSelectedUserId] = useState('');
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [userLoading, setUserLoading] = useState(false);
+  const [linkedUser, setLinkedUser] = useState(null);
+  const [connectingUser, setConnectingUser] = useState(false);
+  const [disconnectingUser, setDisconnectingUser] = useState(false);
+  
+  // Form state
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [userError, setUserError] = useState('');
 
   // Initialize form with organizer data
   useEffect(() => {
@@ -48,7 +68,6 @@ export default function OrganizerEditForm({ organizer, onSubmit }) {
         shortName: organizer.shortName || '',
         description: organizer.description || '',
         isActive: organizer.isActive === true ? true : false,
-        isApproved: organizer.isApproved === true ? true : false,
         isEnabled: organizer.isEnabled === true ? true : false,
         contactInfo: {
           email: organizer.contactInfo?.email || '',
@@ -64,7 +83,8 @@ export default function OrganizerEditForm({ organizer, onSubmit }) {
         },
         // Add missing fields required by backend
         organizerRegion: organizer.organizerRegion || "66c4d99042ec462ea22484bd", // Default US region
-        linkedUserLogin: organizer.linkedUserLogin || null, // Include the linked user if any
+        // We're only using firebaseUserId now - linkedUserLogin is deprecated
+        firebaseUserId: organizer.firebaseUserId || null, // Include the Firebase user ID if any
         wantRender: organizer.wantRender !== false, // Default to true if not specified
         organizerTypes: organizer.organizerTypes || {
           isEventOrganizer: true,
@@ -76,19 +96,63 @@ export default function OrganizerEditForm({ organizer, onSubmit }) {
         }
       });
       
+      // Check if there's a linked user
+      if (organizer.firebaseUserId) {
+        setLinkedUser({
+          firebaseUserId: organizer.firebaseUserId,
+          linkedUserLogin: organizer.linkedUserLogin
+        });
+      }
+      
       console.log('Loaded organizer with:', {
         name: organizer.name,
         fullName: organizer.fullName,
-        shortName: organizer.shortName
-      });
-      
-      console.log('Initialized form data with:', {
-        _id: organizer._id,
-        appId: organizer.appId || '1',
-        organizerRegion: organizer.organizerRegion || "66c4d99042ec462ea22484bd"
+        shortName: organizer.shortName,
+        linkedUser: organizer.linkedUserLogin,
+        firebaseUserId: organizer.firebaseUserId,
+        wantRender: organizer.wantRender
       });
     }
   }, [organizer]);
+  
+  // Fetch user details
+  useEffect(() => {
+    const fetchLinkedUserDetails = async () => {
+      if (linkedUser?.firebaseUserId) {
+        try {
+          // Fetch the linked user's details
+          const userData = await usersApi.getUserById(linkedUser.firebaseUserId, organizer.appId);
+          setLinkedUser({
+            ...linkedUser,
+            ...userData
+          });
+        } catch (err) {
+          console.error('Error fetching linked user details:', err);
+        }
+      }
+    };
+    
+    fetchLinkedUserDetails();
+  }, [linkedUser?.firebaseUserId, organizer?.appId]);
+  
+  // Fetch users for autocomplete
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        setUserLoading(true);
+        // Get users from the backend
+        const userData = await usersApi.getUsers(organizer?.appId || '1', true);
+        setUsers(userData);
+        setUserLoading(false);
+      } catch (err) {
+        console.error('Error fetching users:', err);
+        setUserError('Failed to load users. Please try again.');
+        setUserLoading(false);
+      }
+    };
+    
+    fetchUsers();
+  }, [organizer?.appId]);
 
   // Validate shortName format
   const validateShortName = (value) => {
@@ -136,6 +200,122 @@ export default function OrganizerEditForm({ organizer, onSubmit }) {
     }
   };
 
+  // Handle user selection in autocomplete
+  const handleUserChange = (event, newValue) => {
+    setSelectedUser(newValue);
+    setSelectedUserId(newValue?.firebaseUserId || '');
+  };
+  
+  // Filter users for Autocomplete
+  const filterOptions = (options, { inputValue }) => {
+    const filterValue = inputValue.toLowerCase().trim();
+    return options.filter((option) => {
+      const name = `${option.localUserInfo?.firstName || ''} ${option.localUserInfo?.lastName || ''}`.toLowerCase();
+      const email = (option.firebaseUserInfo?.email || '').toLowerCase();
+      const userId = (option.firebaseUserId || '').toLowerCase();
+      
+      return (
+        name.includes(filterValue) ||
+        email.includes(filterValue) ||
+        userId.includes(filterValue)
+      );
+    });
+  };
+  
+  // Connect user to organizer
+  const handleConnectUser = async () => {
+    if (!selectedUserId) {
+      setUserError('Please select a user to connect');
+      return;
+    }
+    
+    setUserError('');
+    setConnectingUser(true);
+    
+    try {
+      // Call the API to connect the user
+      const response = await fetch(`/api/organizers/${organizer._id}/connect-user`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          firebaseUserId: selectedUserId,
+          appId: formData.appId || '1'
+        }),
+      });
+      
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to connect user');
+      }
+      
+      const data = await response.json();
+      
+      // Update the state with the connected user
+      setLinkedUser({
+        firebaseUserId: selectedUserId,
+        ...selectedUser
+      });
+      
+      // Update form data with only firebaseUserId
+      setFormData(prev => ({
+        ...prev,
+        firebaseUserId: selectedUserId
+      }));
+      
+      setSelectedUser(null);
+      setSelectedUserId('');
+    } catch (err) {
+      console.error('Error connecting user:', err);
+      setUserError(`Failed to connect user: ${err.message}`);
+    } finally {
+      setConnectingUser(false);
+    }
+  };
+  
+  // Disconnect user from organizer
+  const handleDisconnectUser = async () => {
+    if (!linkedUser?.firebaseUserId) {
+      return;
+    }
+    
+    setUserError('');
+    setDisconnectingUser(true);
+    
+    try {
+      // Call the API to disconnect the user
+      const response = await fetch(`/api/organizers/${organizer._id}/disconnect-user`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          appId: formData.appId || '1'
+        }),
+      });
+      
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to disconnect user');
+      }
+      
+      // Clear the linked user
+      setLinkedUser(null);
+      
+      // Update form data - only use firebaseUserId now
+      setFormData(prev => ({
+        ...prev,
+        firebaseUserId: null
+      }));
+    } catch (err) {
+      console.error('Error disconnecting user:', err);
+      setUserError(`Failed to disconnect user: ${err.message}`);
+    } finally {
+      setDisconnectingUser(false);
+    }
+  };
+  
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -159,10 +339,13 @@ export default function OrganizerEditForm({ organizer, onSubmit }) {
         // Make sure shortName exists and is formatted correctly
         shortName: formatShortName(formData.shortName || formData.name.substring(0, 10)),
         // Ensure boolean fields are explicitly true or false
-        isApproved: formData.isApproved === true ? true : false,
+        wantRender: formData.wantRender === true ? true : false,
         isActive: formData.isActive === true ? true : false,
         isEnabled: formData.isEnabled === true ? true : false
       };
+      
+      // Remove isApproved as it's no longer used
+      delete updatedData.isApproved;
       
       console.log('Submitting organizer data:', updatedData);
       
@@ -244,20 +427,6 @@ export default function OrganizerEditForm({ organizer, onSubmit }) {
           <FormControlLabel
             control={
               <Switch 
-                checked={formData.isApproved} 
-                onChange={handleChange}
-                name="isApproved"
-                color="primary"
-              />
-            }
-            label="Approved"
-          />
-        </Grid>
-        
-        <Grid item xs={12} sm={4}>
-          <FormControlLabel
-            control={
-              <Switch 
                 checked={formData.isEnabled} 
                 onChange={handleChange}
                 name="isEnabled"
@@ -265,6 +434,21 @@ export default function OrganizerEditForm({ organizer, onSubmit }) {
               />
             }
             label="Enabled"
+          />
+        </Grid>
+
+        <Grid item xs={12} sm={4}>
+          <FormControlLabel
+            control={
+              <Switch 
+                checked={formData.wantRender === true} 
+                onChange={handleChange}
+                name="wantRender"
+                color="secondary"
+              />
+            }
+            label="Want Render"
+            title="Controls if this organizer should be shown on the public-facing site"
           />
         </Grid>
       </Grid>
@@ -361,6 +545,123 @@ export default function OrganizerEditForm({ organizer, onSubmit }) {
           />
         </Grid>
       </Grid>
+      
+      <Divider sx={{ my: 3 }} />
+      
+      {/* User Connection Section */}
+      <Typography variant="h6" gutterBottom>User Connection</Typography>
+      
+      {userError && (
+        <Alert severity="error" sx={{ mb: 2 }}>
+          {userError}
+        </Alert>
+      )}
+      
+      {/* Display current linked user (if any) */}
+      {linkedUser ? (
+        <Paper sx={{ p: 2, mb: 3, border: '1px solid #eee' }}>
+          <Typography variant="subtitle1" gutterBottom>
+            Connected User
+          </Typography>
+          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <Box>
+              <Typography variant="body1">
+                <strong>Name:</strong> {linkedUser.localUserInfo?.firstName || ''} {linkedUser.localUserInfo?.lastName || ''}
+              </Typography>
+              {linkedUser.firebaseUserInfo?.email && (
+                <Typography variant="body2" color="text.secondary">
+                  <strong>Email:</strong> {linkedUser.firebaseUserInfo.email}
+                </Typography>
+              )}
+              <Typography variant="body2" color="text.secondary">
+                <strong>Firebase ID:</strong> {linkedUser.firebaseUserId}
+              </Typography>
+            </Box>
+            <Button
+              variant="outlined"
+              color="error"
+              startIcon={<LinkOffIcon />}
+              disabled={disconnectingUser}
+              onClick={handleDisconnectUser}
+            >
+              {disconnectingUser ? 'Disconnecting...' : 'Disconnect User'}
+            </Button>
+          </Box>
+        </Paper>
+      ) : (
+        <Box sx={{ mb: 3 }}>
+          <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+            No user connected to this organizer. You can connect a user if needed, but it's optional.
+          </Typography>
+          
+          <Grid container spacing={2}>
+            <Grid item xs={12}>
+              <Autocomplete
+                options={users}
+                loading={userLoading}
+                value={selectedUser}
+                onChange={handleUserChange}
+                filterOptions={filterOptions}
+                getOptionLabel={(option) => {
+                  const name = `${option.localUserInfo?.firstName || ''} ${option.localUserInfo?.lastName || ''}`;
+                  const email = option.firebaseUserInfo?.email || '';
+                  return `${name.trim()} (${email})`;
+                }}
+                renderOption={(props, option) => (
+                  <li {...props}>
+                    <Box>
+                      <Typography variant="body1">
+                        {option.localUserInfo?.firstName || ''} {option.localUserInfo?.lastName || ''}
+                      </Typography>
+                      <Typography variant="caption" color="text.secondary">
+                        {option.firebaseUserInfo?.email || ''}
+                      </Typography>
+                      <Box sx={{ mt: 0.5 }}>
+                        {option.roles && option.roles.map((role) => (
+                          <Chip 
+                            key={role} 
+                            label={role} 
+                            size="small" 
+                            sx={{ mr: 0.5, mb: 0.5 }} 
+                          />
+                        ))}
+                      </Box>
+                    </Box>
+                  </li>
+                )}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label="Select User (Optional)"
+                    variant="outlined"
+                    fullWidth
+                    InputProps={{
+                      ...params.InputProps,
+                      endAdornment: (
+                        <>
+                          {userLoading ? <CircularProgress color="inherit" size={20} /> : null}
+                          {params.InputProps.endAdornment}
+                        </>
+                      ),
+                    }}
+                  />
+                )}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <Button
+                variant="contained"
+                color="primary"
+                startIcon={<LinkIcon />}
+                disabled={!selectedUserId || connectingUser}
+                onClick={handleConnectUser}
+              >
+                {connectingUser ? 'Connecting...' : 'Connect User (Optional)'}
+              </Button>
+            </Grid>
+          </Grid>
+        </Box>
+      )}
       
       <Box sx={{ mt: 3, display: 'flex', justifyContent: 'flex-end' }}>
         <Button 

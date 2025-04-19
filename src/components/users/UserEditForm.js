@@ -37,6 +37,11 @@ export default function UserEditForm({ user, roles, onSubmit }) {
       isActive: true,
       isApproved: true,
       isEnabled: true,
+      userDefaults: {
+        region: '',
+        division: '',
+        city: ''
+      }
     },
     roleIds: [],
     active: true,
@@ -136,6 +141,11 @@ export default function UserEditForm({ user, roles, onSubmit }) {
           isActive: user.localUserInfo?.isActive !== false, // Default to true if undefined
           isApproved: user.localUserInfo?.isApproved !== false, // Default to true if undefined
           isEnabled: user.localUserInfo?.isEnabled !== false, // Default to true if undefined
+          userDefaults: {
+            region: user.localUserInfo?.userDefaults?.region || '',
+            division: user.localUserInfo?.userDefaults?.division || '',
+            city: user.localUserInfo?.userDefaults?.city || ''
+          }
         },
         roleIds: user.roleIds?.map(role => typeof role === 'object' ? role._id : role) || [],
         active: user.active !== false, // Default to true if undefined
@@ -286,7 +296,7 @@ export default function UserEditForm({ user, roles, onSubmit }) {
           />
         </Grid>
         
-        <Grid item xs={12}>
+        <Grid item xs={12} sm={4}>
           <FormControlLabel
             control={
               <Switch 
@@ -297,6 +307,98 @@ export default function UserEditForm({ user, roles, onSubmit }) {
               />
             }
             label="User is Active"
+          />
+        </Grid>
+        
+        <Grid item xs={12} sm={4}>
+          <FormControlLabel
+            control={
+              <Switch 
+                checked={formData.localUserInfo.isApproved} 
+                onChange={handleChange}
+                name="localUserInfo.isApproved"
+                color="primary"
+              />
+            }
+            label="Local User Approved"
+          />
+        </Grid>
+        
+        <Grid item xs={12} sm={4}>
+          <FormControlLabel
+            control={
+              <Switch 
+                checked={formData.localUserInfo.isEnabled} 
+                onChange={handleChange}
+                name="localUserInfo.isEnabled"
+                color="primary"
+              />
+            }
+            label="Local User Enabled"
+          />
+        </Grid>
+        
+        <Grid item xs={12} sm={4}>
+          <FormControlLabel
+            control={
+              <Switch 
+                checked={formData.localUserInfo.isActive} 
+                onChange={handleChange}
+                name="localUserInfo.isActive"
+                color="primary"
+              />
+            }
+            label="Local User Active"
+          />
+        </Grid>
+      </Grid>
+      
+      <Divider sx={{ my: 3 }} />
+      
+      {/* User Defaults Section */}
+      <Typography variant="h6" gutterBottom>User Default Locations</Typography>
+      <Grid container spacing={2} sx={{ mb: 3 }}>
+        <Grid item xs={12}>
+          <TextField
+            fullWidth
+            label="Default Region"
+            name="localUserInfo.userDefaults.region"
+            value={formData.localUserInfo.userDefaults?.region?._id || formData.localUserInfo.userDefaults?.region || ''}
+            onChange={handleChange}
+            placeholder="Region ID"
+            helperText="The default region for this user (ObjectId)"
+          />
+        </Grid>
+        
+        <Grid item xs={12}>
+          <TextField
+            fullWidth
+            label="Default Division"
+            name="localUserInfo.userDefaults.division"
+            value={
+              typeof formData.localUserInfo.userDefaults?.division === 'object' 
+                ? formData.localUserInfo.userDefaults?.division?._id 
+                : formData.localUserInfo.userDefaults?.division || ''
+            }
+            onChange={handleChange}
+            placeholder="Division ID"
+            helperText="The default division for this user (ObjectId)"
+          />
+        </Grid>
+        
+        <Grid item xs={12}>
+          <TextField
+            fullWidth
+            label="Default City"
+            name="localUserInfo.userDefaults.city"
+            value={
+              typeof formData.localUserInfo.userDefaults?.city === 'object' 
+                ? formData.localUserInfo.userDefaults?.city?._id 
+                : formData.localUserInfo.userDefaults?.city || ''
+            }
+            onChange={handleChange}
+            placeholder="City ID"
+            helperText="The default city for this user (ObjectId)"
           />
         </Grid>
       </Grid>

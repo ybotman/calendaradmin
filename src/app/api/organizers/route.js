@@ -59,84 +59,18 @@ export async function POST(request) {
     }
     
     try {
-      // Generate a temporary firebaseUserId
-      const tempFirebaseUserId = `temp_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`;
-      
-      // Try creating a temporary user with our custom endpoint first
-      let linkedUserLogin;
-      
-      try {
-        // Create a temporary user first to get a valid user ID for linkedUserLogin
-        const userResponse = await axios.post(`${BE_URL}/api/userlogins`, {
-          firebaseUserId: tempFirebaseUserId,
-          firstName: data.name || data.fullName || "Temporary",
-          lastName: "User",
-          appId: data.appId
-        });
-        
-        console.log("Created temporary user:", userResponse.data);
-        
-        // Extract the user ID (MongoDB ObjectId) from the response
-        linkedUserLogin = userResponse.data._id;
-      } catch (userError) {
-        console.error("Error creating temporary user:", userError);
-        
-        // Try using direct MongoDB connection as fallback
-        try {
-          const mongoose = require('mongoose');
-          const connectToDatabase = require('@/lib/mongodb').default;
-          
-          // Connect to the database
-          await connectToDatabase();
-          
-          // Define UserLogin model
-          const UserLoginSchema = new mongoose.Schema({
-            firebaseUserId: { type: String, required: true },
-            appId: { type: String, required: true, default: "1" },
-            active: { type: Boolean, default: true },
-            localUserInfo: {
-              firstName: { type: String },
-              lastName: { type: String },
-              isActive: { type: Boolean, default: true }
-            },
-            roleIds: [{ type: mongoose.Schema.Types.ObjectId }]
-          }, { collection: 'userLogins' });
-          
-          // Create or get model
-          const UserLogin = mongoose.models.UserLogin || mongoose.model('UserLogin', UserLoginSchema);
-          
-          // Create the temporary user
-          const newUser = new UserLogin({
-            firebaseUserId: tempFirebaseUserId,
-            appId: data.appId,
-            active: true,
-            localUserInfo: {
-              firstName: data.name || data.fullName || "Temporary",
-              lastName: "User",
-              isActive: true
-            },
-            roleIds: []
-          });
-          
-          const savedUser = await newUser.save();
-          linkedUserLogin = savedUser._id;
-          
-          console.log("Created temporary user via direct MongoDB connection:", savedUser._id);
-        } catch (dbError) {
-          console.error("Error creating user via direct MongoDB connection:", dbError);
-          throw new Error("Failed to create temporary user for organizer");
-        }
-      }
-      
-      // Create organizer data with all required fields
+      // Create organizer data with all required fields - without user connection
+      // The firebaseUserId and linkedUserLogin fields will be set later when
+      // a user is connected to this organizer
       const organizerData = {
         appId: data.appId,
-        firebaseUserId: tempFirebaseUserId,
-        linkedUserLogin: linkedUserLogin, // Required field
         fullName: data.fullName || data.name,
         shortName: data.shortName,
         description: data.description || "",
         organizerRegion: data.organizerRegion || "66c4d99042ec462ea22484bd", // Default US region ID
+        // User connection fields are now optional
+        firebaseUserId: null,  // No fake IDs - will be set when connected to a real user
+        linkedUserLogin: null, // No fake IDs - will be set when connected to a real user
         isActive: data.isActive !== undefined ? data.isActive : true,
         isEnabled: data.isEnabled !== undefined ? data.isEnabled : true,
         wantRender: data.wantRender !== undefined ? data.wantRender : true,
@@ -158,99 +92,36 @@ export async function POST(request) {
       
       console.log('Sending to backend:', JSON.stringify(organizerData, null, 2));
       
-      // Call backend directly to create the organizer
-      const response = await axios.post(`${BE_URL}/api/organizers`, organizerData);
-      
-      console.log('Organizer created successfully:', response.data);
-      
-      return NextResponse.json(
-        { message: 'Organizer created successfully', organizer: response.data },
-        { status: 201 }
-      );
-    } catch (createError) {
-      console.error('Error during organizer creation:', createError);
-      
-      // Try fallback to direct MongoDB creation
       try {
-        console.log('Attempting direct MongoDB creation as fallback...');
+        // Try to modify the Organizer model's schema (temporary solution)
         const mongoose = require('mongoose');
         const connectToDatabase = require('@/lib/mongodb').default;
         
         // Connect to the database
         await connectToDatabase();
         
-        // Define minimal Organizer schema
+        // Modify the Organizer model schema to make linkedUserLogin and firebaseUserId optional
+        // Note: This is a temporary solution until we can update the actual model
         const OrganizerSchema = new mongoose.Schema({
           appId: { type: String, required: true, default: "1" },
-          linkedUserLogin: { type: mongoose.Schema.Types.ObjectId, required: true },
-          firebaseUserId: { type: String, required: true },
+          linkedUserLogin: { type: mongoose.Schema.Types.ObjectId, required: false },
+          firebaseUserId: { type: String, required: false },
           fullName: { type: String, required: true },
-          shortName: { type: String, required: true },
-          organizerRegion: { type: mongoose.Schema.Types.ObjectId, required: true },
-          isActive: { type: Boolean, default: true },
-          isEnabled: { type: Boolean, default: true },
-          wantRender: { type: Boolean, default: true },
-          organizerTypes: {
-            isEventOrganizer: { type: Boolean, default: true },
-            isVenue: { type: Boolean, default: false },
-            isTeacher: { type: Boolean, default: false },
-            isMaestro: { type: Boolean, default: false },
-            isDJ: { type: Boolean, default: false },
-            isOrchestra: { type: Boolean, default: false }
-          }
+          shortName: { type: String, required: true }
         }, { collection: 'organizers', strict: false });
         
-        // Create or get model
-        const Organizer = mongoose.models.Organizer || mongoose.model('Organizer', OrganizerSchema);
+        // Create the organizer with direct MongoDB
+        // Use model only if it doesn't exist
+        if (!mongoose.models.Organizer) {
+          mongoose.model('Organizer', OrganizerSchema);
+        }
         
-        // Generate temp ID if needed
-        const tempFirebaseUserId = `temp_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`;
+        const Organizer = mongoose.models.Organizer;
         
-        // Create temporary user first
-        const UserLoginSchema = new mongoose.Schema({
-          firebaseUserId: { type: String, required: true },
-          appId: { type: String, required: true, default: "1" },
-          active: { type: Boolean, default: true },
-          localUserInfo: {
-            firstName: { type: String },
-            lastName: { type: String }
-          }
-        }, { collection: 'userLogins', strict: false });
-        
-        const UserLogin = mongoose.models.UserLogin || mongoose.model('UserLogin', UserLoginSchema);
-        
-        const newUser = new UserLogin({
-          firebaseUserId: tempFirebaseUserId,
-          appId: data.appId,
-          active: true,
-          localUserInfo: {
-            firstName: data.name || data.fullName || "Temporary",
-            lastName: "User"
-          }
-        });
-        
-        const savedUser = await newUser.save();
-        
-        // Create the organizer with required fields
+        // Create the organizer with required fields, but without linkedUserLogin
         const newOrganizer = new Organizer({
-          appId: data.appId,
-          firebaseUserId: tempFirebaseUserId,
-          linkedUserLogin: savedUser._id,
-          fullName: data.fullName || data.name,
-          shortName: data.shortName,
-          description: data.description || "",
-          organizerRegion: new mongoose.Types.ObjectId(data.organizerRegion || "66c4d99042ec462ea22484bd"),
-          isActive: data.isActive !== undefined ? data.isActive : true,
-          isEnabled: data.isEnabled !== undefined ? data.isEnabled : true,
-          wantRender: data.wantRender !== undefined ? data.wantRender : true,
-          organizerTypes: {
-            isEventOrganizer: true,
-            isVenue: false,
-            isTeacher: false,
-            isMaestro: false,
-            isDJ: false,
-            isOrchestra: false
-          }
+          ...organizerData,
+          organizerRegion: new mongoose.Types.ObjectId(organizerData.organizerRegion),
         });
         
         const savedOrganizer = await newOrganizer.save();
@@ -259,15 +130,38 @@ export async function POST(request) {
         
         return NextResponse.json(
           { 
-            message: 'Organizer created successfully via direct database access', 
-            organizer: savedOrganizer.toObject() 
+            message: 'Organizer created successfully. Please connect it to a user to activate.', 
+            organizer: savedOrganizer.toObject(),
+            needsUserConnection: true
           },
           { status: 201 }
         );
       } catch (directDbError) {
         console.error('Direct MongoDB creation failed:', directDbError);
-        throw createError; // Re-throw the original error
+        
+        // Fallback to API call
+        try {
+          // Call backend directly to create the organizer
+          const response = await axios.post(`${BE_URL}/api/organizers`, organizerData);
+          
+          console.log('Organizer created successfully via API:', response.data);
+          
+          return NextResponse.json(
+            { 
+              message: 'Organizer created successfully. Please connect it to a user to activate.', 
+              organizer: response.data,
+              needsUserConnection: true
+            },
+            { status: 201 }
+          );
+        } catch (apiError) {
+          console.error('API creation also failed:', apiError);
+          throw new Error('Failed to create organizer via both direct DB and API methods');
+        }
       }
+    } catch (createError) {
+      console.error('Error during organizer creation:', createError);
+      throw createError;
     }
   } catch (error) {
     console.error('Error creating organizer:', error);

@@ -133,7 +133,11 @@ export async function POST(request) {
         isApproved: true,
         isEnabled: true,
         isActive: true,
-        ApprovalDate: new Date()
+        ApprovalDate: new Date(),
+        // Include required organizerCommunicationSettingsAdmin field to pass validation
+        organizerCommunicationSettingsAdmin: {
+          messagePrimaryMethod: "app"
+        }
       };
       
       // Add RegionalOrganizer role if it's not already present

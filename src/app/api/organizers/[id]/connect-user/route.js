@@ -88,13 +88,9 @@ export async function PATCH(request, { params }) {
     
     console.log(`Found organizer ${organizer._id} and user ${user._id}`);
     
-    // Update the organizer's firebaseUserId and linkedUserLogin
+    // Update the organizer's firebaseUserId only - we no longer use linkedUserLogin
     if (!organizer.firebaseUserId || organizer.firebaseUserId !== firebaseUserId) {
       organizer.firebaseUserId = firebaseUserId;
-    }
-    
-    if (!organizer.linkedUserLogin || organizer.linkedUserLogin.toString() !== user._id.toString()) {
-      organizer.linkedUserLogin = user._id;
     }
     
     // Update the user's regionalOrganizerInfo
@@ -104,7 +100,11 @@ export async function PATCH(request, { params }) {
       isApproved: true,
       isEnabled: true,
       isActive: true,
-      ApprovalDate: new Date()
+      ApprovalDate: new Date(),
+      // Include required organizerCommunicationSettingsAdmin field to pass validation
+      organizerCommunicationSettingsAdmin: {
+        messagePrimaryMethod: "app"
+      }
     };
     
     // Get roles for adding RegionalOrganizer role
@@ -167,8 +167,7 @@ export async function PATCH(request, { params }) {
       },
       organizer: {
         _id: organizer._id,
-        firebaseUserId: organizer.firebaseUserId,
-        linkedUserLogin: organizer.linkedUserLogin
+        firebaseUserId: organizer.firebaseUserId
       }
     });
   } catch (error) {

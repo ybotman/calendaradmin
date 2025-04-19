@@ -43,7 +43,8 @@ export async function PATCH(request, { params }) {
       }, { status: 400 });
     }
     
-    // Check if this is a user disconnection operation (setting firebaseUserId/linkedUserLogin to null)
+    // Check if this is a user disconnection operation (setting firebaseUserId to null)
+    // We no longer use linkedUserLogin - only check firebaseUserId
     const isUserDisconnection = updates.hasOwnProperty('firebaseUserId') && updates.firebaseUserId === null;
     
     // If disconnecting a user, we need to update the user's references as well
@@ -69,7 +70,7 @@ export async function PATCH(request, { params }) {
                 regionalOrganizerInfo: {
                   ...user.regionalOrganizerInfo,
                   organizerId: null,
-                  isApproved: false,
+                  wantRender: false,
                   isEnabled: false,
                   isActive: false
                 }
@@ -88,7 +89,8 @@ export async function PATCH(request, { params }) {
       }
     }
     
-    // Check if this is a user connection operation (setting firebaseUserId/linkedUserLogin to new values)
+    // Check if this is a user connection operation (setting firebaseUserId to new values)
+    // We now only use firebaseUserId, not linkedUserLogin
     const isUserConnection = updates.hasOwnProperty('firebaseUserId') && 
                              updates.firebaseUserId !== null &&
                              typeof updates.firebaseUserId === 'string';
@@ -133,7 +135,7 @@ export async function PATCH(request, { params }) {
       name: updates.name || updates.fullName, // Admin UI uses name but backend expects fullName
       shortName: updates.shortName || updates.name || updates.fullName, // Ensure shortName exists
       // Ensure boolean fields are properly sent as booleans
-      isApproved: updates.isApproved === true || updates.isApproved === 'true' ? true : false,
+      wantRender: updates.wantRender === true || updates.wantRender === 'true' ? true : false,
       isActive: updates.isActive === true || updates.isActive === 'true' ? true : false,
       isEnabled: updates.isEnabled === true || updates.isEnabled === 'true' ? true : false,
       organizerRegion: updates.organizerRegion || "66c4d99042ec462ea22484bd" // Default US region
@@ -219,7 +221,7 @@ export async function DELETE(request, { params }) {
               regionalOrganizerInfo: {
                 ...user.regionalOrganizerInfo,
                 organizerId: null,
-                isApproved: false,
+                wantRender: false,
                 isEnabled: false,
                 isActive: false
               }

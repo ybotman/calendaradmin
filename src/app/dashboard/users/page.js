@@ -79,12 +79,68 @@ export default function UsersPage() {
       const timestamp = new Date().getTime();
       
       let usersData = [];
+      let organizersData = [];
       
       try {
-        // Fetch users directly from the backend with cache busting
-        usersData = await usersApi.getUsers(appId, undefined, timestamp);
+        // 1. First get the user login records
+        console.log('Fetching user login records...');
+        const usersResponse = await fetch(`http://localhost:3010/api/userlogins/all?appId=${appId}&_=${timestamp}`);
+        
+        if (usersResponse.ok) {
+          usersData = await usersResponse.json();
+          console.log(`User login API returned ${usersData.length} user records`);
+        } else {
+          console.warn(`User login API returned status ${usersResponse.status}`);
+          usersData = [];
+        }
+        
+        // 2. Then get the organizer records
+        console.log('Fetching organizer records...');
+        const organizersResponse = await fetch(`http://localhost:3010/api/organizers?appId=${appId}&isActive=true&_=${timestamp}`);
+        
+        if (organizersResponse.ok) {
+          organizersData = await organizersResponse.json();
+          console.log(`Organizers API returned ${organizersData.length} organizer records`);
+        } else {
+          console.warn(`Organizers API returned status ${organizersResponse.status}`);
+          organizersData = [];
+        }
+        
+        // 3. Process organizers to match user format
+        const processedOrganizers = organizersData.map(organizer => {
+          // Extract key information to match the user record structure
+          return {
+            _id: organizer._id,
+            firebaseUserId: organizer.firebaseUserId || organizer.loginId || organizer._id.toString(),
+            fullName: organizer.fullName || organizer.name,
+            shortName: organizer.shortName,
+            loginId: organizer.loginId,
+            isActive: organizer.isActive,
+            isEnabled: organizer.isEnabled,
+            isActiveAsOrganizer: organizer.isActiveAsOrganizer || organizer.isActive,
+            organizerTypes: organizer.organizerTypes || {},
+            publicEmail: organizer.publicEmail,
+            // Add a marker so we know this was an organizer record
+            _isOrganizer: true
+          };
+        });
+        
+        // 4. Combine users and organizers
+        // But avoid duplicates where an organizer is already linked to a user
+        const userFirebaseIds = new Set(usersData.map(u => u.firebaseUserId).filter(Boolean));
+        
+        // Only include organizers that aren't already linked to a user
+        const uniqueOrganizers = processedOrganizers.filter(org => 
+          !org.firebaseUserId || !userFirebaseIds.has(org.firebaseUserId)
+        );
+        
+        console.log(`Found ${uniqueOrganizers.length} organizers that don't have user records`);
+        
+        // Combine all records
+        usersData = [...usersData, ...uniqueOrganizers];
+        console.log(`Combined data has ${usersData.length} records (${usersData.length} users + ${uniqueOrganizers.length} organizers)`);
       } catch (fetchError) {
-        console.error('Error fetching users from backend:', fetchError);
+        console.error('Error fetching users/organizers:', fetchError);
         
         // If we're in development mode, provide fallback demo data
         if (process.env.NODE_ENV === 'development') {
@@ -121,19 +177,104 @@ export default function UsersPage() {
         }
       }
       
+      console.log(`Received ${usersData.length} users from backend`);
+      
       // Process users data to add display name and computed fields
-      const processedUsers = usersData.map(user => ({
-        ...user,
-        id: user._id, // For DataGrid key
-        displayName: `${user.localUserInfo?.firstName || ''} ${user.localUserInfo?.lastName || ''}`.trim() || 'Unnamed User',
-        email: user.firebaseUserInfo?.email || 'No email',
-        roleNames: (user.roleIds || [])
-          .map(role => typeof role === 'object' ? role.roleName : 'Unknown')
-          .join(', '),
-        isActive: user.active ? 'Active' : 'Inactive',
-        isOrganizer: user.regionalOrganizerInfo?.organizerId ? 'Yes' : 'No',
-        tempFirebaseId: user.firebaseUserId || '',
-      }));
+      const processedUsers = usersData.map(user => {
+        try {
+          // Check if this is a MongoDB document or plain object
+          const userId = user._id || 'unknown';
+          
+          // Check if this record came from the organizers collection
+          const isOrganizerRecord = user._isOrganizer === true;
+          
+          // Handle different structures for 'active' property
+          // It could be at root level, in isActive, or in localUserInfo.isActive
+          const isActiveValue = user.active !== undefined 
+            ? user.active 
+            : user.isActive !== undefined
+              ? user.isActive
+              : user.localUserInfo?.isActive !== undefined
+                ? user.localUserInfo.isActive
+                : user.isActiveAsOrganizer !== undefined
+                  ? user.isActiveAsOrganizer
+                  : true; // Default to active if we can't find anything
+                
+          // Handle display name - from various places
+          const displayName = user.fullName || // Use fullName if available
+            `${user.localUserInfo?.firstName || ''} ${user.localUserInfo?.lastName || ''}`.trim() || // Or build from firstName/lastName
+            user.firebaseUserInfo?.displayName || // Or use Firebase displayName
+            user.shortName || // Or short name
+            user.loginId || // Or login ID
+            'Unnamed User'; // Fallback
+
+          // Handle email - could be in multiple places
+          const email = user.firebaseUserInfo?.email || // First check firebaseUserInfo
+            user.publicEmail || // Then publicEmail
+            user.loginId ? `${user.loginId}@example.com` : // Use loginId if available
+            'No email'; // Fallback
+            
+          // Handle role names - for organizer records, add "Organizer" role
+          let roleNames = '';
+          if (isOrganizerRecord) {
+            roleNames = 'Organizer';
+          } else {
+            roleNames = (user.roleIds || [])
+              .map(role => typeof role === 'object' ? role.roleName : 'Unknown')
+              .join(', ');
+          }
+          
+          // For organizer records, create a synthetic regionalOrganizerInfo
+          let regionalOrganizerInfo = user.regionalOrganizerInfo || {};
+          if (isOrganizerRecord) {
+            regionalOrganizerInfo = {
+              organizerId: user._id, // The organizer record itself is the organizerId
+              isApproved: user.isEnabled !== false,
+              isEnabled: user.isEnabled !== false,
+              isActive: user.isActive !== false
+            };
+          }
+          
+          // Add some diagnostics
+          console.log(`${isOrganizerRecord ? 'Organizer' : 'User'} ${userId}: name=${displayName}, active=${isActiveValue}, source=${isOrganizerRecord ? 'organizers' : 'userLogins'}`);
+          
+          return {
+            ...user, // Keep all original fields
+            id: userId, // For DataGrid key
+            displayName,
+            email,
+            roleNames,
+            isActive: isActiveValue ? 'Active' : 'Inactive',
+            // Ensure these objects exist to prevent UI errors
+            firebaseUserId: user.firebaseUserId || '', // Make sure firebaseUserId is always a string
+            localUserInfo: user.localUserInfo || {},
+            regionalOrganizerInfo,
+            localAdminInfo: user.localAdminInfo || {},
+            // Add computed flag for "isRealUser" vs "isOrganizer"
+            isRealUser: !!user.firebaseUserId && !user.firebaseUserId.startsWith('temp_'),
+            isOrganizer: isOrganizerRecord || !!(user.regionalOrganizerInfo?.organizerId || user.isActiveAsOrganizer || user.organizerTypes),
+            // Add source indication
+            source: isOrganizerRecord ? 'organizers' : 'userLogins'
+          };
+        } catch (err) {
+          console.error('Error processing user:', err, user);
+          
+          // Return a minimal valid user object to prevent UI crashes
+          return {
+            id: user._id || Math.random().toString(36),
+            displayName: 'Error Processing User',
+            email: 'error@example.com',
+            isActive: 'Unknown',
+            firebaseUserId: '',
+            localUserInfo: {},
+            regionalOrganizerInfo: {},
+            localAdminInfo: {},
+            isRealUser: false,
+            isOrganizer: false,
+            source: 'error'
+          };
+        }
+      });
       
       setUsers(processedUsers);
       setFilteredUsers(processedUsers);
@@ -170,6 +311,33 @@ export default function UsersPage() {
         // Fetch roles first - with hardcoded fallback if backend is unreachable
         const rolesData = await rolesApi.getRoles(appId);
         setRoles(rolesData || []);
+        
+        // Manually check the API to diagnose issues
+        try {
+          console.log("Directly checking the backend API...");
+          const directApiResponse = await fetch(`http://localhost:3010/api/userlogins/all?appId=${appId}`);
+          const apiData = await directApiResponse.json();
+          console.log(`Direct API call returned ${apiData.length} users`);
+          
+          // Add more detailed logging about the API response
+          if (apiData.length > 0) {
+            console.log("First 3 user IDs from API:", apiData.slice(0, 3).map(u => u._id));
+            console.log("Sample structure of first user:", {
+              _id: apiData[0]._id,
+              hasFirebaseId: !!apiData[0].firebaseUserId,
+              hasLocalInfo: !!apiData[0].localUserInfo,
+              fields: Object.keys(apiData[0])
+            });
+          }
+          
+          // Also directly call our frontend API for comparison
+          const frontendApiResponse = await fetch(`/api/users?appId=${appId}`);
+          const frontendData = await frontendApiResponse.json();
+          console.log(`Frontend API call returned ${frontendData.length} users`);
+        } catch (directError) {
+          console.warn("Error making direct API call:", directError);
+          // Non-blocking, just for diagnosis
+        }
         
         // Then refresh users
         try {
@@ -213,21 +381,115 @@ export default function UsersPage() {
     if (newValue === 0) { // All Users
       filterUsers(searchTerm);
     } else if (newValue === 1) { // Organizers
-      const organizerUsers = users.filter(user => user.regionalOrganizerInfo?.organizerId);
+      // Consider users as organizers if they have any of these properties
+      const organizerUsers = users.filter(user => 
+        user.regionalOrganizerInfo?.organizerId || // Standard user with organizer connection
+        user.isActiveAsOrganizer || // Pure organizer record with this flag
+        user.organizerTypes || // Has organizer types defined
+        (user.firebaseUserId && user.fullName) // Has both fields (likely an organizer)
+      );
       applySearch(organizerUsers, searchTerm);
     } else if (newValue === 2) { // Admins
+      // Consider users as admins if they have admin roles or flags
       const adminUsers = users.filter(user => 
+        // Check for admin roles
         user.roleIds?.some(role => 
           (typeof role === 'object' && 
-           (role.roleName === 'SystemAdmin' || role.roleName === 'RegionalAdmin'))
-        )
+          (role.roleName === 'SystemAdmin' || role.roleName === 'RegionalAdmin'))
+        ) ||
+        // Or check for admin flags
+        user.isAdmin === true ||
+        user.localAdminInfo?.isActive === true
       );
       applySearch(adminUsers, searchTerm);
-    } else if (newValue === 3) { // Temp Users
-      const tempUsers = users.filter(user => 
-        user.firebaseUserId?.startsWith('temp_')
-      );
-      applySearch(tempUsers, searchTerm);
+    }
+  };
+  
+  // Handle Firebase user synchronization
+  const handleSyncFirebaseUsers = async () => {
+    try {
+      // Get confirmation
+      if (!window.confirm('This will synchronize all Firebase users with the database. Continue?')) {
+        return;
+      }
+      
+      setLoading(true);
+      
+      // First check Firebase status to make sure it's available
+      let statusResponse;
+      try {
+        statusResponse = await axios.get('/api/debug/firebase-status');
+        
+        // If Firebase is not available, show error and instructions
+        if (!statusResponse.data.success) {
+          const errorMessage = statusResponse.data.status || 'Firebase is not properly configured';
+          const helpText = statusResponse.data.possible_causes ? 
+            `\n\nPossible causes:\n- ${statusResponse.data.possible_causes.join('\n- ')}` : '';
+          
+          throw new Error(`${errorMessage}${helpText}`);
+        }
+        
+        console.log('Firebase status check passed:', statusResponse.data);
+      } catch (statusError) {
+        console.error('Firebase status check failed:', statusError);
+        throw new Error(`Unable to verify Firebase availability: ${statusError.message}`);
+      }
+      
+      // Now call the API to import users from Firebase
+      const syncResponse = await axios.post('/api/debug/import-firebase-users', { 
+        appId,
+        forceInit: false // Set to true to force Firebase reinitialization if needed
+      });
+      
+      if (!syncResponse.data.success) {
+        const errorDetails = syncResponse.data.details ? 
+          `\nDetails: ${syncResponse.data.details}` : '';
+        const helpText = syncResponse.data.help ? 
+          `\n\nTroubleshooting: ${syncResponse.data.help}` : '';
+          
+        throw new Error(`${syncResponse.data.error || 'Synchronization failed'}${errorDetails}${helpText}`);
+      }
+      
+      // Show results
+      const stats = syncResponse.data.stats;
+      const detailedMessage = stats ? 
+        `\n\n• Total Firebase users processed: ${stats.total}` +
+        `\n• New users created: ${stats.created}` + 
+        `\n• Existing users updated: ${stats.updated}` +
+        `\n• Users skipped: ${stats.skipped}` +
+        `\n• Errors encountered: ${stats.errors}` : '';
+      
+      alert(`Successfully synchronized users!${detailedMessage}`);
+      
+      // Refresh the users list
+      await refreshUsers();
+      
+    } catch (error) {
+      console.error('Error synchronizing Firebase users:', error);
+      
+      // Format the error message for better readability
+      let errorMessage = 'Error synchronizing users: ';
+      
+      if (error.response && error.response.data) {
+        // API returned a structured error response
+        const responseData = error.response.data;
+        errorMessage += responseData.error || responseData.message || error.message;
+        
+        if (responseData.details) {
+          errorMessage += `\n\nDetails: ${responseData.details}`;
+        }
+        
+        if (responseData.help) {
+          errorMessage += `\n\nTroubleshooting: ${responseData.help}`;
+        }
+      } else {
+        // Standard error
+        errorMessage += error.message;
+      }
+      
+      alert(errorMessage);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -240,22 +502,56 @@ export default function UsersPage() {
 
   // Filter users based on search term and current tab
   const filterUsers = (term) => {
+    console.log(`Filtering ${users.length} users for tab ${tabValue} with search term "${term}"`);
+    
     let filtered = users;
     
     // Apply tab filtering
     if (tabValue === 1) { // Organizers
-      filtered = filtered.filter(user => user.regionalOrganizerInfo?.organizerId);
+      // Filter to show only organizers
+      filtered = filtered.filter(user => 
+        // Direct from organizers collection
+        user.source === 'organizers' ||
+        // Standard user with organizer connection
+        user.regionalOrganizerInfo?.organizerId || 
+        // Pure organizer records
+        user.isActiveAsOrganizer || 
+        // Has organizer types defined
+        user.organizerTypes || 
+        // Organizer record pattern
+        (user.fullName && (user.shortName || user.loginId)) || 
+        // Explicitly marked as organizer
+        user.isOrganizer === true
+      );
+      console.log(`Found ${filtered.length} users matching organizer criteria`);
     } else if (tabValue === 2) { // Admins
+      // Include all possible admin indicators
       filtered = filtered.filter(user => 
-        user.roleIds?.some(role => 
+        // Check for admin roles the standard way
+        (user.roleIds?.some(role => 
           (typeof role === 'object' && 
-           (role.roleName === 'SystemAdmin' || role.roleName === 'RegionalAdmin'))
-        )
+          (role.roleName === 'SystemAdmin' || role.roleName === 'RegionalAdmin'))
+        )) ||
+        // Or check for admin flags
+        user.isAdmin === true ||
+        user.localAdminInfo?.isActive === true ||
+        // Check if roleNames contains admin roles
+        user.roleNames?.includes('SystemAdmin') ||
+        user.roleNames?.includes('RegionalAdmin')
       );
-    } else if (tabValue === 3) { // Temp Users
-      filtered = filtered.filter(user => 
-        user.firebaseUserId?.startsWith('temp_')
-      );
+      console.log(`Found ${filtered.length} users matching admin criteria`);
+    } else {
+      // All users tab - no filtering needed
+      console.log(`Showing all ${filtered.length} users in All Users tab`);
+      
+      // Adding a debug count of sources
+      const userSourceCount = filtered.reduce((count, user) => {
+        const source = user.source || 'unknown';
+        count[source] = (count[source] || 0) + 1;
+        return count;
+      }, {});
+      
+      console.log('Users by source:', userSourceCount);
     }
     
     // Apply search term filtering
@@ -265,18 +561,29 @@ export default function UsersPage() {
   // Apply search filter to the provided list
   const applySearch = (userList, term) => {
     if (!term) {
+      console.log(`Setting filtered users with ${userList.length} items`);
       setFilteredUsers(userList);
       return;
     }
     
     const lowerTerm = term.toLowerCase();
-    const filtered = userList.filter(user =>
-      (user.displayName.toLowerCase().includes(lowerTerm)) ||
-      (user.email.toLowerCase().includes(lowerTerm)) ||
-      (user.roleNames.toLowerCase().includes(lowerTerm)) ||
-      (user.firebaseUserId.toLowerCase().includes(lowerTerm))
-    );
+    const filtered = userList.filter(user => {
+      // Safely check each field to avoid errors with undefined values
+      try {
+        const nameMatch = user.displayName && user.displayName.toLowerCase().includes(lowerTerm);
+        const emailMatch = user.email && user.email.toLowerCase().includes(lowerTerm);
+        const roleMatch = user.roleNames && user.roleNames.toLowerCase().includes(lowerTerm);
+        const idMatch = user.firebaseUserId && user.firebaseUserId.toLowerCase().includes(lowerTerm);
+        const fullNameMatch = user.fullName && user.fullName.toLowerCase().includes(lowerTerm);
+        
+        return nameMatch || emailMatch || roleMatch || idMatch || fullNameMatch;
+      } catch (err) {
+        console.warn('Error filtering user:', err);
+        return false; // Skip items that cause errors
+      }
+    });
     
+    console.log(`Filtered ${userList.length} users down to ${filtered.length} matches for term: ${term}`);
     setFilteredUsers(filtered);
   };
 
@@ -512,14 +819,8 @@ export default function UsersPage() {
   const handleDeleteUser = async (user) => {
     try {
       // Get confirmation with clear warning
-      const isTemp = user.firebaseUserId?.startsWith('temp_');
       let confirmMessage = `Are you sure you want to delete user "${user.displayName}"?`;
-      
-      if (isTemp) {
-        confirmMessage += "\nThis is a temporary user created during import.";
-      } else {
-        confirmMessage += "\n\nWARNING: This will permanently remove this user and they will no longer be able to log in.";
-      }
+      confirmMessage += "\n\nWARNING: This will permanently remove this user and they will no longer be able to log in.";
       
       // Check if user is linked to an organizer
       const hasOrganizer = user.regionalOrganizerInfo?.organizerId;
@@ -586,47 +887,6 @@ export default function UsersPage() {
     }
   };
   
-  // Handle delete all temporary users
-  const handleDeleteAllTempUsers = async () => {
-    try {
-      // Find all temporary users
-      const tempUsers = users.filter(user => 
-        user.firebaseUserId?.startsWith('temp_')
-      );
-      
-      if (tempUsers.length === 0) {
-        alert('No temporary users found to delete.');
-        return;
-      }
-      
-      // Get confirmation
-      const confirmMessage = `Are you sure you want to delete ALL ${tempUsers.length} temporary users?\n\nThis action cannot be undone.`;
-      if (!window.confirm(confirmMessage)) {
-        return;
-      }
-      
-      setLoading(true);
-      
-      // Use our direct bulk deletion endpoint
-      const result = await usersApi.deleteAllTempUsers(appId);
-      
-      // Refresh the user list
-      await refreshUsers();
-      filterUsers(searchTerm);
-      
-      // Show results
-      if (result.success) {
-        alert(`Successfully deleted ${result.message}`);
-      } else {
-        alert(`Error deleting temporary users: ${result.error || 'Unknown error'}`);
-      }
-    } catch (error) {
-      console.error("Error in bulk delete process:", error);
-      alert(`Error in bulk delete process: ${error.message}`);
-    } finally {
-      setLoading(false);
-    }
-  };
   
   // Handle create new user
   const handleCreateUser = async () => {
@@ -784,21 +1044,55 @@ export default function UsersPage() {
     }
   };
 
-  // Define columns for DataGrid
-  const columns = [
+  // Define columns for All Users tab
+  const allUsersColumns = [
     { field: 'displayName', headerName: 'Name', flex: 1 },
     { field: 'email', headerName: 'Email', flex: 1 },
+    { field: 'firebaseUserId', headerName: 'Firebase ID', flex: 1 },
     { field: 'roleNames', headerName: 'Roles', flex: 1 },
-    { field: 'isActive', headerName: 'Status', width: 100 },
-    { field: 'isOrganizer', headerName: 'Organizer', width: 100 },
+    { 
+      field: 'userType',
+      headerName: 'Type', 
+      width: 120,
+      renderCell: (params) => {
+        const user = params.row;
+        if (user.isOrganizer) return <span>Organizer</span>;
+        if (user.isRealUser) return <span>User</span>;
+        return <span>Unknown</span>;
+      }
+    },
+    { 
+      field: 'localUserApproved', 
+      headerName: 'Approved', 
+      width: 100,
+      renderCell: (params) => {
+        const isApproved = 
+          params.row?.localUserInfo?.isApproved ||  // Check in localUserInfo
+          params.row?.isApproved ||                 // Check at root level
+          params.row?.regionalOrganizerInfo?.isApproved; // Check in organizer info
+        return <span>{isApproved ? 'Yes' : 'No'}</span>;
+      }
+    },
+    { 
+      field: 'localUserEnabled', 
+      headerName: 'Enabled', 
+      width: 100,
+      renderCell: (params) => {
+        const isEnabled = 
+          params.row?.localUserInfo?.isEnabled ||   // Check in localUserInfo
+          params.row?.isEnabled ||                  // Check at root level
+          params.row?.regionalOrganizerInfo?.isEnabled; // Check in organizer info
+        return <span>{isEnabled ? 'Yes' : 'No'}</span>;
+      }
+    },
+    { field: 'isActive', headerName: 'Active', width: 100 },
     { 
       field: 'actions', 
       headerName: 'Actions', 
-      width: 280,
+      width: 150,
       renderCell: (params) => {
         const user = params.row;
         const isDeleting = loading && selectedUser?._id === user._id;
-        const isTemp = user.firebaseUserId?.startsWith('temp_');
         
         return (
           <Box sx={{ display: 'flex', gap: 1 }}>
@@ -812,38 +1106,226 @@ export default function UsersPage() {
               Edit
             </Button>
             
-            {user.isOrganizer === 'No' && (
-              <Tooltip title="Create an organizer for this user">
-                <Button
-                  variant="text"
-                  color="secondary"
-                  onClick={() => handleQuickCreateOrganizer(user)}
-                  startIcon={<LinkIcon />}
-                  disabled={creatingOrganizer}
-                  size="small"
-                >
-                  {creatingOrganizer && selectedUser?._id === user._id ? 'Creating...' : 'Create Org'}
-                </Button>
-              </Tooltip>
-            )}
+            <Button
+              variant="text"
+              color="error"
+              onClick={() => handleDeleteUser(user)}
+              startIcon={<DeleteIcon />}
+              disabled={isDeleting}
+              size="small"
+            >
+              {isDeleting ? 'Deleting...' : 'Delete'}
+            </Button>
+          </Box>
+        );
+      }
+    },
+  ];
+  
+  // Define columns for Organizer tab
+  const organizerColumns = [
+    { field: 'displayName', headerName: 'Name', flex: 1 },
+    { field: 'email', headerName: 'Email', flex: 1 },
+    { field: 'firebaseUserId', headerName: 'Firebase ID', width: 180 },
+    { 
+      field: 'organizerId', 
+      headerName: 'Organizer ID',
+      flex: 1,
+      renderCell: (params) => {
+        // Check multiple possible places for organizerId
+        const orgId = 
+          params.row?.regionalOrganizerInfo?.organizerId || // Standard place
+          params.row?._id; // For pure organizer records that don't have the nested structure
+          
+        return <span>{typeof orgId === 'object' ? orgId?._id : orgId}</span>;
+      }
+    },
+    { 
+      field: 'organizerType',
+      headerName: 'Type',
+      width: 120,
+      renderCell: (params) => {
+        const user = params.row;
+        const types = [];
+        
+        // Check organizer types in various locations
+        const organizerTypes = user.organizerTypes || {};
+        
+        if (organizerTypes.isEventOrganizer) types.push('Event');
+        if (organizerTypes.isVenue) types.push('Venue');
+        if (organizerTypes.isTeacher) types.push('Teacher');
+        if (organizerTypes.isMaestro) types.push('Maestro');
+        if (organizerTypes.isDJ) types.push('DJ');
+        if (organizerTypes.isOrchestra) types.push('Orchestra');
+        
+        return <span>{types.length > 0 ? types.join(', ') : 'General'}</span>;
+      }
+    },
+    { 
+      field: 'regionalApproved', 
+      headerName: 'Approved', 
+      width: 100,
+      renderCell: (params) => {
+        const isApproved = 
+          params.row?.regionalOrganizerInfo?.isApproved || // Check in regional info
+          params.row?.isApproved; // Check at root level for pure organizer records
+          
+        return <span>{isApproved ? 'Yes' : 'No'}</span>;
+      }
+    },
+    { 
+      field: 'regionalEnabled', 
+      headerName: 'Enabled', 
+      width: 100,
+      renderCell: (params) => {
+        const isEnabled = 
+          params.row?.regionalOrganizerInfo?.isEnabled || // Check in regional info 
+          params.row?.isEnabled; // Check at root level for pure organizer records
+          
+        return <span>{isEnabled ? 'Yes' : 'No'}</span>;
+      }
+    },
+    { 
+      field: 'regionalActive', 
+      headerName: 'Active', 
+      width: 100,
+      renderCell: (params) => {
+        const isActive = 
+          params.row?.regionalOrganizerInfo?.isActive || // Check in regional info
+          params.row?.isActive || // Check at root level 
+          params.row?.isActiveAsOrganizer; // Check alternate field name
+          
+        return <span>{isActive ? 'Yes' : 'No'}</span>;
+      }
+    },
+    { 
+      field: 'actions', 
+      headerName: 'Actions', 
+      width: 150,
+      renderCell: (params) => {
+        const user = params.row;
+        const isDeleting = loading && selectedUser?._id === user._id;
+        
+        return (
+          <Box sx={{ display: 'flex', gap: 1 }}>
+            <Button
+              variant="text"
+              color="primary"
+              onClick={() => handleEditUser(user)}
+              startIcon={<EditIcon />}
+              size="small"
+            >
+              Edit
+            </Button>
             
-            <Tooltip title={isTemp ? "Delete temporary user" : "Delete user permanently"}>
-              <Button
-                variant="text"
-                color="error"
-                onClick={() => handleDeleteUser(user)}
-                startIcon={<DeleteIcon />}
-                disabled={isDeleting}
-                size="small"
-                sx={{ 
-                  marginLeft: 'auto',
-                  // Make delete button more prominent for temp users
-                  ...(isTemp && { fontWeight: 'bold' })
-                }}
-              >
-                {isDeleting ? 'Deleting...' : 'Delete'}
-              </Button>
-            </Tooltip>
+            <Button
+              variant="text"
+              color="error"
+              onClick={() => handleDeleteUser(user)}
+              startIcon={<DeleteIcon />}
+              disabled={isDeleting}
+              size="small"
+            >
+              {isDeleting ? 'Deleting...' : 'Delete'}
+            </Button>
+          </Box>
+        );
+      }
+    },
+  ];
+  
+  // Define columns for Admin tab
+  const adminColumns = [
+    { field: 'displayName', headerName: 'Name', flex: 1 },
+    { field: 'email', headerName: 'Email', flex: 1 },
+    { field: 'firebaseUserId', headerName: 'Firebase ID', width: 180 },
+    { 
+      field: 'adminType',
+      headerName: 'Admin Type',
+      width: 130,
+      renderCell: (params) => {
+        const user = params.row;
+        const roles = user.roleIds || [];
+        
+        // Check roles to determine admin type
+        const roleNames = roles.map(role => 
+          typeof role === 'object' ? role.roleName : 'Unknown'
+        );
+        
+        if (roleNames.includes('SystemAdmin')) return <span>System Admin</span>;
+        if (roleNames.includes('RegionalAdmin')) return <span>Regional Admin</span>;
+        
+        return <span>-</span>;
+      }
+    },
+    { 
+      field: 'adminApproved', 
+      headerName: 'Admin Approved', 
+      width: 130,
+      renderCell: (params) => {
+        const isApproved = 
+          params.row?.localAdminInfo?.isApproved || // Check in localAdminInfo
+          params.row?.isAdmin || // Check if isAdmin is true at root
+          params.row?.isApproved; // Fallback to root isApproved
+        
+        return <span>{isApproved ? 'Yes' : 'No'}</span>;
+      }
+    },
+    { 
+      field: 'adminEnabled', 
+      headerName: 'Admin Enabled', 
+      width: 130,
+      renderCell: (params) => {
+        const isEnabled = 
+          params.row?.localAdminInfo?.isEnabled || // Check in localAdminInfo
+          params.row?.isEnabled; // Fallback to root isEnabled
+        
+        return <span>{isEnabled ? 'Yes' : 'No'}</span>;
+      }
+    },
+    { 
+      field: 'adminActive', 
+      headerName: 'Admin Active', 
+      width: 130,
+      renderCell: (params) => {
+        const isActive = 
+          params.row?.localAdminInfo?.isActive || // Check in localAdminInfo
+          params.row?.isActive || // Fallback to root isActive
+          params.row?.active; // Fallback to legacy active property
+        
+        return <span>{isActive ? 'Yes' : 'No'}</span>;
+      }
+    },
+    { 
+      field: 'actions', 
+      headerName: 'Actions', 
+      width: 150,
+      renderCell: (params) => {
+        const user = params.row;
+        const isDeleting = loading && selectedUser?._id === user._id;
+        
+        return (
+          <Box sx={{ display: 'flex', gap: 1 }}>
+            <Button
+              variant="text"
+              color="primary"
+              onClick={() => handleEditUser(user)}
+              startIcon={<EditIcon />}
+              size="small"
+            >
+              Edit
+            </Button>
+            
+            <Button
+              variant="text"
+              color="error"
+              onClick={() => handleDeleteUser(user)}
+              startIcon={<DeleteIcon />}
+              disabled={isDeleting}
+              size="small"
+            >
+              {isDeleting ? 'Deleting...' : 'Delete'}
+            </Button>
           </Box>
         );
       }
@@ -869,23 +1351,32 @@ export default function UsersPage() {
           <Tab label="All Users" />
           <Tab label="Organizers" />
           <Tab label="Admins" />
-          <Tab label="Temp Users" />
         </Tabs>
         
-        <TextField
-          placeholder="Search users..."
-          value={searchTerm}
-          onChange={handleSearchChange}
-          variant="outlined"
-          size="small"
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <SearchIcon />
-              </InputAdornment>
-            ),
-          }}
-        />
+        <Box sx={{ display: 'flex', gap: 2 }}>
+          <Button 
+            variant="outlined" 
+            color="primary"
+            onClick={() => handleSyncFirebaseUsers()}
+          >
+            Sync Firebase Users
+          </Button>
+          
+          <TextField
+            placeholder="Search users..."
+            value={searchTerm}
+            onChange={handleSearchChange}
+            variant="outlined"
+            size="small"
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon />
+                </InputAdornment>
+              ),
+            }}
+          />
+        </Box>
       </Box>
       
       <TabPanel value={tabValue} index={0}>
@@ -897,7 +1388,7 @@ export default function UsersPage() {
           ) : (
             <DataGrid
               rows={filteredUsers}
-              columns={columns}
+              columns={allUsersColumns}
               pageSize={10}
               rowsPerPageOptions={[10, 25, 50]}
               disableSelectionOnClick
@@ -916,7 +1407,7 @@ export default function UsersPage() {
           ) : (
             <DataGrid
               rows={filteredUsers}
-              columns={columns}
+              columns={organizerColumns}
               pageSize={10}
               rowsPerPageOptions={[10, 25, 50]}
               disableSelectionOnClick
@@ -935,37 +1426,7 @@ export default function UsersPage() {
           ) : (
             <DataGrid
               rows={filteredUsers}
-              columns={columns}
-              pageSize={10}
-              rowsPerPageOptions={[10, 25, 50]}
-              disableSelectionOnClick
-              density="standard"
-            />
-          )}
-        </Paper>
-      </TabPanel>
-      
-      <TabPanel value={tabValue} index={3}>
-        <Box sx={{ mb: 2, display: 'flex', justifyContent: 'flex-end' }}>
-          <Button
-            variant="contained"
-            color="error"
-            startIcon={<DeleteIcon />}
-            onClick={handleDeleteAllTempUsers}
-            disabled={loading || filteredUsers.length === 0}
-          >
-            Delete All Temporary Users ({filteredUsers.length})
-          </Button>
-        </Box>
-        <Paper sx={{ height: 600, width: '100%' }}>
-          {loading ? (
-            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
-              <CircularProgress />
-            </Box>
-          ) : (
-            <DataGrid
-              rows={filteredUsers}
-              columns={columns}
+              columns={adminColumns}
               pageSize={10}
               rowsPerPageOptions={[10, 25, 50]}
               disableSelectionOnClick

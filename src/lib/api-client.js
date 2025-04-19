@@ -20,7 +20,33 @@ const apiClient = axios.create({
 // Users API
 export const usersApi = {
   getUsers: async (appId = '1', active, timestamp) => {
-    let url = `/api/userlogins/all?appId=${appId}`;
+    try {
+      // First try our frontend API which acts as a proxy
+      let frontendUrl = `/api/users?appId=${appId}`;
+      if (active !== undefined) {
+        frontendUrl += `&active=${active}`;
+      }
+      // Add timestamp for cache busting if needed
+      if (timestamp) {
+        frontendUrl += `&_=${timestamp}`;
+      }
+      
+      console.log('Getting users via frontend API:', frontendUrl);
+      const frontendResponse = await axios.get(frontendUrl);
+      
+      if (Array.isArray(frontendResponse.data) && frontendResponse.data.length > 0) {
+        console.log(`Frontend API returned ${frontendResponse.data.length} users`);
+        return frontendResponse.data;
+      } else {
+        console.warn('Frontend API returned no users, falling back to direct backend call');
+      }
+    } catch (frontendError) {
+      console.warn('Error using frontend API:', frontendError.message);
+      console.warn('Falling back to direct backend call');
+    }
+    
+    // Fallback to direct backend call
+    let url = `${BE_URL}/api/userlogins/all?appId=${appId}`;
     if (active !== undefined) {
       url += `&active=${active}`;
     }
@@ -28,8 +54,10 @@ export const usersApi = {
     if (timestamp) {
       url += `&_=${timestamp}`;
     }
-    console.log('Getting users with URL:', url);
-    const response = await apiClient.get(url);
+    
+    console.log('Fetching users directly from backend:', url);
+    const response = await axios.get(url);
+    console.log(`Backend API returned ${response.data.length} users`);
     return response.data;
   },
   
@@ -316,7 +344,10 @@ export const organizersApi = {
               organizerId: id,
               isApproved: true,
               isEnabled: true,
-              isActive: true
+              isActive: true,
+              organizerCommunicationSettingsAdmin: {
+                messagePrimaryMethod: "app"
+              }
             }
           });
           
@@ -391,6 +422,60 @@ export const organizersApi = {
     } catch (fallbackError) {
       console.error('All connection approaches failed:', fallbackError);
       throw new Error(`Failed to connect user to organizer: ${fallbackError.message}`);
+    }
+  },
+  
+  disconnectUser: async (id, appId = '1') => {
+    console.log(`Disconnecting user from organizer ${id} with appId ${appId}`);
+    
+    // Try approach #1: Use the dedicated disconnect-user endpoint
+    try {
+      console.log('Attempting disconnection via dedicated endpoint...');
+      
+      const directResponse = await fetch(`/api/organizers/${id}/disconnect-user`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          appId
+        }),
+      });
+      
+      if (directResponse.ok) {
+        const data = await directResponse.json();
+        console.log('Disconnection successful via direct database operation');
+        return data;
+      } else {
+        console.warn('Direct disconnection failed:', await directResponse.text());
+        // Continue to fallback approach
+      }
+    } catch (directError) {
+      console.error('Error with direct disconnection:', directError);
+      // Continue to fallback approach
+    }
+    
+    // Fallback: Update organizer record directly
+    try {
+      console.log('Falling back to direct update...');
+      
+      // Update organizer to remove user connection
+      const updateResponse = await apiClient.patch(`/api/organizers/${id}`, {
+        firebaseUserId: null,
+        linkedUserLogin: null,
+        appId: appId
+      });
+      
+      console.log('Successfully disconnected user from organizer via direct update');
+      
+      return {
+        success: true,
+        message: 'Disconnected user from organizer via direct update',
+        organizer: updateResponse.data
+      };
+    } catch (updateError) {
+      console.error('All disconnection approaches failed:', updateError);
+      throw new Error(`Failed to disconnect user from organizer: ${updateError.message}`);
     }
   }
 };

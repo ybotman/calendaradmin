@@ -33,12 +33,10 @@ import { DataGrid } from '@mui/x-data-grid';
 import SearchIcon from '@mui/icons-material/Search';
 import EditIcon from '@mui/icons-material/Edit';
 import AddIcon from '@mui/icons-material/Add';
-import LinkIcon from '@mui/icons-material/Link';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { organizersApi, usersApi } from '@/lib/api-client';
 import OrganizerEditForm from '@/components/organizers/OrganizerEditForm';
 import OrganizerCreateForm from '@/components/organizers/OrganizerCreateForm';
-import OrganizerConnectUserForm from '@/components/organizers/OrganizerConnectUserForm';
 import { useAppContext } from '@/lib/AppContext';
 
 // Tab panel component
@@ -67,10 +65,9 @@ export default function OrganizersPage() {
   const { currentApp } = useAppContext();
   const [editingOrganizer, setEditingOrganizer] = useState(null);
   const [creatingOrganizer, setCreatingOrganizer] = useState(false);
-  const [connectingOrganizer, setConnectingOrganizer] = useState(null);
+  // Connection functionality moved to edit form
   const [dialogOpen, setDialogOpen] = useState(false);
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
-  const [connectDialogOpen, setConnectDialogOpen] = useState(false);
   
   // Import dialog state
   const [importDialogOpen, setImportDialogOpen] = useState(false);
@@ -107,9 +104,9 @@ export default function OrganizersPage() {
           displayName: organizer.fullName || organizer.name || 'Unnamed Organizer',
           shortDisplayName: organizer.shortName || 'No short name',
           status: organizer.isActive ? 'Active' : 'Inactive',
-          approved: organizer.isApproved ? 'Yes' : 'No',
           enabled: organizer.isEnabled ? 'Yes' : 'No',
-          userConnected: organizer.linkedUserLogin ? 'Yes' : 'No',
+          wantRender: organizer.wantRender ? 'Yes' : 'No',
+          userConnected: organizer.firebaseUserId ? 'Yes' : 'No',
         }));
         
         setOrganizers(processedOrganizers);
@@ -159,10 +156,11 @@ export default function OrganizersPage() {
     setDialogOpen(true);
   };
 
-  // Handle connect organizer to user button click
+  // This functionality has been moved to the edit form
+  // Keeping empty function for backward compatibility
   const handleConnectOrganizer = (organizer) => {
-    setConnectingOrganizer(organizer);
-    setConnectDialogOpen(true);
+    // Redirect to edit instead
+    handleEditOrganizer(organizer);
   };
   
   // Function to refresh organizers
@@ -180,12 +178,12 @@ export default function OrganizersPage() {
       const processedOrganizers = organizersData.map(org => ({
         ...org,
         id: org._id,
-        displayName: org.name || 'Unnamed Organizer',
+        displayName: org.fullName || org.name || 'Unnamed Organizer',
         shortDisplayName: org.shortName || 'No short name',
         status: org.isActive ? 'Active' : 'Inactive',
-        approved: org.isApproved ? 'Yes' : 'No',
         enabled: org.isEnabled ? 'Yes' : 'No',
-        userConnected: org.linkedUserLogin ? 'Yes' : 'No',
+        wantRender: org.wantRender ? 'Yes' : 'No',
+        userConnected: org.firebaseUserId ? 'Yes' : 'No',
       }));
       
       console.log(`Refreshed ${processedOrganizers.length} organizers`);
@@ -208,7 +206,8 @@ export default function OrganizersPage() {
       setLoading(true);
       
       // First, check if this organizer is connected to a user
-      if (organizer.linkedUserLogin) {
+      // We now only use firebaseUserId, not linkedUserLogin
+      if (organizer.firebaseUserId) {
         // Find which user is connected to this organizer
         const users = await usersApi.getUsers(currentApp.id);
         const connectedUser = users.find(user => 
@@ -218,21 +217,33 @@ export default function OrganizersPage() {
         );
         
         if (connectedUser) {
-          // Disconnect organizer from user
-          const userUpdateData = {
-            firebaseUserId: connectedUser.firebaseUserId,
-            appId: connectedUser.appId || currentApp.id,
-            regionalOrganizerInfo: {
-              ...connectedUser.regionalOrganizerInfo,
-              organizerId: null,
-              isApproved: false,
-              isEnabled: false,
-              isActive: false
-            }
-          };
-          
-          // Update user to remove organizer connection
-          await usersApi.updateUser(userUpdateData);
+          // First try the new disconnect API endpoint
+          try {
+            console.log(`Disconnecting user from organizer using the disconnect API...`);
+            const disconnectResponse = await axios.patch(`/api/organizers/${organizer._id}/disconnect-user`, {
+              appId: currentApp.id
+            });
+            console.log('Disconnect response:', disconnectResponse.data);
+          } catch (disconnectError) {
+            console.error('Error using the disconnect API:', disconnectError);
+            
+            // Fallback: Update user directly to remove organizer connection
+            console.log('Falling back to direct user update...');
+            const userUpdateData = {
+              firebaseUserId: connectedUser.firebaseUserId,
+              appId: connectedUser.appId || currentApp.id,
+              regionalOrganizerInfo: {
+                ...connectedUser.regionalOrganizerInfo,
+                organizerId: null,
+                isEnabled: false,
+                isActive: false,
+                wantRender: false
+              }
+            };
+            
+            // Update user to remove organizer connection
+            await usersApi.updateUser(userUpdateData);
+          }
         }
       }
       
@@ -281,11 +292,7 @@ export default function OrganizersPage() {
     setCreatingOrganizer(false);
   };
 
-  // Handle connect dialog close
-  const handleConnectDialogClose = () => {
-    setConnectDialogOpen(false);
-    setConnectingOrganizer(null);
-  };
+  // Removed connect dialog functionality (moved to edit form)
   
   // Handle import organizers from BTC
   const handleImportOrganizers = async () => {
@@ -527,9 +534,9 @@ export default function OrganizersPage() {
         displayName: organizer.fullName || organizer.name || 'Unnamed Organizer',
         shortDisplayName: organizer.shortName || 'No short name',
         status: organizer.isActive ? 'Active' : 'Inactive',
-        approved: organizer.isApproved ? 'Yes' : 'No',
         enabled: organizer.isEnabled ? 'Yes' : 'No',
-        userConnected: organizer.linkedUserLogin ? 'Yes' : 'No',
+        wantRender: organizer.wantRender ? 'Yes' : 'No',
+        userConnected: organizer.firebaseUserId ? 'Yes' : 'No',
       }));
       
       setOrganizers(processedOrganizers);
@@ -567,10 +574,13 @@ export default function OrganizersPage() {
         fullName: updatedOrganizer.name,
         shortName: updatedOrganizer.shortName || updatedOrganizer.name,
         // Explicitly convert boolean fields with ternary to ensure true/false values
-        isApproved: updatedOrganizer.isApproved === true ? true : false,
+        wantRender: updatedOrganizer.wantRender === true ? true : false,
         isActive: updatedOrganizer.isActive === true ? true : false,
         isEnabled: updatedOrganizer.isEnabled === true ? true : false
       };
+      
+      // Remove isApproved as it's no longer used
+      delete organizerWithAppId.isApproved;
       
       console.log('Formatted organizer for update:', organizerWithAppId);
       
@@ -605,12 +615,12 @@ export default function OrganizersPage() {
       const processedOrganizers = organizersData.map(organizer => ({
         ...organizer,
         id: organizer._id,
-        displayName: organizer.name || 'Unnamed Organizer',
+        displayName: organizer.fullName || organizer.name || 'Unnamed Organizer',
         shortDisplayName: organizer.shortName || 'No short name',
         status: organizer.isActive ? 'Active' : 'Inactive',
-        approved: organizer.isApproved ? 'Yes' : 'No',
         enabled: organizer.isEnabled ? 'Yes' : 'No',
-        userConnected: organizer.linkedUserLogin ? 'Yes' : 'No',
+        wantRender: organizer.wantRender ? 'Yes' : 'No',
+        userConnected: organizer.firebaseUserId ? 'Yes' : 'No',
       }));
       
       setOrganizers(processedOrganizers);
@@ -664,9 +674,9 @@ export default function OrganizersPage() {
         displayName: organizer.fullName || organizer.name || 'Unnamed Organizer',
         shortDisplayName: organizer.shortName || 'No short name',
         status: organizer.isActive ? 'Active' : 'Inactive',
-        approved: organizer.isApproved ? 'Yes' : 'No',
         enabled: organizer.isEnabled ? 'Yes' : 'No',
-        userConnected: organizer.linkedUserLogin ? 'Yes' : 'No',
+        wantRender: organizer.wantRender ? 'Yes' : 'No',
+        userConnected: organizer.firebaseUserId ? 'Yes' : 'No',
       }));
       
       setOrganizers(processedOrganizers);
@@ -691,58 +701,20 @@ export default function OrganizersPage() {
     }
   };
 
-  // Handle connect organizer to user
-  const handleConnectUser = async (organizerId, firebaseUserId) => {
-    try {
-      setLoading(true);
-      
-      console.log('Connecting organizer to user:', { organizerId, firebaseUserId });
-      
-      // Connect organizer to user
-      await organizersApi.connectToUser(organizerId, firebaseUserId, currentApp.id);
-      
-      // Refresh organizers list
-      const organizersData = await organizersApi.getOrganizers(currentApp.id);
-      
-      // Process organizers data
-      const processedOrganizers = organizersData.map(organizer => ({
-        ...organizer,
-        id: organizer._id,
-        displayName: organizer.name || 'Unnamed Organizer',
-        shortDisplayName: organizer.shortName || 'No short name',
-        status: organizer.isActive ? 'Active' : 'Inactive',
-        approved: organizer.isApproved ? 'Yes' : 'No',
-        enabled: organizer.isEnabled ? 'Yes' : 'No',
-        userConnected: organizer.linkedUserLogin ? 'Yes' : 'No',
-      }));
-      
-      setOrganizers(processedOrganizers);
-      filterOrganizers(searchTerm);
-      setConnectDialogOpen(false);
-      setConnectingOrganizer(null);
-      setLoading(false);
-      
-      // Show success message
-      alert('Organizer connected to user successfully!');
-    } catch (error) {
-      console.error('Error connecting organizer to user:', error);
-      alert(`Error connecting organizer to user: ${error.message}`);
-      setLoading(false);
-    }
-  };
+  // Connect functionality has been moved to edit form
 
   // Define columns for DataGrid
   const columns = [
     { field: 'displayName', headerName: 'Name', flex: 1 },
     { field: 'shortDisplayName', headerName: 'Short Name', flex: 1 },
     { field: 'status', headerName: 'Status', width: 120 },
-    { field: 'approved', headerName: 'Approved', width: 120 },
     { field: 'enabled', headerName: 'Enabled', width: 120 },
+    { field: 'wantRender', headerName: 'Want Render', width: 120 },
     { field: 'userConnected', headerName: 'User Connected', width: 150 },
     { 
       field: 'actions', 
       headerName: 'Actions', 
-      width: 300,
+      width: 200,
       renderCell: (params) => (
         <Box>
           <Button
@@ -754,16 +726,6 @@ export default function OrganizersPage() {
             size="small"
           >
             Edit
-          </Button>
-          <Button
-            variant="text"
-            color="secondary"
-            onClick={() => handleConnectOrganizer(params.row)}
-            startIcon={<LinkIcon />}
-            sx={{ mr: 1 }}
-            size="small"
-          >
-            Link
           </Button>
           <Button
             variant="text"
@@ -922,26 +884,7 @@ export default function OrganizersPage() {
         </DialogActions>
       </Dialog>
 
-      {/* Organizer Connect User Dialog */}
-      <Dialog 
-        open={connectDialogOpen} 
-        onClose={handleConnectDialogClose} 
-        maxWidth="md" 
-        fullWidth
-      >
-        <DialogTitle>Connect Organizer to User</DialogTitle>
-        <DialogContent>
-          {connectingOrganizer && (
-            <OrganizerConnectUserForm
-              organizer={connectingOrganizer}
-              onSubmit={(firebaseUserId) => handleConnectUser(connectingOrganizer._id, firebaseUserId)}
-            />
-          )}
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleConnectDialogClose}>Cancel</Button>
-        </DialogActions>
-      </Dialog>
+      {/* Connect User functionality moved to Edit form */}
       
       {/* Import Organizers Dialog */}
       <Dialog

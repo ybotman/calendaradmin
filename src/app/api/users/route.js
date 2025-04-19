@@ -61,14 +61,20 @@ export async function POST(request) {
         firebaseUserId = firebaseUser.uid;
         console.log(`Firebase user created: ${firebaseUserId}`);
       } catch (firebaseError) {
-        console.warn('Firebase user creation failed, proceeding with temporary ID:', firebaseError);
-        // Continue with a temp ID instead of returning an error
-        firebaseUserId = `temp_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
+        console.warn('Firebase user creation failed:', firebaseError);
+        // Return an error rather than creating a temporary ID
+        return NextResponse.json(
+          { success: false, message: `Firebase user creation failed: ${firebaseError.message}` }, 
+          { status: 500 }
+        );
       }
     } else {
-      // Firebase not available, use a temporary ID
-      console.log('Firebase not available, using temporary ID');
-      firebaseUserId = `temp_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
+      // Firebase not available, return an error
+      console.error('Firebase not available, cannot create user');
+      return NextResponse.json(
+        { success: false, message: 'Firebase authentication is required to create users' }, 
+        { status: 503 }
+      );
     }
     
     console.log(`Creating user with ID: ${firebaseUserId}`);

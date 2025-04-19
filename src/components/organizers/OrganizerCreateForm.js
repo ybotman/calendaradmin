@@ -20,7 +20,7 @@ export default function OrganizerCreateForm({ onSubmit, appId = '1' }) {
     fullName: '',
     description: '',
     isActive: true,
-    isApproved: false,
+    wantRender: true,
     isEnabled: false,
     contactInfo: {
       email: '',
@@ -145,8 +145,11 @@ export default function OrganizerCreateForm({ onSubmit, appId = '1' }) {
         name: formData.name,
         fullName: formData.name || formData.fullName,
         shortName: formData.shortName || formData.name,
+        // Explicitly set firebaseUserId to null - no fake IDs
+        // We're only using firebaseUserId now, not linkedUserLogin
+        firebaseUserId: null,
         // Ensure boolean fields are explicitly true or false
-        isApproved: formData.isApproved === true ? true : false,
+        wantRender: formData.wantRender === true ? true : false,
         isActive: formData.isActive === true ? true : false,
         isEnabled: formData.isEnabled === true ? true : false
       };
@@ -163,7 +166,7 @@ export default function OrganizerCreateForm({ onSubmit, appId = '1' }) {
         fullName: '',
         description: '',
         isActive: true,
-        isApproved: false,
+        wantRender: true,
         isEnabled: false,
         contactInfo: {
           email: '',
@@ -288,13 +291,14 @@ export default function OrganizerCreateForm({ onSubmit, appId = '1' }) {
           <FormControlLabel
             control={
               <Switch 
-                checked={formData.isApproved} 
+                checked={formData.wantRender} 
                 onChange={handleChange}
-                name="isApproved"
-                color="primary"
+                name="wantRender"
+                color="secondary"
               />
             }
-            label="Approved"
+            label="Want Render"
+            title="Controls if this organizer should be shown on the public-facing site"
           />
         </Grid>
         
