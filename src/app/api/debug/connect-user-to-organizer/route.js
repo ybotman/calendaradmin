@@ -3,13 +3,13 @@ import axios from 'axios';
 import connectToDatabase from '@/lib/mongodb';
 import mongoose from 'mongoose';
 
-// Function to get a MongoDB model for UserLogin
-async function getUserLoginModel() {
+// Function to get a MongoDB model for UserLogins
+async function getUserLoginsModel() {
   await connectToDatabase();
   
   try {
     // Return existing model if it's already defined
-    return mongoose.model('UserLogin');
+    return mongoose.model('UserLogins');
   } catch (e) {
     // If model doesn't exist, define it with a minimal schema
     const schema = new mongoose.Schema({
@@ -23,9 +23,9 @@ async function getUserLoginModel() {
         ApprovalDate: Date
       },
       roleIds: [mongoose.Schema.Types.ObjectId]
-    }, { collection: 'userLogins', strict: false });
+    }, { collection: 'userlogins', strict: false });
     
-    return mongoose.model('UserLogin', schema);
+    return mongoose.model('UserLogins', schema);
   }
 }
 
@@ -103,10 +103,10 @@ export async function POST(request) {
       await connectToDatabase();
       
       // Get the user model
-      const UserLogin = await getUserLoginModel();
+      const UserLogins = await getUserLoginsModel();
       
       // Find the user by firebaseUserId (which should be unique)
-      const user = await UserLogin.findOne({ firebaseUserId, appId });
+      const user = await UserLogins.findOne({ firebaseUserId, appId });
       
       if (!user) {
         return NextResponse.json({

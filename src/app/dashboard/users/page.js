@@ -75,14 +75,18 @@ export default function UsersPage() {
     try {
       setLoading(true);
       
-      // Use timestamp to force fresh data
-      const timestamp = new Date().getTime();
+      // Add a small delay to ensure backend has time to process any updates
+      // This helps with the refresh issues between tabs
+      await new Promise(resolve => setTimeout(resolve, 100));
+      
+      // Use timestamp to force fresh data - add randomness to avoid cache
+      const timestamp = new Date().getTime() + Math.floor(Math.random() * 1000);
       
       let usersData = [];
       let organizersData = [];
       
       try {
-        // 1. First get the user login records
+        // Only fetch user login records - we no longer need to combine with organizers
         console.log('Fetching user login records...');
         const usersResponse = await fetch(`http://localhost:3010/api/userlogins/all?appId=${appId}&_=${timestamp}`);
         
@@ -91,54 +95,24 @@ export default function UsersPage() {
           console.log(`User login API returned ${usersData.length} user records`);
         } else {
           console.warn(`User login API returned status ${usersResponse.status}`);
-          usersData = [];
+          
+          // Try a direct API call without timestamp to see if that works
+          try {
+            console.log('Trying direct API call without timestamp...');
+            const directApiResponse = await fetch(`http://localhost:3010/api/userlogins/all?appId=${appId}`);
+            
+            if (directApiResponse.ok) {
+              usersData = await directApiResponse.json();
+              console.log(`Direct API call returned ${usersData.length} user records`);
+            } else {
+              console.warn(`Direct API call also failed with status ${directApiResponse.status}`);
+              usersData = [];
+            }
+          } catch (directApiError) {
+            console.error('Error with direct API call:', directApiError);
+            usersData = [];
+          }
         }
-        
-        // 2. Then get the organizer records
-        console.log('Fetching organizer records...');
-        const organizersResponse = await fetch(`http://localhost:3010/api/organizers?appId=${appId}&isActive=true&_=${timestamp}`);
-        
-        if (organizersResponse.ok) {
-          organizersData = await organizersResponse.json();
-          console.log(`Organizers API returned ${organizersData.length} organizer records`);
-        } else {
-          console.warn(`Organizers API returned status ${organizersResponse.status}`);
-          organizersData = [];
-        }
-        
-        // 3. Process organizers to match user format
-        const processedOrganizers = organizersData.map(organizer => {
-          // Extract key information to match the user record structure
-          return {
-            _id: organizer._id,
-            firebaseUserId: organizer.firebaseUserId || organizer.loginId || organizer._id.toString(),
-            fullName: organizer.fullName || organizer.name,
-            shortName: organizer.shortName,
-            loginId: organizer.loginId,
-            isActive: organizer.isActive,
-            isEnabled: organizer.isEnabled,
-            isActiveAsOrganizer: organizer.isActiveAsOrganizer || organizer.isActive,
-            organizerTypes: organizer.organizerTypes || {},
-            publicEmail: organizer.publicEmail,
-            // Add a marker so we know this was an organizer record
-            _isOrganizer: true
-          };
-        });
-        
-        // 4. Combine users and organizers
-        // But avoid duplicates where an organizer is already linked to a user
-        const userFirebaseIds = new Set(usersData.map(u => u.firebaseUserId).filter(Boolean));
-        
-        // Only include organizers that aren't already linked to a user
-        const uniqueOrganizers = processedOrganizers.filter(org => 
-          !org.firebaseUserId || !userFirebaseIds.has(org.firebaseUserId)
-        );
-        
-        console.log(`Found ${uniqueOrganizers.length} organizers that don't have user records`);
-        
-        // Combine all records
-        usersData = [...usersData, ...uniqueOrganizers];
-        console.log(`Combined data has ${usersData.length} records (${usersData.length} users + ${uniqueOrganizers.length} organizers)`);
       } catch (fetchError) {
         console.error('Error fetching users/organizers:', fetchError);
         
@@ -179,6 +153,19 @@ export default function UsersPage() {
       
       console.log(`Received ${usersData.length} users from backend`);
       
+      // Debug organizer information
+      const usersWithOrganizerInfo = usersData.filter(user => 
+        user.regionalOrganizerInfo && user.regionalOrganizerInfo.organizerId
+      );
+      
+      console.log(`Page: Found ${usersWithOrganizerInfo.length} users with organizer connections`);
+      
+      // Log the first 5 organizer connections in detail
+      usersWithOrganizerInfo.slice(0, 5).forEach(user => {
+        console.log(`Page: User ${user.firebaseUserId} has organizerId:`, user.regionalOrganizerInfo.organizerId);
+        console.log('Full regionalOrganizerInfo:', JSON.stringify(user.regionalOrganizerInfo, null, 2));
+      });
+      
       // Process users data to add display name and computed fields
       const processedUsers = usersData.map(user => {
         try {
@@ -200,15 +187,15 @@ export default function UsersPage() {
                   ? user.isActiveAsOrganizer
                   : true; // Default to active if we can't find anything
                 
-          // Handle display name - from various places
-          const displayName = user.fullName || // Use fullName if available
+          // Always use Firebase display name if available, as requested
+          const displayName = user.firebaseUserInfo?.displayName || 
+            user.fullName || // Use fullName if available
             `${user.localUserInfo?.firstName || ''} ${user.localUserInfo?.lastName || ''}`.trim() || // Or build from firstName/lastName
-            user.firebaseUserInfo?.displayName || // Or use Firebase displayName
             user.shortName || // Or short name
             user.loginId || // Or login ID
             'Unnamed User'; // Fallback
 
-          // Handle email - could be in multiple places
+          // Always use Firebase email if available, as requested
           const email = user.firebaseUserInfo?.email || // First check firebaseUserInfo
             user.publicEmail || // Then publicEmail
             user.loginId ? `${user.loginId}@example.com` : // Use loginId if available
@@ -238,23 +225,27 @@ export default function UsersPage() {
           // Add some diagnostics
           console.log(`${isOrganizerRecord ? 'Organizer' : 'User'} ${userId}: name=${displayName}, active=${isActiveValue}, source=${isOrganizerRecord ? 'organizers' : 'userLogins'}`);
           
+          // Determine if user has organizer profile
+          const hasOrganizerProfile = !!(user.regionalOrganizerInfo && user.regionalOrganizerInfo.organizerId);
+          
           return {
             ...user, // Keep all original fields
             id: userId, // For DataGrid key
             displayName,
             email,
             roleNames,
+            loginUserName: user.localUserInfo?.loginUserName || '',
             isActive: isActiveValue ? 'Active' : 'Inactive',
             // Ensure these objects exist to prevent UI errors
             firebaseUserId: user.firebaseUserId || '', // Make sure firebaseUserId is always a string
             localUserInfo: user.localUserInfo || {},
-            regionalOrganizerInfo,
+            regionalOrganizerInfo: user.regionalOrganizerInfo || {},
             localAdminInfo: user.localAdminInfo || {},
-            // Add computed flag for "isRealUser" vs "isOrganizer"
+            // Add computed flag for user status
             isRealUser: !!user.firebaseUserId && !user.firebaseUserId.startsWith('temp_'),
-            isOrganizer: isOrganizerRecord || !!(user.regionalOrganizerInfo?.organizerId || user.isActiveAsOrganizer || user.organizerTypes),
-            // Add source indication
-            source: isOrganizerRecord ? 'organizers' : 'userLogins'
+            isOrganizer: hasOrganizerProfile,
+            // All records now come from userlogins collection
+            source: 'userLogins' 
           };
         } catch (err) {
           console.error('Error processing user:', err, user);
@@ -374,34 +365,62 @@ export default function UsersPage() {
   }, [appId]);
 
   // Handle tab change
-  const handleTabChange = (event, newValue) => {
+  const handleTabChange = async (event, newValue) => {
     setTabValue(newValue);
     
-    // Filter users based on tab
-    if (newValue === 0) { // All Users
-      filterUsers(searchTerm);
-    } else if (newValue === 1) { // Organizers
-      // Consider users as organizers if they have any of these properties
-      const organizerUsers = users.filter(user => 
-        user.regionalOrganizerInfo?.organizerId || // Standard user with organizer connection
-        user.isActiveAsOrganizer || // Pure organizer record with this flag
-        user.organizerTypes || // Has organizer types defined
-        (user.firebaseUserId && user.fullName) // Has both fields (likely an organizer)
-      );
-      applySearch(organizerUsers, searchTerm);
-    } else if (newValue === 2) { // Admins
-      // Consider users as admins if they have admin roles or flags
-      const adminUsers = users.filter(user => 
-        // Check for admin roles
-        user.roleIds?.some(role => 
-          (typeof role === 'object' && 
-          (role.roleName === 'SystemAdmin' || role.roleName === 'RegionalAdmin'))
-        ) ||
-        // Or check for admin flags
-        user.isAdmin === true ||
-        user.localAdminInfo?.isActive === true
-      );
-      applySearch(adminUsers, searchTerm);
+    try {
+      // Refresh data before filtering to ensure we have the latest data
+      // Use a timestamp to force cache busting
+      await refreshUsers();
+      
+      // After refreshing, filter users based on tab
+      if (newValue === 0) { // All Users
+        filterUsers(searchTerm);
+      } else if (newValue === 1) { // Organizers
+        console.log("Debugging user records with regionalOrganizerInfo:");
+        users.forEach(user => {
+          if (user.regionalOrganizerInfo && Object.keys(user.regionalOrganizerInfo).length > 0) {
+            console.log(`User ${user.firebaseUserId || user._id}: organizerId=${user.regionalOrganizerInfo.organizerId || 'none'}`);
+          }
+        });
+
+        // Filter users who have a valid organizerId in their regionalOrganizerInfo
+        const organizerUsers = users.filter(user => {
+          const hasOrganizerId = user.regionalOrganizerInfo && 
+            user.regionalOrganizerInfo.organizerId && 
+            user.regionalOrganizerInfo.organizerId !== null &&
+            user.regionalOrganizerInfo.organizerId !== undefined;
+            
+          // Log debugging information for each potential organizer
+          if (hasOrganizerId) {
+            console.log(`Found organizer: ${user.firebaseUserId}, organizerId: ${
+              typeof user.regionalOrganizerInfo.organizerId === 'object' 
+              ? user.regionalOrganizerInfo.organizerId._id 
+              : user.regionalOrganizerInfo.organizerId
+            }`);
+          }
+          
+          return hasOrganizerId;
+        });
+        
+        console.log(`Found ${organizerUsers.length} users with valid organizerId in regionalOrganizerInfo`);
+        applySearch(organizerUsers, searchTerm);
+      } else if (newValue === 2) { // Admins
+        // Consider users as admins if they have admin roles or flags
+        const adminUsers = users.filter(user => 
+          // Check for admin roles
+          user.roleIds?.some(role => 
+            (typeof role === 'object' && 
+            (role.roleName === 'SystemAdmin' || role.roleName === 'RegionalAdmin'))
+          ) ||
+          // Or check for admin flags
+          user.isAdmin === true ||
+          user.localAdminInfo?.isActive === true
+        );
+        applySearch(adminUsers, searchTerm);
+      }
+    } catch (error) {
+      console.error(`Error refreshing data during tab change:`, error);
     }
   };
   
@@ -508,22 +527,28 @@ export default function UsersPage() {
     
     // Apply tab filtering
     if (tabValue === 1) { // Organizers
-      // Filter to show only organizers
-      filtered = filtered.filter(user => 
-        // Direct from organizers collection
-        user.source === 'organizers' ||
-        // Standard user with organizer connection
-        user.regionalOrganizerInfo?.organizerId || 
-        // Pure organizer records
-        user.isActiveAsOrganizer || 
-        // Has organizer types defined
-        user.organizerTypes || 
-        // Organizer record pattern
-        (user.fullName && (user.shortName || user.loginId)) || 
-        // Explicitly marked as organizer
-        user.isOrganizer === true
-      );
+      // Filter to show only users with valid organizerId in regionalOrganizerInfo
+      filtered = filtered.filter(user => {
+        const hasOrganizerId = user.regionalOrganizerInfo && 
+          user.regionalOrganizerInfo.organizerId && 
+          user.regionalOrganizerInfo.organizerId !== null &&
+          user.regionalOrganizerInfo.organizerId !== undefined;
+        
+        return hasOrganizerId;
+      });
       console.log(`Found ${filtered.length} users matching organizer criteria`);
+      
+      // Debug: log all filtered organizer users
+      if (filtered.length > 0) {
+        console.log("Organizers found:");
+        filtered.forEach(user => {
+          console.log(`  - ${user.firebaseUserId || user._id}: ${user.displayName}, organizerId: ${
+            typeof user.regionalOrganizerInfo.organizerId === 'object' 
+            ? user.regionalOrganizerInfo.organizerId._id 
+            : user.regionalOrganizerInfo.organizerId
+          }`);
+        });
+      }
     } else if (tabValue === 2) { // Admins
       // Include all possible admin indicators
       filtered = filtered.filter(user => 
@@ -1046,8 +1071,24 @@ export default function UsersPage() {
 
   // Define columns for All Users tab
   const allUsersColumns = [
-    { field: 'displayName', headerName: 'Name', flex: 1 },
-    { field: 'email', headerName: 'Email', flex: 1 },
+    { 
+      field: 'displayName', 
+      headerName: 'Name', 
+      flex: 1,
+      renderCell: (params) => {
+        // Always use Firebase displayName if available
+        return <span>{params.row.firebaseUserInfo?.displayName || params.row.displayName}</span>;
+      }
+    },
+    { 
+      field: 'email', 
+      headerName: 'Email', 
+      flex: 1,
+      renderCell: (params) => {
+        // Always use Firebase email if available
+        return <span>{params.row.firebaseUserInfo?.email || params.row.email}</span>;
+      }
+    },
     { field: 'firebaseUserId', headerName: 'Firebase ID', flex: 1 },
     { field: 'roleNames', headerName: 'Roles', flex: 1 },
     { 
@@ -1124,8 +1165,24 @@ export default function UsersPage() {
   
   // Define columns for Organizer tab
   const organizerColumns = [
-    { field: 'displayName', headerName: 'Name', flex: 1 },
-    { field: 'email', headerName: 'Email', flex: 1 },
+    { 
+      field: 'displayName', 
+      headerName: 'Name', 
+      flex: 1,
+      renderCell: (params) => {
+        // Always use Firebase displayName if available
+        return <span>{params.row.firebaseUserInfo?.displayName || params.row.displayName}</span>;
+      }
+    },
+    { 
+      field: 'email', 
+      headerName: 'Email', 
+      flex: 1,
+      renderCell: (params) => {
+        // Always use Firebase email if available
+        return <span>{params.row.firebaseUserInfo?.email || params.row.email}</span>;
+      }
+    },
     { field: 'firebaseUserId', headerName: 'Firebase ID', width: 180 },
     { 
       field: 'organizerId', 
@@ -1236,8 +1293,24 @@ export default function UsersPage() {
   
   // Define columns for Admin tab
   const adminColumns = [
-    { field: 'displayName', headerName: 'Name', flex: 1 },
-    { field: 'email', headerName: 'Email', flex: 1 },
+    { 
+      field: 'displayName', 
+      headerName: 'Name', 
+      flex: 1,
+      renderCell: (params) => {
+        // Always use Firebase displayName if available
+        return <span>{params.row.firebaseUserInfo?.displayName || params.row.displayName}</span>;
+      }
+    },
+    { 
+      field: 'email', 
+      headerName: 'Email', 
+      flex: 1,
+      renderCell: (params) => {
+        // Always use Firebase email if available
+        return <span>{params.row.firebaseUserInfo?.email || params.row.email}</span>;
+      }
+    },
     { field: 'firebaseUserId', headerName: 'Firebase ID', width: 180 },
     { 
       field: 'adminType',

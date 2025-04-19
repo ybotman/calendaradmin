@@ -131,7 +131,7 @@ async function main() {
               }
               
               console.log(`Using collection: ${userCollection}`);
-              const UserLoginModel = mongoose.model('UserLogin', new mongoose.Schema({}, { strict: false }), userCollection);
+              const UserLoginModel = mongoose.model('UserLogins', new mongoose.Schema({}, { strict: false }), userCollection);
               
               // Try with and without appId filter
               let query = {};

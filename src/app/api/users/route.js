@@ -21,6 +21,16 @@ export async function GET(request) {
     // Fetch users from backend
     const response = await axios.get(`${BE_URL}/api/userlogins/all?${queryString}`);
     
+    // Log users with organizer connections
+    const usersWithOrganizers = response.data.filter(user => 
+      user.regionalOrganizerInfo && user.regionalOrganizerInfo.organizerId
+    );
+    
+    console.log(`API: Found ${usersWithOrganizers.length} users with organizer connections`);
+    usersWithOrganizers.forEach(user => {
+      console.log(`API: User ${user.firebaseUserId} has organizerId: ${user.regionalOrganizerInfo.organizerId}`);
+    });
+    
     // Return the data directly
     return NextResponse.json(response.data);
   } catch (error) {

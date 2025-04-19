@@ -29,7 +29,7 @@ export async function GET() {
         status: 'Firebase Admin SDK is initialized but Auth is not available',
         possible_causes: [
           'Firebase Admin SDK initialization is incomplete',
-          'Firebase service account doesn't have auth permissions'
+          'Firebase service account does not have auth permissions'
         ]
       });
     }
@@ -59,7 +59,7 @@ export async function GET() {
         error: authError.message,
         code: authError.code,
         possible_causes: [
-          'Firebase service account doesn't have required permissions',
+          'Firebase service account does not have required permissions',
           'Network connectivity issues to Firebase',
           'Project quotas or limits reached'
         ]

@@ -40,6 +40,13 @@ const UserLoginSchema = new mongoose.Schema({
     allowedCities: [{ type: mongoose.Schema.Types.ObjectId, ref: "Cities" }],
     allowedDivisions: [{ type: mongoose.Schema.Types.ObjectId, ref: "Divisions" }],
     allowedRegions: [{ type: mongoose.Schema.Types.ObjectId, ref: "Regions" }],
+    organizerCommunicationSettingsAdmin: {
+      messagePrimaryMethod: {
+        type: String,
+        enum: ["app", "text", "email", "social"],
+        default: "app",
+      },
+    },
   },
   localAdminInfo: {
     isApproved: { type: Boolean, default: false },
@@ -55,4 +62,4 @@ const UserLoginSchema = new mongoose.Schema({
   updatedAt: { type: Date, default: Date.now },
 });
 
-export default mongoose.models.UserLogins || mongoose.model('UserLogins', UserLoginSchema);
+export default mongoose.models.UserLogins || mongoose.model('UserLogins', UserLoginSchema, 'userlogins');

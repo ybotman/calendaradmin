@@ -3,12 +3,12 @@ import connectToDatabase from '@/lib/mongodb';
 import mongoose from 'mongoose';
 
 // Function to get a MongoDB model for UserLogins
-async function getUserLoginModel() {
+async function getUserLoginsModel() {
   await connectToDatabase();
   
   try {
     // Return existing model if it's already defined
-    return mongoose.model('UserLogin');
+    return mongoose.model('UserLogins');
   } catch (e) {
     // If model doesn't exist, define it with a minimal schema
     const schema = new mongoose.Schema({
@@ -34,9 +34,9 @@ async function getUserLoginModel() {
         isEnabled: Boolean,
         isActive: Boolean
       }
-    }, { collection: 'userLogins', strict: false });
+    }, { collection: 'userlogins', strict: false });
     
-    return mongoose.model('UserLogin', schema);
+    return mongoose.model('UserLogins', schema);
   }
 }
 
@@ -167,7 +167,7 @@ export async function POST(request) {
     await connectToDatabase();
     
     // Get models
-    const UserLogin = await getUserLoginModel();
+    const UserLogins = await getUserLoginsModel();
     const Role = await getRoleModel();
     
     // Find the default user role
@@ -224,7 +224,7 @@ export async function POST(request) {
         }
         
         // Check if user already exists
-        const existingUser = await UserLogin.findOne({ firebaseUserId: uid, appId });
+        const existingUser = await UserLogins.findOne({ firebaseUserId: uid, appId });
         
         if (existingUser) {
           // Update existing user
@@ -275,7 +275,7 @@ export async function POST(request) {
           stats.details.push({ uid, action: 'updated', email });
         } else {
           // Create new user
-          const newUser = new UserLogin({
+          const newUser = new UserLogins({
             firebaseUserId: uid,
             appId,
             active: !disabled,
@@ -290,6 +290,12 @@ export async function POST(request) {
               isActive: !disabled,
               isApproved: true, // Auto-approve new Firebase users
               isEnabled: true    // Auto-enable new Firebase users
+            },
+            // Add default regionalOrganizerInfo with required fields
+            regionalOrganizerInfo: {
+              organizerCommunicationSettingsAdmin: {
+                messagePrimaryMethod: "app"
+              }
             },
             roleIds: userRole ? [userRole._id] : []
           });
@@ -338,24 +344,24 @@ export async function GET(request) {
     // Connect to MongoDB
     await connectToDatabase();
     
-    // Get UserLogin model
-    const UserLogin = await getUserLoginModel();
+    // Get UserLogins model
+    const UserLogins = await getUserLoginsModel();
     
     // Count users by type
-    const totalUsers = await UserLogin.countDocuments({ appId });
-    const tempUsers = await UserLogin.countDocuments({ 
+    const totalUsers = await UserLogins.countDocuments({ appId });
+    const tempUsers = await UserLogins.countDocuments({ 
       appId, 
       firebaseUserId: { $regex: '^temp_' } 
     });
     const realUsers = totalUsers - tempUsers;
     
     // Get sample of each type
-    const realUsersSample = await UserLogin.find({ 
+    const realUsersSample = await UserLogins.find({ 
       appId,
       firebaseUserId: { $not: { $regex: '^temp_' } }
     }).limit(5).sort({ createdAt: -1 });
     
-    const tempUsersSample = await UserLogin.find({ 
+    const tempUsersSample = await UserLogins.find({ 
       appId,
       firebaseUserId: { $regex: '^temp_' }
     }).limit(5).sort({ createdAt: -1 });

@@ -11,13 +11,13 @@ import {
   getMasteredCityModel 
 } from '@/lib/models';
 
-// Create a model for UserLogin - used for direct deletion
-async function getUserLoginModel() {
+// Create a model for UserLogins - used for direct deletion
+async function getUserLoginsModel() {
   await connectToDatabase();
   
   try {
     // Return existing model if it's already defined
-    return mongoose.model('UserLogin');
+    return mongoose.model('UserLogins');
   } catch (e) {
     // If model doesn't exist, define it with a minimal schema
     const schema = new mongoose.Schema({
@@ -26,9 +26,9 @@ async function getUserLoginModel() {
       active: Boolean,
       // Using strict: false allows us to work with documents
       // that might have fields not defined in the schema
-    }, { collection: 'userLogins', strict: false });
+    }, { collection: 'userlogins', strict: false });
     
-    return mongoose.model('UserLogin', schema);
+    return mongoose.model('UserLogins', schema);
   }
 }
 
@@ -92,7 +92,7 @@ export async function POST(request) {
         await connectToDatabase();
         
         // Get the necessary models
-        const UserLogin = await getUserLoginModel();
+        const UserLogins = await getUserLoginsModel();
         const Organizer = await getOrganizerModel();
         
         // Convert organizerId to ObjectId if needed
@@ -132,7 +132,7 @@ export async function POST(request) {
         // Next, find the user
         let user;
         try {
-          user = await UserLogin.findOne({ firebaseUserId, appId });
+          user = await UserLogins.findOne({ firebaseUserId, appId });
         } catch (findUserError) {
           console.error('Error finding user:', findUserError);
           return NextResponse.json({
@@ -244,10 +244,10 @@ export async function POST(request) {
         await connectToDatabase();
         
         // Get the user model
-        const UserLogin = await getUserLoginModel();
+        const UserLogins = await getUserLoginsModel();
         
         // Delete all users with temp_ prefix in firebaseUserId
-        const result = await UserLogin.deleteMany({
+        const result = await UserLogins.deleteMany({
           firebaseUserId: { $regex: '^temp_' },
           appId: appId
         });
@@ -285,7 +285,7 @@ export async function POST(request) {
       await connectToDatabase();
       
       // Get the user model
-      const UserLogin = await getUserLoginModel();
+      const UserLogins = await getUserLoginsModel();
       
       // Convert IDs to ObjectIds where possible
       const objectIds = userIds.map(id => {
@@ -308,7 +308,7 @@ export async function POST(request) {
       }
       
       // Delete matching users
-      const result = await UserLogin.deleteMany(query);
+      const result = await UserLogins.deleteMany(query);
       
       return NextResponse.json({
         success: true,
@@ -353,7 +353,7 @@ export async function DELETE(request) {
       await connectToDatabase();
       
       // Get the user model
-      const UserLogin = await getUserLoginModel();
+      const UserLogins = await getUserLoginsModel();
       
       // Attempt to convert to ObjectId (in case it's a string ID)
       let objectId;
@@ -365,7 +365,7 @@ export async function DELETE(request) {
       }
       
       // Try both the string ID and ObjectId to be safe
-      const result = await UserLogin.deleteOne({
+      const result = await UserLogins.deleteOne({
         $or: [
           { _id: objectId },
           { _id: userId }

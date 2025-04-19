@@ -13,17 +13,17 @@ export async function POST(request) {
     const body = await request.json();
     const appId = body.appId || '1';
     
-    // Create a minimal UserLogin schema that can access the collection
-    const UserLoginSchema = new mongoose.Schema({
+    // Create a minimal UserLogins schema that can access the collection
+    const UserLoginsSchema = new mongoose.Schema({
       appId: String,
       firebaseUserId: String,
       auditLog: Array,
-    }, { collection: 'userLogins', strict: false });
+    }, { collection: 'userlogins', strict: false });
     
-    const UserLogin = mongoose.models.UserLogin || mongoose.model('UserLogin', UserLoginSchema);
+    const UserLogins = mongoose.models.UserLogins || mongoose.model('UserLogins', UserLoginsSchema);
     
     // Find all users with the specified appId
-    const users = await UserLogin.find({ appId });
+    const users = await UserLogins.find({ appId });
     console.log(`Found ${users.length} users with appId ${appId}`);
     
     // Stats to track the operation
@@ -54,7 +54,7 @@ export async function POST(request) {
           
           // Save user without triggering the pre-save hook
           // This is important to prevent creating new audit log entries
-          await UserLogin.updateOne(
+          await UserLogins.updateOne(
             { _id: user._id },
             { $set: { auditLog: [] } }
           );
@@ -91,17 +91,17 @@ export async function GET() {
   try {
     await connectToDatabase();
     
-    // Create a minimal UserLogin schema
-    const UserLoginSchema = new mongoose.Schema({
+    // Create a minimal UserLogins schema
+    const UserLoginsSchema = new mongoose.Schema({
       appId: String,
       firebaseUserId: String,
       auditLog: Array,
-    }, { collection: 'userLogins', strict: false });
+    }, { collection: 'userlogins', strict: false });
     
-    const UserLogin = mongoose.models.UserLogin || mongoose.model('UserLogin', UserLoginSchema);
+    const UserLogins = mongoose.models.UserLogins || mongoose.model('UserLogins', UserLoginsSchema);
     
     // Get stats about audit logs
-    const allUsers = await UserLogin.find({});
+    const allUsers = await UserLogins.find({});
     const usersWithAuditLogs = allUsers.filter(user => user.auditLog && user.auditLog.length > 0);
     
     // Calculate total entries and rough size estimate
