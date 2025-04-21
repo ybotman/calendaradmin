@@ -6,11 +6,15 @@
   "type": "module",
   "scripts": {
     "dev": "next dev -p 3003",
+    "dev:mem": "NODE_OPTIONS=\"--max-old-space-size=4096\" next dev -p 3003",
     "build": "next build",
+    "build:mem": "NODE_OPTIONS=\"--max-old-space-size=4096\" next build",
     "start": "next start -p 3003",
+    "start:mem": "NODE_OPTIONS=\"--max-old-space-size=4096\" next start -p 3003",
     "lint": "next lint",
     "format": "prettier --write .",
-    "sync-models": "node scripts/syncModels.js"
+    "sync-models": "node scripts/syncModels.js",
+    "sync-models:mem": "NODE_OPTIONS=\"--max-old-space-size=4096\" node scripts/syncModels.js"
   },
   "engines": {
     "node": ">=18.0.0"

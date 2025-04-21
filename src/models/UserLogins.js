@@ -10,6 +10,11 @@ const UserLoginSchema = new mongoose.Schema({
     required: true,
     default: [],
   },
+  firebaseUserInfo: {
+    email: { type: String },
+    displayName: { type: String },
+    lastSyncedAt: { type: Date, default: Date.now }
+  },
   localUserInfo: {
     isApproved: { type: Boolean, default: true },
     isEnabled: { type: Boolean, default: true },
