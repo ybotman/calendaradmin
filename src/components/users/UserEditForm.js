@@ -90,16 +90,28 @@ export default function UserEditForm({ user, roles, onSubmit }) {
           // Continue to fallback approach
         }
         
-        // Fallback - try fetching directly from backend
+        // Fallback - try fetching directly from backend but using the correct endpoint
         try {
           const BE_URL = process.env.NEXT_PUBLIC_BE_URL || 'http://localhost:3010';
-          const directResponse = await axios.get(`${BE_URL}/api/organizers/all?appId=${appId}&isActive=true`);
+          // Using the standard endpoint with query params, not '/all'
+          const directResponse = await axios.get(`${BE_URL}/api/organizers?appId=${appId}&isActive=true`);
           
-          if (directResponse.data && Array.isArray(directResponse.data)) {
-            console.log(`Loaded ${directResponse.data.length} organizers from direct backend call`);
-            setOrganizers(directResponse.data);
+          if (directResponse.data) {
+            // Handle paginated response format
+            if (directResponse.data.organizers && Array.isArray(directResponse.data.organizers)) {
+              console.log(`Loaded ${directResponse.data.organizers.length} organizers from direct backend call (paginated format)`);
+              setOrganizers(directResponse.data.organizers);
+            } 
+            // Handle direct array format
+            else if (Array.isArray(directResponse.data)) {
+              console.log(`Loaded ${directResponse.data.length} organizers from direct backend call`);
+              setOrganizers(directResponse.data);
+            } else {
+              console.error('Invalid organizers data format from direct backend call');
+              setOrganizers([]);
+            }
           } else {
-            console.error('Invalid organizers data from direct backend call:', directResponse.data);
+            console.error('No data returned from direct backend call');
             setOrganizers([]);
           }
         } catch (directError) {
@@ -425,7 +437,9 @@ export default function UserEditForm({ user, roles, onSubmit }) {
                   }
                   label={
                     <Box>
-                      <Typography variant="body1">{role.roleName}</Typography>
+                      <Typography variant="body1">
+                        {role.roleName} {role.roleNameCode ? `(${role.roleNameCode})` : ''}
+                      </Typography>
                       <Typography variant="caption" color="text.secondary">
                         {role.description}
                       </Typography>

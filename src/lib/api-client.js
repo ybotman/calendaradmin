@@ -88,18 +88,42 @@ export const usersApi = {
   },
   
   updateUser: async (userData) => {
-    const { firebaseUserId, appId = '1', ...data } = userData;
-    console.log('Sending update to backend:', {
-      firebaseUserId,
-      appId,
-      ...data
-    });
-    const response = await apiClient.put('/api/userlogins/updateUserInfo', {
-      firebaseUserId,
-      appId,
-      ...data
-    });
-    return response.data;
+    try {
+      const { firebaseUserId, appId = '1', ...data } = userData;
+      
+      // Log what we're sending for debugging
+      console.log('Sending update to backend:', {
+        firebaseUserId,
+        appId,
+        ...data
+      });
+      
+      // First try using direct API implementation - PUT to /userlogins/firebase/{id} instead
+      try {
+        const response = await apiClient.put(`/api/userlogins/firebase/${firebaseUserId}`, {
+          appId,
+          ...data
+        });
+        console.log('Update successful through firebase ID endpoint');
+        return response.data;
+      } catch (directError) {
+        console.warn('First update approach failed:', directError.message);
+        // If this fails, try the updateUserInfo endpoint
+        
+        const response = await apiClient.put('/api/userlogins/updateUserInfo', {
+          firebaseUserId,
+          appId,
+          ...data
+        });
+        return response.data;
+      }
+    } catch (error) {
+      console.error('All update approaches failed:', error);
+      if (error.response && error.response.data) {
+        console.error('Backend error details:', error.response.data);
+      }
+      throw error;
+    }
   },
   
   updateUserRoles: async (firebaseUserId, roleIds, appId = '1') => {

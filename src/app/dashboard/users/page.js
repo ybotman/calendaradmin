@@ -15,7 +15,6 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
-  Tooltip,
   Grid,
   FormControlLabel,
   Switch,
@@ -25,7 +24,6 @@ import { DataGrid } from '@mui/x-data-grid';
 import SearchIcon from '@mui/icons-material/Search';
 import EditIcon from '@mui/icons-material/Edit';
 import PersonAddIcon from '@mui/icons-material/Add';
-import LinkIcon from '@mui/icons-material/Link';
 import DeleteIcon from '@mui/icons-material/Delete';
 import UserEditForm from '@/components/users/UserEditForm';
 import { usersApi, rolesApi } from '@/lib/api-client';
@@ -59,7 +57,6 @@ export default function UsersPage() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [addUserDialogOpen, setAddUserDialogOpen] = useState(false);
   const [roles, setRoles] = useState([]);
-  const [creatingOrganizer, setCreatingOrganizer] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
   const [newUser, setNewUser] = useState({
     email: '',
@@ -70,34 +67,21 @@ export default function UsersPage() {
     isOrganizer: false,
   });
 
+  // Backend API base URL from environment
+  const BE_URL = process.env.NEXT_PUBLIC_BE_URL;
+
   // Helper function to convert role IDs to role codes
   const getRoleCodeForId = (roleId) => {
     try {
-      // Only process if we have roles loaded
       if (!roles?.roles || !Array.isArray(roles.roles) || roles.roles.length === 0) {
-        console.log(`No roles available to match ID ${roleId}`);
         return '';
       }
       
-      // For NamedUser hardcoded ID, return "NU" directly
-      if (roleId === '66cb85ac74dca51e34e268ed') {
-        return 'NU';
-      }
-      
-      // Find the matching role
       const role = roles.roles.find(r => r._id === roleId);
-      
-      if (role) {
-        console.log(`Matched role ${roleId} to code ${role.roleNameCode || 'unknown code'}`);
-      } else {
-        console.log(`No match found for role ID ${roleId}`);
-      }
-      
-      // Return the roleNameCode if found, empty string otherwise
-      return role?.roleNameCode || '';
+      return role?.roleNameCode || '?';
     } catch (error) {
       console.error('Error in getRoleCodeForId:', error);
-      return '';
+      return '?';
     }
   };
   
@@ -107,22 +91,16 @@ export default function UsersPage() {
       setLoading(true);
       
       // Add a small delay to ensure backend has time to process any updates
-      // This helps with the refresh issues between tabs
       await new Promise(resolve => setTimeout(resolve, 100));
       
-      // Use timestamp to force fresh data - add randomness to avoid cache
+      // Use timestamp to force fresh data
       const timestamp = new Date().getTime() + Math.floor(Math.random() * 1000);
       
       let usersData = [];
-      let organizersData = [];
-      
-      // Access the current roles list from state to use for lookups
-      const currentRoles = roles;
       
       try {
-        // Only fetch user login records - we no longer need to combine with organizers
         console.log('Fetching user login records...');
-        const usersResponse = await fetch(`http://localhost:3010/api/userlogins/all?appId=${appId}&_=${timestamp}`);
+        const usersResponse = await fetch(`${BE_URL}/api/userlogins/all?appId=${appId}&_=${timestamp}`);
         
         if (usersResponse.ok) {
           const response = await usersResponse.json();
@@ -140,99 +118,22 @@ export default function UsersPage() {
           }
         } else {
           console.warn(`User login API returned status ${usersResponse.status}`);
-          
-          // Try a direct API call without timestamp to see if that works
-          try {
-            console.log('Trying direct API call without timestamp...');
-            const directApiResponse = await fetch(`http://localhost:3010/api/userlogins/all?appId=${appId}`);
-            
-            if (directApiResponse.ok) {
-              const response = await directApiResponse.json();
-              
-              // Handle paginated response format
-              if (response && response.users) {
-                usersData = response.users;
-                console.log(`Direct API call returned ${usersData.length} user records (paginated format)`);
-              } else if (Array.isArray(response)) {
-                usersData = response;
-                console.log(`Direct API call returned ${usersData.length} user records (array format)`);
-              } else {
-                console.warn(`Direct API call returned unexpected format:`, response);
-                usersData = [];
-              }
-            } else {
-              console.warn(`Direct API call also failed with status ${directApiResponse.status}`);
-              usersData = [];
-            }
-          } catch (directApiError) {
-            console.error('Error with direct API call:', directApiError);
-            usersData = [];
-          }
+          usersData = [];
         }
       } catch (fetchError) {
-        console.error('Error fetching users/organizers:', fetchError);
-        
-        // If we're in development mode, provide fallback demo data
-        if (process.env.NODE_ENV === 'development') {
-          console.log('Using demo data since backend is unavailable');
-          usersData = [
-            {
-              _id: "1",
-              firebaseUserId: "demouser1",
-              localUserInfo: { firstName: "John", lastName: "Demo" },
-              active: true,
-              roleIds: [{_id: "66cb85ac74dca51e34e268ef", roleName: "User"}],
-              regionalOrganizerInfo: {}
-            },
-            {
-              _id: "2",
-              firebaseUserId: "demouser2",
-              localUserInfo: { firstName: "Admin", lastName: "User" },
-              active: true,
-              roleIds: [{_id: "66cb85ac74dca51e34e268ec", roleName: "SystemAdmin"}],
-              regionalOrganizerInfo: {}
-            },
-            {
-              _id: "3",
-              firebaseUserId: "demoorganizer",
-              localUserInfo: { firstName: "Organizer", lastName: "Demo" },
-              active: true,
-              roleIds: [{_id: "66cb85ac74dca51e34e268ed", roleName: "RegionalOrganizer"}],
-              regionalOrganizerInfo: { organizerId: "123", isActive: true, isApproved: true, isEnabled: true }
-            }
-          ];
-        } else {
-          // In production, rethrow to show proper error
-          throw fetchError;
-        }
+        console.error('Error fetching users:', fetchError);
+        usersData = [];
       }
       
       console.log(`Received ${usersData.length} users from backend`);
       
-      // Debug organizer information
-      const usersWithOrganizerInfo = usersData.filter(user => 
-        user.regionalOrganizerInfo && user.regionalOrganizerInfo.organizerId
-      );
-      
-      console.log(`Page: Found ${usersWithOrganizerInfo.length} users with organizer connections`);
-      
-      // Log the first 5 organizer connections in detail
-      usersWithOrganizerInfo.slice(0, 5).forEach(user => {
-        console.log(`Page: User ${user.firebaseUserId} has organizerId:`, user.regionalOrganizerInfo.organizerId);
-        console.log('Full regionalOrganizerInfo:', JSON.stringify(user.regionalOrganizerInfo, null, 2));
-      });
-      
       // Process users data to add display name and computed fields
       const processedUsers = usersData.map(user => {
         try {
-          // Check if this is a MongoDB document or plain object
           const userId = user._id || 'unknown';
-          
-          // Check if this record came from the organizers collection
           const isOrganizerRecord = user._isOrganizer === true;
           
-          // Handle different structures for 'active' property
-          // It could be at root level, in isActive, or in localUserInfo.isActive
+          // Handle active/inactive status
           const isActiveValue = user.active !== undefined 
             ? user.active 
             : user.isActive !== undefined
@@ -241,54 +142,54 @@ export default function UsersPage() {
                 ? user.localUserInfo.isActive
                 : user.isActiveAsOrganizer !== undefined
                   ? user.isActiveAsOrganizer
-                  : true; // Default to active if we can't find anything
+                  : false;
                 
-          // Always use Firebase display name if available, as requested
+          // Use Firebase display name if available
           const displayName = user.firebaseUserInfo?.displayName || 
-            user.fullName || // Use fullName if available
-            `${user.localUserInfo?.firstName || ''} ${user.localUserInfo?.lastName || ''}`.trim() || // Or build from firstName/lastName
-            user.shortName || // Or short name
-            user.loginId || // Or login ID
-            'Unnamed User'; // Fallback
+            user.fullName || 
+            `${user.localUserInfo?.firstName || ''} ${user.localUserInfo?.lastName || ''}`.trim() || 
+            user.shortName || 
+            user.loginId || 
+            '';
 
-          // Always use Firebase email if available, as requested
-          const email = user.firebaseUserInfo?.email || // First check firebaseUserInfo
-            user.publicEmail || // Then publicEmail
-            user.loginId ? `${user.loginId}@example.com` : // Use loginId if available
-            'No email'; // Fallback
+          // Use Firebase email if available
+          const email = user.firebaseUserInfo?.email || 
+            user.publicEmail || 
+            user.loginId ? `${user.loginId}@example.com` : 
+            '';
             
-          // Handle role names - for organizer records, add "Organizer" role
-          let roleNames = '';
+          // Handle role name codes
+          let roleNameCodes = '';
           if (isOrganizerRecord) {
-            roleNames = 'Organizer';
+            roleNameCodes = 'RO'; // Organizer role code
           } else {
             // Get all role IDs from the user
             const roleIds = (user.roleIds || []).map(role => 
               typeof role === 'object' ? role._id : role
             );
             
-            // Simply join the IDs with commas or show "No roles" if empty
-            roleNames = roleIds.length > 0 ? roleIds.join(', ') : 'No roles';
-            
-            // Debug for first few users processed
-            if (usersData.indexOf(user) < 5) {
-              console.log(`Role IDs for user ${user._id?.substring(0,8) || 'unknown'}:`, roleIds);
+            // Convert roleIds to roleNameCodes
+            if (roleIds.length === 0) {
+              roleNameCodes = ''; // Empty string if no roles
+            } else {
+              const roleCodes = roleIds.map(roleId => {
+                const code = getRoleCodeForId(roleId);
+                return code || '?'; // Use ? for any unrecognized role IDs
+              });
+              roleNameCodes = roleCodes.join(', ');
             }
           }
           
-          // For organizer records, create a synthetic regionalOrganizerInfo
+          // For organizer records, create a regionalOrganizerInfo
           let regionalOrganizerInfo = user.regionalOrganizerInfo || {};
           if (isOrganizerRecord) {
             regionalOrganizerInfo = {
-              organizerId: user._id, // The organizer record itself is the organizerId
+              organizerId: user._id,
               isApproved: user.isEnabled !== false,
               isEnabled: user.isEnabled !== false,
               isActive: user.isActive !== false
             };
           }
-          
-          // Add some diagnostics
-          console.log(`${isOrganizerRecord ? 'Organizer' : 'User'} ${userId}: name=${displayName}, active=${isActiveValue}, source=${isOrganizerRecord ? 'organizers' : 'userLogins'}`);
           
           // Determine if user has organizer profile
           const hasOrganizerProfile = !!(user.regionalOrganizerInfo && user.regionalOrganizerInfo.organizerId);
@@ -298,19 +199,16 @@ export default function UsersPage() {
             id: userId, // For DataGrid key
             displayName,
             email,
-            roleNames,
+            roleNameCodes,
             loginUserName: user.localUserInfo?.loginUserName || '',
             isActive: isActiveValue ? 'Active' : 'Inactive',
-            // Ensure these objects exist to prevent UI errors
-            firebaseUserId: user.firebaseUserId || '', // Make sure firebaseUserId is always a string
+            firebaseUserId: user.firebaseUserId || '',
             localUserInfo: user.localUserInfo || {},
             regionalOrganizerInfo: user.regionalOrganizerInfo || {},
             localAdminInfo: user.localAdminInfo || {},
-            // Add computed flag for user status
             isRealUser: !!user.firebaseUserId && !user.firebaseUserId.startsWith('temp_'),
             isOrganizer: hasOrganizerProfile,
-            // All records now come from userlogins collection
-            source: 'userLogins' 
+            source: 'userLogins'
           };
         } catch (err) {
           console.error('Error processing user:', err, user);
@@ -318,9 +216,9 @@ export default function UsersPage() {
           // Return a minimal valid user object to prevent UI crashes
           return {
             id: user._id || Math.random().toString(36),
-            displayName: 'Error Processing User',
-            email: 'error@example.com',
-            isActive: 'Unknown',
+            displayName: '',
+            email: '',
+            isActive: '',
             firebaseUserId: '',
             localUserInfo: {},
             regionalOrganizerInfo: {},
@@ -336,7 +234,7 @@ export default function UsersPage() {
       setFilteredUsers(processedUsers);
       setLoading(false);
       
-      // Set a short timeout to reapply filters (sometimes needed for UI refresh)
+      // Set a short timeout to reapply filters
       setTimeout(() => {
         setFilteredUsers(prev => [...prev]); // Force re-render
       }, 100);
@@ -345,16 +243,9 @@ export default function UsersPage() {
     } catch (error) {
       console.error('Error fetching users:', error);
       setLoading(false);
-      
-      // In development mode, just log the error
-      if (process.env.NODE_ENV === 'development') {
-        console.error(`Failed to fetch users: ${error.message}`);
-      } else {
-        // In production, show alert
-        alert(`Failed to fetch users: ${error.message}`);
-      }
-      
-      throw error; // Rethrow for the caller to handle
+      setUsers([]);
+      setFilteredUsers([]);
+      throw error;
     }
   };
 
@@ -364,7 +255,7 @@ export default function UsersPage() {
       try {
         setLoading(true);
         
-        // Fetch roles first - with hardcoded fallback if backend is unreachable
+        // Fetch roles first
         const rolesData = await rolesApi.getRoles(appId);
         console.log("Roles data loaded:", rolesData);
         
@@ -372,7 +263,6 @@ export default function UsersPage() {
           console.log("Roles array:", rolesData.roles.map(r => ({id: r._id, code: r.roleNameCode})));
           setRoles(rolesData);
         } else if (Array.isArray(rolesData)) {
-          // Handle legacy format where rolesData is directly an array
           console.log("Roles array (legacy format):", rolesData.map(r => ({id: r._id, code: r.roleNameCode})));
           setRoles({ roles: rolesData });
         } else {
@@ -380,60 +270,14 @@ export default function UsersPage() {
           setRoles({ roles: [] });
         }
         
-        // Manually check the API to diagnose issues
-        try {
-          console.log("Directly checking the backend API...");
-          const directApiResponse = await fetch(`http://localhost:3010/api/userlogins/all?appId=${appId}`);
-          const apiData = await directApiResponse.json();
-          console.log(`Direct API call returned ${apiData.length} users`);
-          
-          // Add more detailed logging about the API response
-          if (apiData.length > 0) {
-            console.log("First 3 user IDs from API:", apiData.slice(0, 3).map(u => u._id));
-            console.log("Sample structure of first user:", {
-              _id: apiData[0]._id,
-              hasFirebaseId: !!apiData[0].firebaseUserId,
-              hasLocalInfo: !!apiData[0].localUserInfo,
-              fields: Object.keys(apiData[0])
-            });
-          }
-          
-          // Also directly call our frontend API for comparison
-          const frontendApiResponse = await fetch(`/api/users?appId=${appId}`);
-          const frontendData = await frontendApiResponse.json();
-          console.log(`Frontend API call returned ${frontendData.length} users`);
-        } catch (directError) {
-          console.warn("Error making direct API call:", directError);
-          // Non-blocking, just for diagnosis
-        }
-        
         // Then refresh users
-        try {
-          await refreshUsers();
-        } catch (userError) {
-          console.error('Error fetching users:', userError);
-          setLoading(false);
-          
-          // Set empty users array instead of showing an error
-          // This prevents the UI from crashing
-          setUsers([]);
-          setFilteredUsers([]);
-          
-          // Show a warning but don't block the UI
-          console.warn('Using demo data because backend is unavailable');
-        }
+        await refreshUsers();
       } catch (error) {
         console.error('Error initializing data:', error);
         setLoading(false);
-        
-        // Show a more helpful message
-        if (error.code === 'ERR_NETWORK') {
-          alert(`Backend server appears to be offline. Some functionality will be limited.`);
-        } else {
-          alert(`Failed to fetch data: ${error.message}`);
-        }
+        setUsers([]);
+        setFilteredUsers([]);
       } finally {
-        // Always make sure loading is false
         setLoading(false);
       }
     };
@@ -447,7 +291,6 @@ export default function UsersPage() {
     
     try {
       // Refresh data before filtering to ensure we have the latest data
-      // Use a timestamp to force cache busting
       await refreshUsers();
       
       // After refreshing, filter users based on tab
@@ -455,49 +298,24 @@ export default function UsersPage() {
         // No filtering for All Users tab
         filterUsers(searchTerm);
       } else if (newValue === 1) { // Organizers
-        console.log("Debugging user records with regionalOrganizerInfo:");
-        users.forEach(user => {
-          if (user.regionalOrganizerInfo && Object.keys(user.regionalOrganizerInfo).length > 0) {
-            console.log(`User ${user.firebaseUserId || user._id}: organizerId=${user.regionalOrganizerInfo.organizerId || 'none'}`);
-          }
-        });
-
         // Filter users who have a valid organizerId in their regionalOrganizerInfo
         const organizerUsers = users.filter(user => {
           const hasOrganizerId = user.regionalOrganizerInfo && 
             user.regionalOrganizerInfo.organizerId && 
             user.regionalOrganizerInfo.organizerId !== null &&
             user.regionalOrganizerInfo.organizerId !== undefined;
-            
-          // Log debugging information for each potential organizer
-          if (hasOrganizerId) {
-            console.log(`Found organizer: ${user.firebaseUserId}, organizerId: ${
-              typeof user.regionalOrganizerInfo.organizerId === 'object' 
-              ? user.regionalOrganizerInfo.organizerId._id 
-              : user.regionalOrganizerInfo.organizerId
-            }`);
-          }
           
           return hasOrganizerId;
         });
         
-        console.log(`Found ${organizerUsers.length} users with valid organizerId in regionalOrganizerInfo`);
         applySearch(organizerUsers, searchTerm);
       } else if (newValue === 2) { // Admins
-        // Consider users as admins if they have admin roles or flags
-        const adminUsers = users.filter(user => 
-          // Check for admin roles
-          (user.roleIds?.some(role => 
-            (typeof role === 'object' && 
-            (role.roleName === 'SystemAdmin' || role.roleName === 'RegionalAdmin'))
-          )) ||
-          // Or check for admin flags
-          user.isAdmin === true ||
-          user.localAdminInfo?.isApproved === true ||
-          user.localAdminInfo?.isActive === true
-        );
+        // Consider users as admins if they have admin role codes
+        const adminUsers = users.filter(user => {
+          const roleCodes = user.roleNameCodes?.split(', ') || [];
+          return roleCodes.includes('SA') || roleCodes.includes('RA');
+        });
         
-        console.log(`Found ${adminUsers.length} admin users`);
         applySearch(adminUsers, searchTerm);
       }
     } catch (error) {
@@ -617,48 +435,12 @@ export default function UsersPage() {
         
         return hasOrganizerId;
       });
-      console.log(`Found ${filtered.length} users matching organizer criteria`);
-      
-      // Debug: log all filtered organizer users
-      if (filtered.length > 0) {
-        console.log("Organizers found:");
-        filtered.forEach(user => {
-          console.log(`  - ${user.firebaseUserId || user._id}: ${user.displayName}, organizerId: ${
-            typeof user.regionalOrganizerInfo.organizerId === 'object' 
-            ? user.regionalOrganizerInfo.organizerId._id 
-            : user.regionalOrganizerInfo.organizerId
-          }`);
-        });
-      }
     } else if (tabValue === 2) { // Admins
-      // Include all possible admin indicators
-      filtered = filtered.filter(user => 
-        // Check for admin roles the standard way
-        (user.roleIds?.some(role => 
-          (typeof role === 'object' && 
-          (role.roleName === 'SystemAdmin' || role.roleName === 'RegionalAdmin'))
-        )) ||
-        // Or check for admin flags
-        user.isAdmin === true ||
-        user.localAdminInfo?.isApproved === true ||
-        user.localAdminInfo?.isActive === true ||
-        // Check if roleNames contains admin roles
-        user.roleNames?.includes('SystemAdmin') ||
-        user.roleNames?.includes('RegionalAdmin')
-      );
-      console.log(`Found ${filtered.length} users matching admin criteria`);
-    } else {
-      // All users tab - no filtering needed
-      console.log(`Showing all ${filtered.length} users in All Users tab`);
-      
-      // Adding a debug count of sources
-      const userSourceCount = filtered.reduce((count, user) => {
-        const source = user.source || 'unknown';
-        count[source] = (count[source] || 0) + 1;
-        return count;
-      }, {});
-      
-      console.log('Users by source:', userSourceCount);
+      // Filter admin users by role code
+      filtered = filtered.filter(user => {
+        const roleCodes = user.roleNameCodes?.split(', ') || [];
+        return roleCodes.includes('SA') || roleCodes.includes('RA');
+      });
     }
     
     // Apply search term filtering
@@ -668,29 +450,26 @@ export default function UsersPage() {
   // Apply search filter to the provided list
   const applySearch = (userList, term) => {
     if (!term) {
-      console.log(`Setting filtered users with ${userList.length} items`);
       setFilteredUsers(userList);
       return;
     }
     
     const lowerTerm = term.toLowerCase();
     const filtered = userList.filter(user => {
-      // Safely check each field to avoid errors with undefined values
       try {
         const nameMatch = user.displayName && user.displayName.toLowerCase().includes(lowerTerm);
         const emailMatch = user.email && user.email.toLowerCase().includes(lowerTerm);
-        const roleMatch = user.roleNames && user.roleNames.toLowerCase().includes(lowerTerm);
+        const roleMatch = user.roleNameCodes && user.roleNameCodes.toLowerCase().includes(lowerTerm);
         const idMatch = user.firebaseUserId && user.firebaseUserId.toLowerCase().includes(lowerTerm);
         const fullNameMatch = user.fullName && user.fullName.toLowerCase().includes(lowerTerm);
         
         return nameMatch || emailMatch || roleMatch || idMatch || fullNameMatch;
       } catch (err) {
         console.warn('Error filtering user:', err);
-        return false; // Skip items that cause errors
+        return false;
       }
     });
     
-    console.log(`Filtered ${userList.length} users down to ${filtered.length} matches for term: ${term}`);
     setFilteredUsers(filtered);
   };
 
@@ -724,13 +503,10 @@ export default function UsersPage() {
         localAdminInfo: updatedUser.localAdminInfo
       };
       
-      console.log('Updating user data:', userUpdateData);
-      
-      // Update user basic information directly to the backend
+      // Update user basic information
       await usersApi.updateUser(userUpdateData);
       
-      // Update user roles separately directly to the backend
-      console.log('Updating user roles:', roleIds);
+      // Update user roles separately
       await usersApi.updateUserRoles(updatedUser.firebaseUserId, roleIds, appId);
       
       // Refresh the users list
@@ -739,190 +515,14 @@ export default function UsersPage() {
       setDialogOpen(false);
       setEditingUser(null);
       setLoading(false);
-      
-      // No success message needed
     } catch (error) {
       console.error('Error updating user:', error);
       alert(`Error updating user: ${error.message}`);
       setLoading(false);
     }
   };
-
-  // Handle quick create organizer
-  const handleQuickCreateOrganizer = async (user) => {
-    try {
-      setSelectedUser(user);
-      setCreatingOrganizer(true);
-      
-      // Check if this user has a valid firebase ID (check if it's not a temp ID)
-      const isFirebaseUser = !user.firebaseUserId.startsWith('temp_');
-      
-      // Use the existing user's Firebase ID if available
-      const fullName = `${user.localUserInfo?.firstName || ''} ${user.localUserInfo?.lastName || ''}`.trim() || 'Unnamed Organizer';
-      const shortName = user.localUserInfo?.firstName || 'Unnamed';
-      
-      const organizerData = {
-        firebaseUserId: user.firebaseUserId,
-        linkedUserLogin: user._id,
-        appId: user.appId || '1',
-        fullName: fullName,
-        name: fullName, // Add name as well to ensure it's displayed in lists
-        shortName: shortName,
-        organizerRegion: "66c4d99042ec462ea22484bd", // US region default
-        isActive: true,
-        isEnabled: true,
-        wantRender: true,
-        organizerTypes: {
-          isEventOrganizer: true,
-          isVenue: false,
-          isTeacher: false,
-          isMaestro: false,
-          isDJ: false,
-          isOrchestra: false
-        }
-      };
-      
-      // Create the organizer
-      const response = await axios.post(`/api/organizers`, organizerData);
-      
-      console.log("Organizer created:", response.data);
-      
-      // Update user to include organizerId reference and organizer role
-      const userUpdateData = {
-        firebaseUserId: user.firebaseUserId,
-        appId: user.appId || '1',
-        regionalOrganizerInfo: {
-          ...user.regionalOrganizerInfo,
-          organizerId: response.data.organizer._id || response.data._id,
-          isApproved: true,
-          isEnabled: true,
-          isActive: true
-        }
-      };
-      
-      // Update user
-      await usersApi.updateUser(userUpdateData);
-      
-      // Find organizer role
-      const organizerRole = roles.find(role => role.roleName === 'RegionalOrganizer');
-      if (organizerRole) {
-        const roleIds = [...(user.roleIds || [])];
-        const roleObjectIds = roleIds.map(role => 
-          typeof role === 'object' ? role._id : role
-        );
-        
-        // Add organizer role if not already present
-        if (!roleObjectIds.includes(organizerRole._id)) {
-          roleObjectIds.push(organizerRole._id);
-          await usersApi.updateUserRoles(user.firebaseUserId, roleObjectIds, user.appId || '1');
-        }
-      }
-      
-      // Set a delay to ensure backend updates are processed
-      await new Promise(resolve => setTimeout(resolve, 500));
-      
-      // Force a full refresh of the user data with an anti-cache parameter
-      const timestamp = new Date().getTime();
-      const refreshedUsers = await usersApi.getUsers(appId, undefined, timestamp);
-      
-      // Process users data
-      const processedUsers = refreshedUsers.map(user => ({
-        ...user,
-        id: user._id,
-        displayName: `${user.localUserInfo?.firstName || ''} ${user.localUserInfo?.lastName || ''}`.trim() || 'Unnamed User',
-        email: user.firebaseUserInfo?.email || 'No email',
-        roleNames: (user.roleIds || [])
-          .map(role => typeof role === 'object' ? role.roleName : 'Unknown')
-          .join(', '),
-        isActive: user.active ? 'Active' : 'Inactive',
-        isOrganizer: user.regionalOrganizerInfo?.organizerId ? 'Yes' : 'No',
-        tempFirebaseId: user.firebaseUserId || '',
-      }));
-      
-      setUsers(processedUsers);
-      filterUsers(searchTerm);
-    } catch (error) {
-      console.error("Error creating organizer:", error);
-      
-      let errorMessage = 'Failed to create organizer';
-      if (error.response && error.response.data) {
-        errorMessage += `: ${error.response.data.message || JSON.stringify(error.response.data)}`;
-      } else {
-        errorMessage += `: ${error.message}`;
-      }
-      
-      alert(errorMessage);
-    } finally {
-      setCreatingOrganizer(false);
-      setSelectedUser(null);
-    }
-  };
-
-  // Handle delete organizer
-  const handleDeleteOrganizer = async (user) => {
-    try {
-      if (!user.regionalOrganizerInfo?.organizerId) {
-        alert('This user does not have an organizer to delete.');
-        return;
-      }
-
-      // Get confirmation
-      if (!window.confirm(`Are you sure you want to delete the organizer associated with ${user.displayName}?\nThis action cannot be undone.`)) {
-        return;
-      }
-
-      setSelectedUser(user);
-      setLoading(true);
-
-      // First, disconnect the organizer from the user
-      const userUpdateData = {
-        firebaseUserId: user.firebaseUserId,
-        appId: user.appId || '1',
-        regionalOrganizerInfo: {
-          ...user.regionalOrganizerInfo,
-          organizerId: null, // Remove the organizer reference
-          isApproved: false,
-          isEnabled: false,
-          isActive: false
-        }
-      };
-
-      // Update user to remove organizer connection
-      await usersApi.updateUser(userUpdateData);
-
-      // Now delete the organizer
-      let organizerId = user.regionalOrganizerInfo.organizerId;
-      if (typeof organizerId === 'object') {
-        // Handle the case where organizerId is an object with _id
-        organizerId = organizerId._id;
-      }
-
-      // Delete the organizer
-      await axios.delete(`${process.env.NEXT_PUBLIC_BE_URL || 'http://localhost:3010'}/api/organizers/${organizerId}?appId=${user.appId || '1'}`);
-
-      // Refresh users
-      await refreshUsers();
-      filterUsers(searchTerm);
-
-      alert('Organizer deleted successfully!');
-    } catch (error) {
-      console.error("Error deleting organizer:", error);
-      
-      let errorMessage = 'Failed to delete organizer';
-      if (error.response && error.response.data) {
-        errorMessage += `: ${error.response.data.message || JSON.stringify(error.response.data)}`;
-      } else {
-        errorMessage += `: ${error.message}`;
-      }
-      
-      alert(errorMessage);
-    } finally {
-      setLoading(false);
-      setSelectedUser(null);
-    }
-  };
   
-  // Handle delete user with proper organizer relationship cleanup
+  // Handle delete user
   const handleDeleteUser = async (user) => {
     try {
       // Get confirmation with clear warning
@@ -959,7 +559,7 @@ export default function UsersPage() {
           await axios.patch(`/api/organizers/${organizerId}`, {
             firebaseUserId: null,
             linkedUserLogin: null,
-            appId: user.appId || '1'
+            appId: user.appId || appId
           });
           
           console.log(`Successfully disconnected user from organizer ${organizerId}`);
@@ -970,7 +570,7 @@ export default function UsersPage() {
       }
 
       // Delete the user
-      await usersApi.deleteUser(user._id, user.appId || '1');
+      await usersApi.deleteUser(user._id, user.appId || appId);
 
       // Refresh the user list
       await refreshUsers();
@@ -994,11 +594,10 @@ export default function UsersPage() {
     }
   };
   
-  
   // Handle create new user
   const handleCreateUser = async () => {
     try {
-      // Basic validation - Just need email and names for direct backend creation
+      // Basic validation
       if (!newUser.email || !newUser.firstName || !newUser.lastName) {
         alert('Please fill in all required fields (Email, First name, Last name)');
         return;
@@ -1013,9 +612,6 @@ export default function UsersPage() {
       // Set loading state
       setLoading(true);
       
-      // Log what we're attempting to do
-      console.log(`Creating new user: ${newUser.email} (${newUser.firstName} ${newUser.lastName})`);
-      
       // Confirm that the user understands temp users
       if (!newUser.password || newUser.password.length === 0) {
         const confirm = window.confirm("You are creating a temporary user without Firebase authentication. This user won't be able to log in. Continue?");
@@ -1025,122 +621,99 @@ export default function UsersPage() {
         }
       }
       
-      // 1. Create user - direct backend call
-      try {
-        // Create user data
-        const userData = {
-          email: newUser.email,
-          password: newUser.password || '', // Password is optional, will create temp user if missing
-          firstName: newUser.firstName,
-          lastName: newUser.lastName,
-          appId: appId,
-          active: newUser.active
-        };
-        
-        // Make the API call directly to our backend
-        console.log('Sending user data to API:', userData);
-        const response = await axios.post('/api/users', userData);
-        console.log('User created response:', response.data);
-        
-        if (!response.data) {
-          throw new Error('No data returned from user creation API');
-        }
-        
-        // Get the newly created user data 
-        const createdUser = response.data;
-        
-        // If the user requested to create an organizer, do that now
-        if (newUser.isOrganizer && createdUser.firebaseUserId) {
-          try {
-            // Prepare organizer data
-            const organizerData = {
-              firebaseUserId: createdUser.firebaseUserId,
-              linkedUserLogin: createdUser._id,
-              appId: appId,
-              fullName: `${newUser.firstName} ${newUser.lastName}`.trim(),
-              shortName: newUser.firstName,
-              organizerRegion: "66c4d99042ec462ea22484bd", // US region default
-              isActive: true,
-              isEnabled: true,
-              wantRender: true,
-              organizerTypes: {
-                isEventOrganizer: true,
-                isVenue: false,
-                isTeacher: false,
-                isMaestro: false,
-                isDJ: false,
-                isOrchestra: false
-              }
-            };
-            
-            console.log('Creating organizer for new user with data:', organizerData);
-            
-            // Create the organizer
-            const organizerResponse = await axios.post('/api/organizers', organizerData);
-            console.log("Organizer created:", organizerResponse.data);
-            
-            // Update user to include organizerId reference
-            const userUpdateData = {
-              firebaseUserId: createdUser.firebaseUserId,
-              appId: appId,
-              regionalOrganizerInfo: {
-                organizerId: organizerResponse.data._id,
-                isApproved: true,
-                isEnabled: true,
-                isActive: true
-              }
-            };
-            
-            // Update user with organizer reference
-            await usersApi.updateUser(userUpdateData);
-            
-            // Add organizer role to the user
-            const organizerRole = roles.find(role => role.roleName === 'RegionalOrganizer');
-            if (organizerRole) {
-              await usersApi.updateUserRoles(createdUser.firebaseUserId, [organizerRole._id], appId);
-            }
-          } catch (organizerError) {
-            console.error("Error creating organizer for new user:", organizerError);
-            
-            // Still continue since the user was created successfully
-            alert(`User created, but could not create organizer: ${organizerError.message}`);
-          }
-        }
-        
-        // Refresh the user list with a cache-busting parameter
-        console.log('Refreshing users after creation...');
-        await refreshUsers();
-        filterUsers(searchTerm);
-        
-        // Reset form and close dialog
-        setNewUser({
-          email: '',
-          password: '',
-          firstName: '',
-          lastName: '',
-          active: true,
-          isOrganizer: false,
-        });
-        setAddUserDialogOpen(false);
-        
-        // No success message needed
-      } catch (directError) {
-        console.error('Direct backend creation failed:', directError);
-        throw directError; // Re-throw to be caught by outer catch
+      // Create user data
+      const userData = {
+        email: newUser.email,
+        password: newUser.password || '',
+        firstName: newUser.firstName,
+        lastName: newUser.lastName,
+        appId: appId,
+        active: newUser.active
+      };
+      
+      // Make the API call
+      const response = await axios.post('/api/users', userData);
+      
+      if (!response.data) {
+        throw new Error('No data returned from user creation API');
       }
+      
+      // Get the newly created user data 
+      const createdUser = response.data;
+      
+      // If the user requested to create an organizer, do that now
+      if (newUser.isOrganizer && createdUser.firebaseUserId) {
+        try {
+          // Prepare organizer data
+          const organizerData = {
+            firebaseUserId: createdUser.firebaseUserId,
+            linkedUserLogin: createdUser._id,
+            appId: appId,
+            fullName: `${newUser.firstName} ${newUser.lastName}`.trim(),
+            shortName: newUser.firstName,
+            organizerRegion: "66c4d99042ec462ea22484bd", // US region default
+            isActive: true,
+            isEnabled: true,
+            wantRender: true,
+            organizerTypes: {
+              isEventOrganizer: true,
+              isVenue: false,
+              isTeacher: false,
+              isMaestro: false,
+              isDJ: false,
+              isOrchestra: false
+            }
+          };
+          
+          // Create the organizer
+          const organizerResponse = await axios.post('/api/organizers', organizerData);
+          
+          // Update user to include organizerId reference
+          const userUpdateData = {
+            firebaseUserId: createdUser.firebaseUserId,
+            appId: appId,
+            regionalOrganizerInfo: {
+              organizerId: organizerResponse.data._id,
+              isApproved: true,
+              isEnabled: true,
+              isActive: true
+            }
+          };
+          
+          // Update user with organizer reference
+          await usersApi.updateUser(userUpdateData);
+          
+          // Add organizer role to the user
+          const organizerRole = roles.roles.find(role => role.roleNameCode === 'RO');
+          if (organizerRole) {
+            await usersApi.updateUserRoles(createdUser.firebaseUserId, [organizerRole._id], appId);
+          }
+        } catch (organizerError) {
+          console.error("Error creating organizer for new user:", organizerError);
+          alert(`User created, but could not create organizer: ${organizerError.message}`);
+        }
+      }
+      
+      // Refresh the user list
+      await refreshUsers();
+      filterUsers(searchTerm);
+      
+      // Reset form and close dialog
+      setNewUser({
+        email: '',
+        password: '',
+        firstName: '',
+        lastName: '',
+        active: true,
+        isOrganizer: false,
+      });
+      setAddUserDialogOpen(false);
     } catch (error) {
       console.error("Error creating user:", error);
       
       let errorMessage = 'Failed to create user';
-      if (error.response) {
-        console.error('Error response:', error.response);
-        if (typeof error.response.data === 'string' && error.response.data.includes('<!DOCTYPE html>')) {
-          errorMessage += ': Server error - check the console for details';
-        } else if (error.response.data && error.response.data.message) {
-          errorMessage += `: ${error.response.data.message}`;
-        } else {
-          errorMessage += `: ${error.message}`;
-        }
+      if (error.response && error.response.data && error.response.data.message) {
+        errorMessage += `: ${error.response.data.message}`;
       } else {
         errorMessage += `: ${error.message}`;
       }
@@ -1158,7 +731,6 @@ export default function UsersPage() {
       headerName: 'Name', 
       flex: 1,
       renderCell: (params) => {
-        // Always use Firebase displayName if available
         return <span>{params.row.firebaseUserInfo?.displayName || params.row.displayName}</span>;
       }
     },
@@ -1167,16 +739,11 @@ export default function UsersPage() {
       headerName: 'Email', 
       flex: 1,
       renderCell: (params) => {
-        // Always use Firebase email if available
         return <span>{params.row.firebaseUserInfo?.email || params.row.email}</span>;
       }
     },
     { field: 'firebaseUserId', headerName: 'Firebase ID', flex: 1 },
-    { 
-      field: 'roleNames', 
-      headerName: 'Roles', 
-      flex: 1 
-    },
+    { field: 'roleNameCodes', headerName: 'Roles', flex: 1 },
     { 
       field: 'userType',
       headerName: 'Type', 
@@ -1185,7 +752,7 @@ export default function UsersPage() {
         const user = params.row;
         if (user.isOrganizer) return <span>Organizer</span>;
         if (user.isRealUser) return <span>User</span>;
-        return <span>Unknown</span>;
+        return <span></span>;
       }
     },
     { 
@@ -1194,10 +761,10 @@ export default function UsersPage() {
       width: 100,
       renderCell: (params) => {
         const isApproved = 
-          params.row?.localUserInfo?.isApproved ||  // Check in localUserInfo
-          params.row?.isApproved ||                 // Check at root level
-          params.row?.regionalOrganizerInfo?.isApproved; // Check in organizer info
-        return <span>{isApproved ? 'Yes' : 'No'}</span>;
+          params.row?.localUserInfo?.isApproved || 
+          params.row?.isApproved || 
+          params.row?.regionalOrganizerInfo?.isApproved;
+        return <span>{isApproved ? 'Yes' : ''}</span>;
       }
     },
     { 
@@ -1206,10 +773,10 @@ export default function UsersPage() {
       width: 100,
       renderCell: (params) => {
         const isEnabled = 
-          params.row?.localUserInfo?.isEnabled ||   // Check in localUserInfo
-          params.row?.isEnabled ||                  // Check at root level
-          params.row?.regionalOrganizerInfo?.isEnabled; // Check in organizer info
-        return <span>{isEnabled ? 'Yes' : 'No'}</span>;
+          params.row?.localUserInfo?.isEnabled || 
+          params.row?.isEnabled || 
+          params.row?.regionalOrganizerInfo?.isEnabled;
+        return <span>{isEnabled ? 'Yes' : ''}</span>;
       }
     },
     { field: 'isActive', headerName: 'Active', width: 100 },
@@ -1256,7 +823,6 @@ export default function UsersPage() {
       headerName: 'Name', 
       flex: 1,
       renderCell: (params) => {
-        // Always use Firebase displayName if available
         return <span>{params.row.firebaseUserInfo?.displayName || params.row.displayName}</span>;
       }
     },
@@ -1265,7 +831,6 @@ export default function UsersPage() {
       headerName: 'Email', 
       flex: 1,
       renderCell: (params) => {
-        // Always use Firebase email if available
         return <span>{params.row.firebaseUserInfo?.email || params.row.email}</span>;
       }
     },
@@ -1275,10 +840,9 @@ export default function UsersPage() {
       headerName: 'Organizer ID',
       flex: 1,
       renderCell: (params) => {
-        // Check multiple possible places for organizerId
         const orgId = 
-          params.row?.regionalOrganizerInfo?.organizerId || // Standard place
-          params.row?._id; // For pure organizer records that don't have the nested structure
+          params.row?.regionalOrganizerInfo?.organizerId || 
+          params.row?._id;
           
         return <span>{typeof orgId === 'object' ? orgId?._id : orgId}</span>;
       }
@@ -1291,7 +855,6 @@ export default function UsersPage() {
         const user = params.row;
         const types = [];
         
-        // Check organizer types in various locations
         const organizerTypes = user.organizerTypes || {};
         
         if (organizerTypes.isEventOrganizer) types.push('Event');
@@ -1310,10 +873,10 @@ export default function UsersPage() {
       width: 100,
       renderCell: (params) => {
         const isApproved = 
-          params.row?.regionalOrganizerInfo?.isApproved || // Check in regional info
-          params.row?.isApproved; // Check at root level for pure organizer records
+          params.row?.regionalOrganizerInfo?.isApproved ||
+          params.row?.isApproved;
           
-        return <span>{isApproved ? 'Yes' : 'No'}</span>;
+        return <span>{isApproved ? 'Yes' : ''}</span>;
       }
     },
     { 
@@ -1322,10 +885,10 @@ export default function UsersPage() {
       width: 100,
       renderCell: (params) => {
         const isEnabled = 
-          params.row?.regionalOrganizerInfo?.isEnabled || // Check in regional info 
-          params.row?.isEnabled; // Check at root level for pure organizer records
+          params.row?.regionalOrganizerInfo?.isEnabled || 
+          params.row?.isEnabled;
           
-        return <span>{isEnabled ? 'Yes' : 'No'}</span>;
+        return <span>{isEnabled ? 'Yes' : ''}</span>;
       }
     },
     { 
@@ -1334,11 +897,11 @@ export default function UsersPage() {
       width: 100,
       renderCell: (params) => {
         const isActive = 
-          params.row?.regionalOrganizerInfo?.isActive || // Check in regional info
-          params.row?.isActive || // Check at root level 
-          params.row?.isActiveAsOrganizer; // Check alternate field name
+          params.row?.regionalOrganizerInfo?.isActive ||
+          params.row?.isActive ||
+          params.row?.isActiveAsOrganizer;
           
-        return <span>{isActive ? 'Yes' : 'No'}</span>;
+        return <span>{isActive ? 'Yes' : ''}</span>;
       }
     },
     { 
@@ -1384,7 +947,6 @@ export default function UsersPage() {
       headerName: 'Name', 
       flex: 1,
       renderCell: (params) => {
-        // Always use Firebase displayName if available
         return <span>{params.row.firebaseUserInfo?.displayName || params.row.displayName}</span>;
       }
     },
@@ -1393,7 +955,6 @@ export default function UsersPage() {
       headerName: 'Email', 
       flex: 1,
       renderCell: (params) => {
-        // Always use Firebase email if available
         return <span>{params.row.firebaseUserInfo?.email || params.row.email}</span>;
       }
     },
@@ -1403,19 +964,12 @@ export default function UsersPage() {
       headerName: 'Admin Type',
       width: 130,
       renderCell: (params) => {
-        const user = params.row;
-        const roles = user.roleIds || [];
+        const roleCodes = params.row.roleNameCodes?.split(', ') || [];
         
-        // Just use the role IDs directly, no need for codes
-        const roleIds = roles.map(role => 
-          typeof role === 'object' ? role._id : role
-        );
+        if (roleCodes.includes('SA')) return <span>System Admin</span>;
+        if (roleCodes.includes('RA')) return <span>Regional Admin</span>;
         
-        // Display SA as System Admin, RA as Regional Admin
-        if (roleNameCodes.includes('SA')) return <span>System Admin</span>;
-        if (roleNameCodes.includes('RA')) return <span>Regional Admin</span>;
-        
-        return <span>-</span>;
+        return <span></span>;
       }
     },
     { 
@@ -1424,11 +978,11 @@ export default function UsersPage() {
       width: 130,
       renderCell: (params) => {
         const isApproved = 
-          params.row?.localAdminInfo?.isApproved || // Check in localAdminInfo
-          params.row?.isAdmin || // Check if isAdmin is true at root
-          params.row?.isApproved; // Fallback to root isApproved
+          params.row?.localAdminInfo?.isApproved || 
+          params.row?.isAdmin || 
+          params.row?.isApproved;
         
-        return <span>{isApproved ? 'Yes' : 'No'}</span>;
+        return <span>{isApproved ? 'Yes' : ''}</span>;
       }
     },
     { 
@@ -1437,10 +991,10 @@ export default function UsersPage() {
       width: 130,
       renderCell: (params) => {
         const isEnabled = 
-          params.row?.localAdminInfo?.isEnabled || // Check in localAdminInfo
-          params.row?.isEnabled; // Fallback to root isEnabled
+          params.row?.localAdminInfo?.isEnabled || 
+          params.row?.isEnabled;
         
-        return <span>{isEnabled ? 'Yes' : 'No'}</span>;
+        return <span>{isEnabled ? 'Yes' : ''}</span>;
       }
     },
     { 
@@ -1449,11 +1003,11 @@ export default function UsersPage() {
       width: 130,
       renderCell: (params) => {
         const isActive = 
-          params.row?.localAdminInfo?.isActive || // Check in localAdminInfo
-          params.row?.isActive || // Fallback to root isActive
-          params.row?.active; // Fallback to legacy active property
+          params.row?.localAdminInfo?.isActive || 
+          params.row?.isActive || 
+          params.row?.active;
         
-        return <span>{isActive ? 'Yes' : 'No'}</span>;
+        return <span>{isActive ? 'Yes' : ''}</span>;
       }
     },
     { 
@@ -1605,10 +1159,10 @@ export default function UsersPage() {
       >
         <DialogTitle>Edit User</DialogTitle>
         <DialogContent>
-          {editingUser && roles.length > 0 && (
+          {editingUser && roles.roles && (
             <UserEditForm
               user={editingUser}
-              roles={roles}
+              roles={roles.roles}
               onSubmit={handleUpdateUser}
             />
           )}
