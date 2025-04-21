@@ -70,6 +70,37 @@ export default function UsersPage() {
     isOrganizer: false,
   });
 
+  // Helper function to convert role IDs to role codes
+  const getRoleCodeForId = (roleId) => {
+    try {
+      // Only process if we have roles loaded
+      if (!roles?.roles || !Array.isArray(roles.roles) || roles.roles.length === 0) {
+        console.log(`No roles available to match ID ${roleId}`);
+        return '';
+      }
+      
+      // For NamedUser hardcoded ID, return "NU" directly
+      if (roleId === '66cb85ac74dca51e34e268ed') {
+        return 'NU';
+      }
+      
+      // Find the matching role
+      const role = roles.roles.find(r => r._id === roleId);
+      
+      if (role) {
+        console.log(`Matched role ${roleId} to code ${role.roleNameCode || 'unknown code'}`);
+      } else {
+        console.log(`No match found for role ID ${roleId}`);
+      }
+      
+      // Return the roleNameCode if found, empty string otherwise
+      return role?.roleNameCode || '';
+    } catch (error) {
+      console.error('Error in getRoleCodeForId:', error);
+      return '';
+    }
+  };
+  
   // Function to refresh users
   const refreshUsers = async () => {
     try {
@@ -84,6 +115,9 @@ export default function UsersPage() {
       
       let usersData = [];
       let organizersData = [];
+      
+      // Access the current roles list from state to use for lookups
+      const currentRoles = roles;
       
       try {
         // Only fetch user login records - we no longer need to combine with organizers
@@ -228,9 +262,18 @@ export default function UsersPage() {
           if (isOrganizerRecord) {
             roleNames = 'Organizer';
           } else {
-            roleNames = (user.roleIds || [])
-              .map(role => typeof role === 'object' ? role.roleName : 'Unknown')
-              .join(', ');
+            // Get all role IDs from the user
+            const roleIds = (user.roleIds || []).map(role => 
+              typeof role === 'object' ? role._id : role
+            );
+            
+            // Simply join the IDs with commas or show "No roles" if empty
+            roleNames = roleIds.length > 0 ? roleIds.join(', ') : 'No roles';
+            
+            // Debug for first few users processed
+            if (usersData.indexOf(user) < 5) {
+              console.log(`Role IDs for user ${user._id?.substring(0,8) || 'unknown'}:`, roleIds);
+            }
           }
           
           // For organizer records, create a synthetic regionalOrganizerInfo
@@ -323,7 +366,19 @@ export default function UsersPage() {
         
         // Fetch roles first - with hardcoded fallback if backend is unreachable
         const rolesData = await rolesApi.getRoles(appId);
-        setRoles(rolesData || []);
+        console.log("Roles data loaded:", rolesData);
+        
+        if (rolesData && rolesData.roles && Array.isArray(rolesData.roles)) {
+          console.log("Roles array:", rolesData.roles.map(r => ({id: r._id, code: r.roleNameCode})));
+          setRoles(rolesData);
+        } else if (Array.isArray(rolesData)) {
+          // Handle legacy format where rolesData is directly an array
+          console.log("Roles array (legacy format):", rolesData.map(r => ({id: r._id, code: r.roleNameCode})));
+          setRoles({ roles: rolesData });
+        } else {
+          console.error("Error: Roles data is not in expected format:", rolesData);
+          setRoles({ roles: [] });
+        }
         
         // Manually check the API to diagnose issues
         try {
@@ -1117,7 +1172,11 @@ export default function UsersPage() {
       }
     },
     { field: 'firebaseUserId', headerName: 'Firebase ID', flex: 1 },
-    { field: 'roleNames', headerName: 'Roles', flex: 1 },
+    { 
+      field: 'roleNames', 
+      headerName: 'Roles', 
+      flex: 1 
+    },
     { 
       field: 'userType',
       headerName: 'Type', 
@@ -1347,13 +1406,14 @@ export default function UsersPage() {
         const user = params.row;
         const roles = user.roleIds || [];
         
-        // Check roles to determine admin type
-        const roleNames = roles.map(role => 
-          typeof role === 'object' ? role.roleName : 'Unknown'
+        // Just use the role IDs directly, no need for codes
+        const roleIds = roles.map(role => 
+          typeof role === 'object' ? role._id : role
         );
         
-        if (roleNames.includes('SystemAdmin')) return <span>System Admin</span>;
-        if (roleNames.includes('RegionalAdmin')) return <span>Regional Admin</span>;
+        // Display SA as System Admin, RA as Regional Admin
+        if (roleNameCodes.includes('SA')) return <span>System Admin</span>;
+        if (roleNameCodes.includes('RA')) return <span>Regional Admin</span>;
         
         return <span>-</span>;
       }

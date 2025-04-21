@@ -7,7 +7,7 @@ This documentation covers two methods for managing Firebase users in the TangoTi
 
 ## Architecture Overview
 
-- **Frontend (calendaradmin)**: Next.js application that provides the UI
+- **Frontend (calops)**: Next.js application that provides the UI
 - **Backend (calendar-be)**: Node.js server running on port 3010 that handles API requests
 - **Database**: MongoDB running on standard port 27017 (accessed through the backend)
 - **Firebase Admin SDK**: Used for direct communication with Firebase Authentication
@@ -23,7 +23,7 @@ The Admin UI provides a "Sync Firebase Users" button that directly communicates 
 First, encode your Firebase service account credentials to base64:
 
 ```bash
-cd calendaradmin/scripts
+cd calops/scripts
 node encode-firebase-json.js ../../tangotiempo-257ff-firebase-adminsdk-gx3rl-fc9b09dbd6.json
 ```
 
@@ -34,7 +34,7 @@ This will produce a base64-encoded string for your environment.
 Add the following environment variable to your environment:
 
 For development:
-- Create or edit `.env.local` in the `calendaradmin` directory
+- Create or edit `.env.local` in the `calops` directory
 - Add `FIREBASE_JSON=YOUR_BASE64_ENCODED_STRING`
 
 For production:

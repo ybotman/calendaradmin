@@ -79,7 +79,7 @@ export default function AdminLayout({ children }) {
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%' }}>
           <Box 
             component="img"
-            src="/MCAdminSquareSmall.png"
+            src="/CalOpsWideSmall.jpg"
             alt="Calendar Admin Logo"
             sx={{ 
               height: 40,

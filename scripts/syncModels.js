@@ -1,7 +1,7 @@
 /**
  * Model Sync Script
  * 
- * This script validates the model connections between calendaradmin and calendar-be.
+ * This script validates the model connections between calops and calendar-be.
  * It tests importing models from calendar-be and ensures they can be properly accessed.
  */
 

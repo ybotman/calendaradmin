@@ -63,7 +63,7 @@ try {
     console.log('To use this in your environment, set the following environment variable:');
     console.log('\nFIREBASE_JSON=' + base64Content.substring(0, 20) + '...\n');
     console.log('You can set this in your .env file or directly in your environment.');
-    console.log('For development, add it to calendaradmin/.env.local');
+    console.log('For development, add it to calops/.env.local');
     
     // Provide usage example
     console.log('\nIn .env.local:');

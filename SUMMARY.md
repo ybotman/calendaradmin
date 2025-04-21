@@ -42,7 +42,7 @@ The Calendar Admin application provides a centralized administrative interface f
 ## File Structure
 
 ```
-calendaradmin/
+calops/
 ├── README.md                # Project documentation
 ├── package.json             # Project dependencies and scripts
 ├── .env                     # Environment variables
