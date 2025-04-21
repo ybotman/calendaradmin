@@ -10,7 +10,10 @@ export const metadata = {
   title: 'Calendar Admin',
   description: 'Administration for the Calendar Backend',
   icons: {
-    icon: '/MCAdminIcon.png',
+    icon: [
+      { url: '/MCAdminIcon.png' },
+      { url: '/favicon.ico' },
+    ],
     apple: '/MCAdminIcon.png',
   },
 };

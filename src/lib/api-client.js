@@ -19,10 +19,10 @@ const apiClient = axios.create({
 
 // Users API
 export const usersApi = {
-  getUsers: async (appId = '1', active, timestamp) => {
+  getUsers: async (appId = '1', active, timestamp, page = 1, limit = 100) => {
     try {
       // First try our frontend API which acts as a proxy
-      let frontendUrl = `/api/users?appId=${appId}`;
+      let frontendUrl = `/api/users?appId=${appId}&page=${page}&limit=${limit}`;
       if (active !== undefined) {
         frontendUrl += `&active=${active}`;
       }
@@ -34,8 +34,17 @@ export const usersApi = {
       console.log('Getting users via frontend API:', frontendUrl);
       const frontendResponse = await axios.get(frontendUrl);
       
-      if (Array.isArray(frontendResponse.data) && frontendResponse.data.length > 0) {
-        console.log(`Frontend API returned ${frontendResponse.data.length} users`);
+      // Check if the response has the new format with pagination
+      if (frontendResponse.data && frontendResponse.data.users) {
+        const { users, pagination } = frontendResponse.data;
+        console.log(`Frontend API returned ${users.length} users (page ${pagination.page}/${pagination.pages} of ${pagination.total} total)`);
+        
+        // Augment users array with pagination info for apps that rely on it
+        users.pagination = pagination;
+        return users;
+      } else if (Array.isArray(frontendResponse.data) && frontendResponse.data.length > 0) {
+        // Legacy format
+        console.log(`Frontend API returned ${frontendResponse.data.length} users (legacy format)`);
         return frontendResponse.data;
       } else {
         console.warn('Frontend API returned no users, falling back to direct backend call');
@@ -46,7 +55,7 @@ export const usersApi = {
     }
     
     // Fallback to direct backend call
-    let url = `${BE_URL}/api/userlogins/all?appId=${appId}`;
+    let url = `${BE_URL}/api/userlogins/all?appId=${appId}&page=${page}&limit=${limit}`;
     if (active !== undefined) {
       url += `&active=${active}`;
     }
@@ -57,8 +66,20 @@ export const usersApi = {
     
     console.log('Fetching users directly from backend:', url);
     const response = await axios.get(url);
-    console.log(`Backend API returned ${response.data.length} users`);
-    return response.data;
+    
+    // Check if the response has the new format with pagination
+    if (response.data && response.data.users) {
+      const { users, pagination } = response.data;
+      console.log(`Backend API returned ${users.length} users (page ${pagination.page}/${pagination.pages} of ${pagination.total} total)`);
+      
+      // Augment users array with pagination info for apps that rely on it
+      users.pagination = pagination;
+      return users;
+    } else {
+      // Legacy format
+      console.log(`Backend API returned ${response.data.length} users (legacy format)`);
+      return response.data;
+    }
   },
   
   getUserById: async (firebaseUserId, appId = '1') => {
@@ -184,11 +205,13 @@ export const rolesApi = {
 
 // Organizers API
 export const organizersApi = {
-  getOrganizers: async (appId = '1', active, approved) => {
+  getOrganizers: async (appId = '1', active, approved, page = 1, limit = 100) => {
     try {
       // Build simple query with required filter params
       let queryParams = new URLSearchParams({
-        appId: appId
+        appId: appId,
+        page: page.toString(),
+        limit: limit.toString()
       });
       
       // Add a filter to satisfy the backend requirement
@@ -200,8 +223,17 @@ export const organizersApi = {
       
       // Use the regular endpoint with the required filters
       const response = await apiClient.get(`/api/organizers?${queryParams.toString()}`);
-      console.log('Fetched organizers successfully:', response.data.length);
-      return response.data;
+      
+      // Handle the new response format which includes pagination
+      if (response.data && response.data.organizers) {
+        const { organizers, pagination } = response.data;
+        console.log(`Fetched organizers successfully: ${organizers.length} (page ${pagination.page}/${pagination.pages}, total: ${pagination.total})`);
+        return organizers;
+      } else {
+        // Legacy format - just return the data directly
+        console.log('Fetched organizers successfully (legacy format):', response.data.length);
+        return response.data;
+      }
     } catch (error) {
       console.error('Error in getOrganizers:', error);
       // Return empty array to prevent UI errors

@@ -91,8 +91,19 @@ export default function UsersPage() {
         const usersResponse = await fetch(`http://localhost:3010/api/userlogins/all?appId=${appId}&_=${timestamp}`);
         
         if (usersResponse.ok) {
-          usersData = await usersResponse.json();
-          console.log(`User login API returned ${usersData.length} user records`);
+          const response = await usersResponse.json();
+          
+          // Handle paginated response format
+          if (response && response.users) {
+            usersData = response.users;
+            console.log(`User login API returned ${usersData.length} user records (paginated format)`);
+          } else if (Array.isArray(response)) {
+            usersData = response;
+            console.log(`User login API returned ${usersData.length} user records (array format)`);
+          } else {
+            console.warn(`User login API returned unexpected format:`, response);
+            usersData = [];
+          }
         } else {
           console.warn(`User login API returned status ${usersResponse.status}`);
           
@@ -102,8 +113,19 @@ export default function UsersPage() {
             const directApiResponse = await fetch(`http://localhost:3010/api/userlogins/all?appId=${appId}`);
             
             if (directApiResponse.ok) {
-              usersData = await directApiResponse.json();
-              console.log(`Direct API call returned ${usersData.length} user records`);
+              const response = await directApiResponse.json();
+              
+              // Handle paginated response format
+              if (response && response.users) {
+                usersData = response.users;
+                console.log(`Direct API call returned ${usersData.length} user records (paginated format)`);
+              } else if (Array.isArray(response)) {
+                usersData = response;
+                console.log(`Direct API call returned ${usersData.length} user records (array format)`);
+              } else {
+                console.warn(`Direct API call returned unexpected format:`, response);
+                usersData = [];
+              }
             } else {
               console.warn(`Direct API call also failed with status ${directApiResponse.status}`);
               usersData = [];
@@ -375,6 +397,7 @@ export default function UsersPage() {
       
       // After refreshing, filter users based on tab
       if (newValue === 0) { // All Users
+        // No filtering for All Users tab
         filterUsers(searchTerm);
       } else if (newValue === 1) { // Organizers
         console.log("Debugging user records with regionalOrganizerInfo:");
@@ -409,14 +432,17 @@ export default function UsersPage() {
         // Consider users as admins if they have admin roles or flags
         const adminUsers = users.filter(user => 
           // Check for admin roles
-          user.roleIds?.some(role => 
+          (user.roleIds?.some(role => 
             (typeof role === 'object' && 
             (role.roleName === 'SystemAdmin' || role.roleName === 'RegionalAdmin'))
-          ) ||
+          )) ||
           // Or check for admin flags
           user.isAdmin === true ||
+          user.localAdminInfo?.isApproved === true ||
           user.localAdminInfo?.isActive === true
         );
+        
+        console.log(`Found ${adminUsers.length} admin users`);
         applySearch(adminUsers, searchTerm);
       }
     } catch (error) {
@@ -559,6 +585,7 @@ export default function UsersPage() {
         )) ||
         // Or check for admin flags
         user.isAdmin === true ||
+        user.localAdminInfo?.isApproved === true ||
         user.localAdminInfo?.isActive === true ||
         // Check if roleNames contains admin roles
         user.roleNames?.includes('SystemAdmin') ||

@@ -4,16 +4,18 @@ import firebaseAdmin from '@/lib/firebase-admin'; // Import the improved firebas
 
 const BE_URL = process.env.NEXT_PUBLIC_BE_URL || 'http://localhost:3010';
 
-// GET handler - Get all users or filter by parameters
+// GET handler - Get all users or filter by parameters with pagination
 export async function GET(request) {
   try {
     // Parse query parameters
     const { searchParams } = new URL(request.url);
     const appId = searchParams.get('appId') || "1";
     const active = searchParams.has('active') ? searchParams.get('active') === 'true' : undefined;
+    const page = searchParams.get('page') || "1";
+    const limit = searchParams.get('limit') || "100";
     
     // Build query string for backend request
-    let queryString = `appId=${appId}`;
+    let queryString = `appId=${appId}&page=${page}&limit=${limit}`;
     if (active !== undefined) {
       queryString += `&active=${active}`;
     }
@@ -21,18 +23,46 @@ export async function GET(request) {
     // Fetch users from backend
     const response = await axios.get(`${BE_URL}/api/userlogins/all?${queryString}`);
     
-    // Log users with organizer connections
-    const usersWithOrganizers = response.data.filter(user => 
-      user.regionalOrganizerInfo && user.regionalOrganizerInfo.organizerId
-    );
-    
-    console.log(`API: Found ${usersWithOrganizers.length} users with organizer connections`);
-    usersWithOrganizers.forEach(user => {
-      console.log(`API: User ${user.firebaseUserId} has organizerId: ${user.regionalOrganizerInfo.organizerId}`);
-    });
-    
-    // Return the data directly
-    return NextResponse.json(response.data);
+    // Check if the response has the new format (with users and pagination)
+    if (response.data && response.data.users) {
+      const { users, pagination } = response.data;
+      
+      // Log users with organizer connections
+      const usersWithOrganizers = users.filter(user => 
+        user.regionalOrganizerInfo && user.regionalOrganizerInfo.organizerId
+      );
+      
+      console.log(`API: Found ${usersWithOrganizers.length} users with organizer connections (page ${pagination.page}/${pagination.pages}, total: ${pagination.total})`);
+      usersWithOrganizers.forEach(user => {
+        console.log(`API: User ${user.firebaseUserId} has organizerId: ${user.regionalOrganizerInfo.organizerId}`);
+      });
+      
+      // Return the complete response with pagination info
+      return NextResponse.json({
+        users,
+        pagination
+      });
+    } else {
+      // Legacy format - just return the data directly
+      console.log(`API: Retrieved ${response.data.length} users (legacy format)`);
+      
+      // Log users with organizer connections in legacy format
+      const usersWithOrganizers = response.data.filter(user => 
+        user.regionalOrganizerInfo && user.regionalOrganizerInfo.organizerId
+      );
+      console.log(`API: Found ${usersWithOrganizers.length} users with organizer connections`);
+      
+      // Return legacy format with pagination wrapper
+      return NextResponse.json({
+        users: response.data,
+        pagination: {
+          total: response.data.length,
+          page: 1,
+          limit: response.data.length,
+          pages: 1
+        }
+      });
+    }
   } catch (error) {
     console.error('Error fetching users:', error);
     return NextResponse.json({ 

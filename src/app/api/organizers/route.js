@@ -8,9 +8,11 @@ export async function GET(request) {
     const { searchParams } = new URL(request.url);
     const appId = searchParams.get('appId') || "1";
     const isActive = searchParams.has('isActive') ? searchParams.get('isActive') : null;
+    const page = searchParams.get('page') || "1";
+    const limit = searchParams.get('limit') || "100";
     
-    // Build the URL with proper query parameters
-    let url = `${BE_URL}/api/organizers/all?appId=${appId}`;
+    // Build the URL with proper query parameters - use the filtered endpoint instead of /all
+    let url = `${BE_URL}/api/organizers?appId=${appId}&page=${page}&limit=${limit}`;
     
     // If isActive is provided, add it to the URL
     // Note: The backend expects a 'true' or 'false' string, not a boolean
@@ -21,8 +23,29 @@ export async function GET(request) {
     console.log('Fetching organizers with URL:', url);
     const response = await axios.get(url);
     
-    console.log('Successful organizers fetch, count:', response.data.length);
-    return NextResponse.json(response.data);
+    // Handle the new response format which includes pagination
+    if (response.data && response.data.organizers) {
+      const { organizers, pagination } = response.data;
+      console.log(`Successful organizers fetch, count: ${organizers.length}, total: ${pagination.total}`);
+      
+      // Return the entire response including pagination info
+      return NextResponse.json({
+        organizers,
+        pagination
+      });
+    } else {
+      // Fallback for backwards compatibility
+      console.log('Successful organizers fetch (legacy format), count:', response.data.length);
+      return NextResponse.json({
+        organizers: response.data,
+        pagination: {
+          total: response.data.length,
+          page: 1,
+          limit: response.data.length,
+          pages: 1
+        }
+      });
+    }
   } catch (error) {
     console.error('Error fetching organizers:', error);
     return NextResponse.json({ 
