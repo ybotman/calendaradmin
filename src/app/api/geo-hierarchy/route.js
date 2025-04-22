@@ -1,9 +1,8 @@
 import { NextResponse } from 'next/server';
 import connectToDatabase from '@/lib/mongodb';
 import mongoose from 'mongoose';
-import { validateAppId } from '@/utils/api-validation';
 
-// Direct model definitions to avoid importing from calendar-be
+// Direct model definitions for geo hierarchy (temporary until backend API is available)
 let modelsCache = {};
 
 // Helper functions for getting models
@@ -114,9 +113,34 @@ async function getMasteredCityModel() {
   return model;
 }
 
+/**
+ * GET handler for geo-hierarchy API endpoint
+ * NOTE: This uses direct database access as a temporary solution 
+ * until proper backend API endpoint is available
+ * 
+ * @param {Request} request - The incoming request
+ * @returns {Promise<Response>} JSON response with geo hierarchy data
+ */
 export async function GET(request) {
+  console.log('Geo Hierarchy API endpoint called');
+  
   try {
-    console.log('Starting geo-hierarchy API request...');
+    const url = new URL(request.url);
+    const searchParams = url.searchParams;
+    
+    // Log the request for debugging
+    console.log('Request URL:', url.toString());
+    console.log('Search params:', Object.fromEntries(searchParams.entries()));
+    
+    const appId = searchParams.get('appId');
+    const type = searchParams.get('type') || 'all';
+    
+    // Required parameters
+    if (!appId) {
+      return NextResponse.json({ error: 'appId is required' }, { status: 400 });
+    }
+    
+    // Connect to the database
     await connectToDatabase();
     console.log('Database connection established');
     
@@ -141,26 +165,8 @@ export async function GET(request) {
       }, { status: 500 });
     }
     
-    console.log('API request received:', request.url);
-    const { searchParams } = new URL(request.url);
-    
-    // Extract and validate appId parameter
-    let appId;
-    try {
-      appId = validateAppId(searchParams);
-    } catch (error) {
-      console.error(`AppId validation error: ${error.message}`);
-      return NextResponse.json({ 
-        error: 'Invalid or missing appId parameter', 
-        details: error.message 
-      }, { status: 400 });
-    }
-    
-    const type = searchParams.get('type') || 'all'; // country, region, division, city, or all
-    
-    // Simplify query to just get all items with appId=1
+    // Simplify query to just get all items with the given appId
     const query = { appId };
-    
     console.log('Using query:', query, 'for type:', type);
     
     let result = {};
@@ -280,7 +286,18 @@ export async function GET(request) {
       throw queryError;
     }
     
-    return NextResponse.json(result);
+    // Transform the result to match the expected frontend format if needed
+    if (type === 'country') {
+      return NextResponse.json({ countries: result });
+    } else if (type === 'region') {
+      return NextResponse.json({ regions: result });
+    } else if (type === 'division') {
+      return NextResponse.json({ divisions: result });
+    } else if (type === 'city') {
+      return NextResponse.json({ cities: result });
+    } else {
+      return NextResponse.json(result);
+    }
   } catch (error) {
     console.error('Error fetching geo hierarchy:', error);
     return NextResponse.json({ 
@@ -291,6 +308,10 @@ export async function GET(request) {
   }
 }
 
+/**
+ * POST handler for creating geo-hierarchy items
+ * Uses direct database access as temp solution until backend API is available
+ */
 export async function POST(request) {
   try {
     console.log('Starting POST request to create a geo hierarchy item...');
@@ -309,10 +330,14 @@ export async function POST(request) {
       );
     }
     
-    console.log(`Creating ${type} with data:`, JSON.stringify(itemData));
+    if (!itemData.appId) {
+      return NextResponse.json(
+        { error: 'appId is required' },
+        { status: 400 }
+      );
+    }
     
-    // Always set appId to "1" regardless of what's provided
-    itemData.appId = "1";
+    console.log(`Creating ${type} with data:`, JSON.stringify(itemData));
     
     let newItem;
     let Model;
@@ -386,133 +411,6 @@ export async function POST(request) {
     console.error('Error creating geo hierarchy item:', error);
     return NextResponse.json({ 
       error: 'Failed to create geo hierarchy item', 
-      details: error.message,
-      stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
-    }, { status: 500 });
-  }
-}
-
-export async function DELETE(request) {
-  try {
-    console.log('Starting DELETE request for a geo hierarchy item...');
-    await connectToDatabase();
-    console.log('Database connection established for DELETE');
-    
-    const { searchParams } = new URL(request.url);
-    const type = searchParams.get('type');
-    const id = searchParams.get('id');
-    
-    // Validation
-    if (!type || !id) {
-      return NextResponse.json(
-        { error: 'Geo hierarchy type and ID are required' },
-        { status: 400 }
-      );
-    }
-    
-    console.log(`Deleting ${type} with ID: ${id}`);
-    
-    let Model;
-    let deleteResult;
-    
-    // Get the appropriate model
-    try {
-      switch (type) {
-        case 'country':
-          Model = await getMasteredCountryModel();
-          break;
-        case 'region':
-          Model = await getMasteredRegionModel();
-          break;
-        case 'division':
-          Model = await getMasteredDivisionModel();
-          break;
-        case 'city':
-          Model = await getMasteredCityModel();
-          break;
-        default:
-          return NextResponse.json(
-            { error: 'Invalid geo hierarchy type. Must be one of: country, region, division, city' },
-            { status: 400 }
-          );
-      }
-    } catch (modelError) {
-      console.error(`Error loading model for type ${type}:`, modelError);
-      return NextResponse.json({ 
-        error: `Failed to load model for type ${type}`, 
-        details: modelError.message,
-        stack: process.env.NODE_ENV === 'development' ? modelError.stack : undefined
-      }, { status: 500 });
-    }
-    
-    // Check dependency before deleting
-    try {
-      // Check if this geo hierarchy item has dependencies
-      let hasDependencies = false;
-      let dependencyMessage = '';
-      
-      switch (type) {
-        case 'country':
-          // Check if any regions reference this country
-          const MasteredRegion = await getMasteredRegionModel();
-          const regionsUsingCountry = await MasteredRegion.countDocuments({ masteredCountryId: id });
-          
-          if (regionsUsingCountry > 0) {
-            hasDependencies = true;
-            dependencyMessage = `Cannot delete country: ${regionsUsingCountry} region(s) are associated with this country.`;
-          }
-          break;
-          
-        case 'region':
-          // Check if any divisions reference this region
-          const MasteredDivision = await getMasteredDivisionModel();
-          const divisionsUsingRegion = await MasteredDivision.countDocuments({ masteredRegionId: id });
-          
-          if (divisionsUsingRegion > 0) {
-            hasDependencies = true;
-            dependencyMessage = `Cannot delete region: ${divisionsUsingRegion} division(s) are associated with this region.`;
-          }
-          break;
-          
-        case 'division':
-          // Check if any cities reference this division
-          const MasteredCity = await getMasteredCityModel();
-          const citiesUsingDivision = await MasteredCity.countDocuments({ masteredDivisionId: id });
-          
-          if (citiesUsingDivision > 0) {
-            hasDependencies = true;
-            dependencyMessage = `Cannot delete division: ${citiesUsingDivision} city/cities are associated with this division.`;
-          }
-          break;
-          
-        // Cities don't need dependency check as they don't have child entities in this schema
-      }
-      
-      if (hasDependencies) {
-        return NextResponse.json({ error: dependencyMessage }, { status: 400 });
-      }
-      
-      // Proceed with deletion
-      deleteResult = await Model.findByIdAndDelete(id);
-      
-      if (!deleteResult) {
-        return NextResponse.json({ error: `${type} with ID ${id} not found` }, { status: 404 });
-      }
-      
-      console.log(`Successfully deleted ${type} with ID ${id}`);
-      return NextResponse.json({ message: `${type} deleted successfully` });
-    } catch (error) {
-      console.error(`Error deleting ${type}:`, error);
-      return NextResponse.json({ 
-        error: `Failed to delete ${type}`, 
-        details: error.message,
-        stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
-      }, { status: 500 });
-    }
-  } catch (error) {
-    console.error('Error processing delete request:', error);
-    return NextResponse.json({ 
-      error: 'Failed to process delete request', 
       details: error.message,
       stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
     }, { status: 500 });

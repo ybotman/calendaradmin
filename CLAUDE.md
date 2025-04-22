@@ -2,6 +2,12 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+
+# On claude startup you must 
+1) read your roles and responiblity in CLAUDE_ROLES.MD
+2) Reply with your understanding and you current role.
+
+
 ## Build/Lint/Test Commands
 - `npm run dev`: Run dev server on port 3003
 - `npm run build`: Build for production
@@ -18,6 +24,11 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - API routes: RESTful patterns with resource-based paths
 - Structure: Maintain separation between API routes, components, and models
 - MongoDB integration: Follow existing model patterns
+- Failover solutions : do not code short cuts. Move to instruct what is needed to complete.
+- Follow world class best practives. Better stable solid practives architecture and best pattern are much better than a working solution.
+- Code assuming the code is expected to go from DEV to TEST to PROD.
+- Code with productyion ready great coding.
+
 
 ## API Integration Guidelines
 
@@ -40,40 +51,6 @@ const newEvent = await axios.post('/api/events', {
   appId 
 });
 ```
-
-#### 2. API Client Services (LEGACY PATTERN)
-For backward compatibility only, some parts of the codebase may still use the specialized API services from api-client.js:
-
-```javascript
-import { usersApi, organizersApi } from '@/lib/api-client';
-
-// Use specific API functions
-const users = await usersApi.getUsers(appId);
-const organizer = await organizersApi.getOrganizerById(id, appId);
-```
-
-#### 3. API Route Implementation
-For Next.js API routes, use the proxy pattern to forward requests to the backend:
-
-```javascript
-// src/app/api/resource/route.js
-export async function GET(request) {
-  const url = new URL(request.url);
-  const searchParams = url.searchParams;
-  const appId = searchParams.get('appId');
-  
-  if (!appId) {
-    return NextResponse.json({ error: 'appId is required' }, { status: 400 });
-  }
-  
-  // Forward to backend
-  const backendUrl = process.env.NEXT_PUBLIC_BE_URL || 'http://localhost:3010';
-  const apiUrl = `${backendUrl}/api/resource?${searchParams.toString()}`;
-  
-  const response = await fetch(apiUrl);
-  const data = await response.json();
-  return NextResponse.json(data);
-}
 ```
 
 ### Prohibited Patterns
@@ -108,6 +85,8 @@ The following practices should NEVER be used:
    const events = await Event.find({ appId });
    const users = await usersApi.getUsers(appId);
    ```
+
+4. ## Fallback pattnerns to get code to 'work' . Dont defer great codet to later. Do it how.
 
 ### Event API Usage
 For events, use the following best practices with direct axios:

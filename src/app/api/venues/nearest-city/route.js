@@ -1,153 +1,108 @@
 import { NextResponse } from 'next/server';
-import connectToDatabase from '@/lib/mongodb';
-import mongoose from 'mongoose';
-import { validateAppId } from '@/utils/api-validation';
 
-// Direct model definitions to avoid importing from calendar-be
-let modelsCache = {};
-
-// MasteredCity model needed for geospatial queries
-async function getMasteredCityModel() {
-  if (modelsCache.MasteredCity) {
-    return modelsCache.MasteredCity;
-  }
-  
-  const Schema = mongoose.Schema;
-  const masteredCitySchema = new Schema({
-    appId: { type: String, required: true, default: "1" },
-    cityName: { type: String, required: true },
-    cityCode: { type: String, required: true },
-    latitude: { type: Number, required: true },
-    longitude: { type: Number, required: true },
-    location: {
-      type: { type: String, enum: ["Point"], required: true, default: "Point" },
-      coordinates: {
-        type: [Number],
-        required: true,
-        validate: {
-          validator: function (value) {
-            return value.length === 2;
-          },
-          message: "Coordinates must be [longitude, latitude]",
-        },
-      },
-    },
-    isActive: { type: Boolean, default: true },
-    masteredDivisionId: {
-      type: Schema.Types.ObjectId,
-      ref: "masteredDivision",
-      required: true,
-    },
-  });
-  
-  masteredCitySchema.index({ location: "2dsphere" });
-  
-  const model = mongoose.models.masteredCity || mongoose.model("masteredCity", masteredCitySchema);
-  modelsCache.MasteredCity = model;
-  return model;
-}
-
+/**
+ * GET handler for finding the nearest city to a venue - proxies to backend
+ * 
+ * @param {Request} request - The incoming request
+ * @returns {Promise<Response>} JSON response with the nearest city
+ */
 export async function GET(request) {
+  console.log('Venues nearest-city API endpoint called - Proxying to backend');
+  
   try {
-    console.log('Starting nearest-city API request...');
-    await connectToDatabase();
-    console.log('Database connection established');
+    const url = new URL(request.url);
+    const searchParams = url.searchParams;
     
-    // Parse query parameters
-    const { searchParams } = new URL(request.url);
-    const longitude = parseFloat(searchParams.get('longitude'));
-    const latitude = parseFloat(searchParams.get('latitude'));
+    // Log the request for debugging
+    console.log('Request URL:', url.toString());
+    console.log('Search params:', Object.fromEntries(searchParams.entries()));
     
-    // Extract and validate appId parameter
-    let appId;
+    const appId = searchParams.get('appId');
+    const latitude = searchParams.get('latitude');
+    const longitude = searchParams.get('longitude');
+    
+    // Required parameters
+    if (!appId) {
+      return NextResponse.json({ error: 'appId is required' }, { status: 400 });
+    }
+    
+    if (!latitude || !longitude) {
+      return NextResponse.json({ error: 'latitude and longitude are required' }, { status: 400 });
+    }
+    
+    // Backend URL from environment variable with fallback
+    const backendUrl = process.env.NEXT_PUBLIC_BE_URL || 'http://localhost:3010';
+    
+    // Construct the backend API URL
+    const apiUrl = `${backendUrl}/api/venues/nearest-city?${searchParams.toString()}`;
+    console.log('Proxying request to backend:', apiUrl);
+    
     try {
-      appId = validateAppId(searchParams);
-    } catch (error) {
-      console.error(`AppId validation error: ${error.message}`);
-      return NextResponse.json({ 
-        error: 'Invalid or missing appId parameter', 
-        details: error.message 
-      }, { status: 400 });
-    }
-    
-    const limit = parseInt(searchParams.get('limit') || '5', 10);
-    
-    // Validate parameters
-    if (isNaN(longitude) || isNaN(latitude)) {
-      return NextResponse.json({ 
-        error: 'Invalid coordinates. Both longitude and latitude must be provided as numbers.' 
-      }, { status: 400 });
-    }
-    
-    console.log(`Finding nearest cities to coordinates: [${longitude}, ${latitude}], appId: ${appId}`);
-    
-    // Get MasteredCity model
-    const MasteredCity = await getMasteredCityModel();
-    
-    // Find nearest cities
-    const nearestCities = await MasteredCity.find({
-      appId,
-      isActive: true,
-      location: {
-        $near: {
-          $geometry: {
-            type: "Point",
-            coordinates: [longitude, latitude],
-          },
-        },
-      },
-    })
-    .limit(limit)
-    .populate({
-      path: 'masteredDivisionId',
-      populate: {
-        path: 'masteredRegionId',
-        populate: { path: 'masteredCountryId' }
-      }
-    });
-    
-    console.log(`Found ${nearestCities.length} nearest cities`);
-    
-    // Calculate distances for each city
-    const citiesWithDistance = nearestCities.map(city => {
-      // Basic distance calculation for sorting purposes
-      const cityCoords = city.location.coordinates;
-      const distance = calculateDistance(
-        latitude, 
-        longitude, 
-        cityCoords[1], 
-        cityCoords[0]
-      );
+      // Forward the request to the backend
+      const response = await fetch(apiUrl, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
       
-      return {
-        ...city.toObject(),
-        distance: distance,
-        distanceInKm: distance.toFixed(1),
-        distanceInMiles: (distance * 0.621371).toFixed(1)
-      };
-    });
-    
-    return NextResponse.json(citiesWithDistance);
+      // Check if the request was successful
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ message: 'Unknown error' }));
+        console.error('Backend API error:', {
+          status: response.status,
+          statusText: response.statusText,
+          data: errorData
+        });
+        
+        return NextResponse.json(
+          { 
+            error: 'Backend API error', 
+            details: errorData.message || response.statusText,
+            status: response.status,
+          },
+          { status: response.status }
+        );
+      }
+      
+      // Get the response data
+      const data = await response.json();
+      console.log(`Successfully received nearest city data from backend`);
+      
+      // Return the data to the client
+      return NextResponse.json(data);
+    } catch (fetchError) {
+      console.error('Error fetching from backend:', fetchError);
+      
+      // If we can't connect to the backend, return a 503 Service Unavailable
+      return NextResponse.json(
+        { 
+          error: 'Backend service unavailable', 
+          details: fetchError.message 
+        },
+        { status: 503 }
+      );
+    }
   } catch (error) {
-    console.error('Error finding nearest cities:', error);
-    return NextResponse.json({ 
-      error: 'Failed to find nearest cities', 
-      details: error.message,
-      stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
-    }, { status: 500 });
+    console.error('Error in API route:', error);
+    
+    // Add more debug information
+    const errorDetails = {
+      message: error.message,
+      stack: error.stack,
+      name: error.name
+    };
+    
+    // Log the detailed error
+    console.error('Detailed error:', JSON.stringify(errorDetails, null, 2));
+    
+    return NextResponse.json(
+      { 
+        error: 'Internal server error', 
+        details: error.message,
+        stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
+      },
+      { status: 500 }
+    );
   }
-}
-
-// Haversine formula to calculate distance between two points on Earth
-function calculateDistance(lat1, lon1, lat2, lon2) {
-  const R = 6371; // Radius of the Earth in km
-  const dLat = (lat2 - lat1) * Math.PI / 180;
-  const dLon = (lon2 - lon1) * Math.PI / 180;
-  const a = 
-    Math.sin(dLat/2) * Math.sin(dLat/2) +
-    Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * 
-    Math.sin(dLon/2) * Math.sin(dLon/2);
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-  const distance = R * c; // Distance in km
-  return distance;
 }

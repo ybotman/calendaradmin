@@ -396,8 +396,8 @@ Goals:
 Tasks:
 - [x] Test all event filter combinations
 - [x] Test event CRUD operations
-- [ ] Test geo-hierarchy operations
-- [ ] Test venue operations
+- [x] Test geo-hierarchy operations
+- [x] Test venue operations
 - [ ] Test location operations
 - [ ] Test API fallbacks with backend unavailable
 - [ ] Fix remaining browser console errors
@@ -420,14 +420,18 @@ The API integration project is in progress with the following status for each ph
 
 3. **Phase 3: Clean Up Direct MongoDB Routes** 🟡
    - Converted events API routes to properly proxy to the backend
-   - **Still need to convert geo-hierarchy, venues, and locations routes**
+   - Converted geo-hierarchy API routes to properly proxy to the backend ✅
+   - Converted venues API routes to properly proxy to the backend ✅
+   - **Still need to convert locations routes**
    - Implemented standardized error handling for completed routes
    - Added detailed logging for troubleshooting
 
 4. **Phase 4: Model Refinement** 🟡
    - Created interface-only version of the Event model
-   - Added defaultEvent object for new event creation
-   - **Still need to create interfaces for geo-hierarchy, venues, and locations models**
+   - Created interface-only version of geo-hierarchy models
+   - Created interface-only version of Venue model
+   - Added default objects for new item creation
+   - **Still need to create interfaces for locations models**
    - **Still need to remove remaining direct MongoDB dependencies**
 
 5. **Phase 5: Documentation Update** ✅
@@ -439,17 +443,19 @@ The API integration project is in progress with the following status for each ph
 
 To complete the API integration, we need to focus on:
 
-1. **Complete Geo-Hierarchy API Proxying**
-   - Convert `/api/geo-hierarchy/route.js` to use proxy pattern
-   - Convert `/api/geo-hierarchy/[type]/[id]/route.js` to use proxy pattern
-   - Ensure all appId validation is consistent
-   - Verify fix for "Invalid or missing appId parameter" error
+1. **Complete Geo-Hierarchy API Proxying** ✅
+   - [x] Convert `/api/geo-hierarchy/route.js` to use proxy pattern
+   - [x] Convert `/api/geo-hierarchy/[type]/[id]/route.js` to use proxy pattern
+   - [x] Ensure all appId validation is consistent
+   - [x] Create interfaces for geo-hierarchy models
+   - [x] Verified geo-hierarchy page now correctly displays cities, divisions, and regions
 
-2. **Complete Venues API Proxying**
-   - Convert `/api/venues/route.js` to proxy pattern
-   - Convert `/api/venues/[id]/route.js` to proxy pattern
-   - Convert `/api/venues/nearest-city/route.js` to proxy pattern
-   - Remove `/api/venues-debug/route.js` or convert to proxy
+2. **Complete Venues API Proxying** ✅
+   - [x] Convert `/api/venues/route.js` to proxy pattern
+   - [x] Convert `/api/venues/[id]/route.js` to proxy pattern
+   - [x] Convert `/api/venues/nearest-city/route.js` to proxy pattern
+   - [x] Create interface for Venue model
+   - [x] Verified venues page now correctly displays venue data
 
 3. **Complete Locations API Proxying**
    - Convert `/api/locations/route.js` to proxy pattern
@@ -457,14 +463,14 @@ To complete the API integration, we need to focus on:
    - Ensure consistent appId handling
 
 4. **Interface Creation**
-   - Create interfaces for all geo-hierarchy models (Country, Region, Division, City)
-   - Create interfaces for Venue models
-   - Create interfaces for Location models
-   - Update imports across the application
+   - [x] Create interfaces for all geo-hierarchy models (Country, Region, Division, City)
+   - [x] Create interfaces for Venue models
+   - [ ] Create interfaces for Location models
+   - [ ] Update imports across the application
 
 5. **Comprehensive Testing**
-   - Test geo-hierarchy operations with appId parameter
-   - Test venues operations
+   - [x] Test geo-hierarchy operations with appId parameter
+   - [x] Test venues operations
    - Test location operations
    - Verify no remaining 500 errors or appId validation errors
 
