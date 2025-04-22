@@ -25,6 +25,7 @@ import BusinessIcon from '@mui/icons-material/Business';
 import AppsIcon from '@mui/icons-material/Apps';
 import BuildIcon from '@mui/icons-material/Build';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
+import EventIcon from '@mui/icons-material/Event';
 
 // Navigation items
 const mainNavItems = [
@@ -33,6 +34,7 @@ const mainNavItems = [
   { name: 'Organizers', icon: <BusinessIcon />, href: '/dashboard/organizers' },
   { name: 'Geo Hierarchy', icon: <LocationOnIcon />, href: '/dashboard/geo-hierarchy' },
   { name: 'Venues', icon: <LocationOnIcon />, href: '/dashboard/venues' },
+  { name: 'Events', icon: <EventIcon />, href: '/dashboard/events' },
 ];
 
 const drawerWidth = 240;

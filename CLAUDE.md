@@ -35,6 +35,19 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - Backend URL: http://localhost:3010 (default)
 - Admin App runs on port 3003
 
+## CalOps Purpose & Functionality
+The CalOps (Calendar Operations) application serves as the central administrative hub for the entire Master Calendar ecosystem. Its core functions include:
+
+- Administrative management of the multi-calendar user base
+- User account approval, verification, and issue resolution
+- Organization and event moderation across all connected calendars
+- System maintenance and configuration adjustments
+- Cross-platform user relationship management
+- Security monitoring and access control enforcement
+- Administrative reporting and analytics
+
+This application is the primary tool for administrators to maintain system integrity, resolve user issues, and ensure proper functioning of all connected calendar platforms.
+
 ## Tango Calendar Platform
 This admin application is part of an integrated platform with four components:
 
