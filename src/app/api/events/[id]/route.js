@@ -1,9 +1,7 @@
 import { NextResponse } from 'next/server';
-import connectToDatabase from '@/lib/mongodb';
-import Event from '@/models/Event';
 
 /**
- * GET handler for fetching a single event by ID
+ * GET handler for fetching a single event by ID - proxies to backend
  * 
  * @param {Request} request - The incoming request
  * @param {Object} params - Route parameters
@@ -20,15 +18,26 @@ export async function GET(request, { params }) {
       return NextResponse.json({ error: 'appId is required' }, { status: 400 });
     }
     
-    await connectToDatabase();
+    // Backend URL from environment variable with fallback
+    const backendUrl = process.env.NEXT_PUBLIC_BE_URL || 'http://localhost:3010';
     
-    const event = await Event.findOne({ _id: id, appId });
+    // Forward request to backend
+    const response = await fetch(`${backendUrl}/api/events/id/${id}?appId=${appId}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
     
-    if (!event) {
-      return NextResponse.json({ error: 'Event not found' }, { status: 404 });
+    // Handle error responses
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({ message: 'Unknown error' }));
+      return NextResponse.json(errorData, { status: response.status });
     }
     
-    return NextResponse.json(event);
+    // Pass through the backend response
+    const data = await response.json();
+    return NextResponse.json(data);
   } catch (error) {
     console.error('Error fetching event:', error);
     return NextResponse.json(
@@ -39,7 +48,7 @@ export async function GET(request, { params }) {
 }
 
 /**
- * PUT handler for updating an event
+ * PUT handler for updating an event - proxies to backend
  * 
  * @param {Request} request - The incoming request
  * @param {Object} params - Route parameters
@@ -56,42 +65,23 @@ export async function PUT(request, { params }) {
       return NextResponse.json({ error: 'appId is required' }, { status: 400 });
     }
     
-    await connectToDatabase();
+    // Backend URL from environment variable with fallback
+    const backendUrl = process.env.NEXT_PUBLIC_BE_URL || 'http://localhost:3010';
     
-    // Verify event exists and belongs to the specified app
-    const existingEvent = await Event.findOne({ _id: id, appId });
+    // Forward request to backend
+    const response = await fetch(`${backendUrl}/api/events/${id}?appId=${appId}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    });
     
-    if (!existingEvent) {
-      return NextResponse.json({ error: 'Event not found' }, { status: 404 });
-    }
-    
-    // Don't allow changing the owner (for simplicity in this implementation)
-    delete data.ownerOrganizerID;
-    
-    // Update the event
-    const updatedEvent = await Event.findByIdAndUpdate(
-      id,
-      { $set: data },
-      { new: true, runValidators: true }
-    );
-    
-    return NextResponse.json(updatedEvent);
+    // Pass through the backend response
+    const responseData = await response.json();
+    return NextResponse.json(responseData, { status: response.status });
   } catch (error) {
     console.error('Error updating event:', error);
-    
-    // Handle validation errors
-    if (error.name === 'ValidationError') {
-      const validationErrors = Object.keys(error.errors).reduce((acc, key) => {
-        acc[key] = error.errors[key].message;
-        return acc;
-      }, {});
-      
-      return NextResponse.json(
-        { error: 'Validation error', details: validationErrors },
-        { status: 400 }
-      );
-    }
-    
     return NextResponse.json(
       { error: 'Error updating event', details: error.message },
       { status: 500 }
@@ -100,7 +90,7 @@ export async function PUT(request, { params }) {
 }
 
 /**
- * DELETE handler for removing an event
+ * DELETE handler for removing an event - proxies to backend
  * 
  * @param {Request} request - The incoming request
  * @param {Object} params - Route parameters
@@ -117,19 +107,20 @@ export async function DELETE(request, { params }) {
       return NextResponse.json({ error: 'appId is required' }, { status: 400 });
     }
     
-    await connectToDatabase();
+    // Backend URL from environment variable with fallback
+    const backendUrl = process.env.NEXT_PUBLIC_BE_URL || 'http://localhost:3010';
     
-    // Verify event exists and belongs to the specified app
-    const existingEvent = await Event.findOne({ _id: id, appId });
+    // Forward request to backend
+    const response = await fetch(`${backendUrl}/api/events/${id}?appId=${appId}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
     
-    if (!existingEvent) {
-      return NextResponse.json({ error: 'Event not found' }, { status: 404 });
-    }
-    
-    // Delete the event
-    await Event.findByIdAndDelete(id);
-    
-    return NextResponse.json({ message: 'Event deleted successfully', eventId: id });
+    // Pass through the backend response
+    const data = await response.json();
+    return NextResponse.json(data, { status: response.status });
   } catch (error) {
     console.error('Error deleting event:', error);
     return NextResponse.json(

@@ -44,30 +44,34 @@ export default function useEventData(appId) {
       if (filters.category) params.append('category', filters.category);
 
       console.log('Fetching events with params:', params.toString());
-
-      try {
-        // Attempt to fetch events from API
-        const response = await axios.get(`/api/events?${params.toString()}`);
-        const events = response.data.events || response.data;
-  
-        console.log(`Successfully fetched ${events.length} events`);
-        dispatch({ type: 'FETCH_EVENTS_SUCCESS', payload: events });
-        return events;
-      } catch (apiError) {
-        console.error('API error, using mock response for UI testing:', apiError);
-        
-        // Generate mock events for development/testing
-        if (process.env.NODE_ENV === 'development') {
-          console.warn('Using mock event data for testing');
-          // Build basic mock events for testing the UI
-          const mockEvents = generateMockEvents(filters);
-          dispatch({ type: 'FETCH_EVENTS_SUCCESS', payload: mockEvents });
-          return mockEvents;
-        } else {
-          // In production, report the error normally
-          throw apiError;
-        }
+      
+      // Fetch events from API
+      const response = await axios.get(`/api/events?${params.toString()}`);
+      
+      // Get events from the response
+      let events = [];
+      
+      if (response.data && response.data.events && Array.isArray(response.data.events)) {
+        // API returns { events: [...] }
+        events = response.data.events;
+        console.log('Received events array from API.events:', events.length);
+      } else if (Array.isArray(response.data)) {
+        // API returns direct array
+        events = response.data;
+        console.log('Received direct array from API:', events.length);
+      } else {
+        console.error('Unexpected API response format:', response.data);
+        events = [];
       }
+      
+      // Log a sample event for debugging
+      if (events.length > 0) {
+        console.log('Sample event from API:', JSON.stringify(events[0], null, 2));
+      }
+      
+      // Send the events to the store
+      dispatch({ type: 'FETCH_EVENTS_SUCCESS', payload: events });
+      return events;
     } catch (error) {
       console.error('Error fetching events:', error);
       dispatch({ 
@@ -92,7 +96,8 @@ export default function useEventData(appId) {
       const eventDate = new Date(startDate);
       eventDate.setDate(eventDate.getDate() + (i * dayIncrement));
       
-      mockEvents.push({
+      // Use this mockEvent structure for comparison with actual API data
+      const mockEvent = {
         _id: `mock-event-${i}`,
         appId: appId,
         title: `Mock Event ${i + 1} ${filters.regionName || ''}`,
@@ -109,7 +114,14 @@ export default function useEventData(appId) {
         isFeatured: i === 0, // First event is featured
         isDiscovered: false,
         expiresAt: new Date(new Date().setFullYear(new Date().getFullYear() + 1))
-      });
+      };
+      
+      // Log an example mock event structure
+      if (i === 0) {
+        console.log('Mock event structure for comparison:', mockEvent);
+      }
+      
+      mockEvents.push(mockEvent);
     }
     
     return mockEvents;

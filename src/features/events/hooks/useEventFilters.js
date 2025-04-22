@@ -71,6 +71,9 @@ export default function useEventFilters() {
   useEffect(() => {
     if (!events.length) return;
 
+    // Log original events before filtering
+    console.log(`Filtering ${events.length} events, first event:`, events[0]);
+    
     let filteredEvents = [...events];
 
     // Apply title search filter
@@ -79,7 +82,7 @@ export default function useEventFilters() {
       const searchLower = searchTerm.trim().toLowerCase().substring(0, 15);
       
       filteredEvents = filteredEvents.filter(event => 
-        event.title?.toLowerCase().includes(searchLower)
+        event.title?.toLowerCase()?.includes(searchLower)
       );
     }
     
@@ -88,7 +91,7 @@ export default function useEventFilters() {
       const descSearchTerm = searchDescriptionTerm.trim().toLowerCase();
       
       filteredEvents = filteredEvents.filter(event => 
-        event.description?.toLowerCase().includes(descSearchTerm)
+        event.description?.toLowerCase()?.includes(descSearchTerm)
       );
     }
 
@@ -100,8 +103,32 @@ export default function useEventFilters() {
     } else if (tabValue === 3) { // Featured events
       filteredEvents = filteredEvents.filter(event => event.isFeatured);
     }
+    
+    // Map events to ensure all required fields exist
+    const processedEvents = filteredEvents.map(event => {
+      // Add default values for required fields if missing
+      return {
+        _id: event._id || `unknown-${Math.random()}`,
+        title: event.title || '(No Title)',
+        startDate: event.startDate || null,
+        endDate: event.endDate || null,
+        ownerOrganizerName: event.ownerOrganizerName || '',
+        masteredRegionName: event.masteredRegionName || '',
+        masteredDivisionName: event.masteredDivisionName || '',
+        masteredCityName: event.masteredCityName || '',
+        categoryFirst: event.categoryFirst || '',
+        isActive: event.isActive !== undefined ? event.isActive : true,
+        isFeatured: event.isFeatured !== undefined ? event.isFeatured : false,
+        ...event, // Include all original properties
+      };
+    });
+    
+    // Log filtered events
+    if (processedEvents.length > 0) {
+      console.log(`Filtered to ${processedEvents.length} events, first event:`, processedEvents[0]);
+    }
 
-    dispatch({ type: 'SET_FILTERED_EVENTS', payload: filteredEvents });
+    dispatch({ type: 'SET_FILTERED_EVENTS', payload: processedEvents });
   }, [events, searchTerm, searchDescriptionTerm, tabValue, dispatch]);
 
   return {

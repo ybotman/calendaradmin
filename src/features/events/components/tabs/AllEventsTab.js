@@ -34,18 +34,26 @@ export default function AllEventsTab({
     imageFlags
   });
 
+  // Debug first event for structure
+  if (filteredEvents && filteredEvents.length > 0) {
+    console.log('First event in AllEventsTab:', filteredEvents[0]);
+  }
+  
   return (
     <TabPanel value={value} index={index}>
       <DataGridWrapper
         rows={filteredEvents}
         columns={columns}
         loading={loading}
-        getRowId={(row) => row._id}
+        getRowId={(row) => row?._id || `row-${Math.random()}`}
         autoHeight
         disableSelectionOnClick
         pageSize={10}
         rowsPerPageOptions={[10, 25, 50]}
         density="standard"
+        onRowClick={(params) => {
+          console.log('Row clicked:', params.row);
+        }}
       />
     </TabPanel>
   );
