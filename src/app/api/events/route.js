@@ -9,14 +9,35 @@ import Event from '@/models/Event';
  * @returns {Promise<Response>} JSON response with events data
  */
 export async function GET(request) {
+  console.log('Events API endpoint called');
+  
   try {
     const url = new URL(request.url);
-    const appId = url.searchParams.get('appId');
+    const searchParams = url.searchParams;
+    
+    // Validate URL and params
+    console.log('Request URL:', url.toString());
+    console.log('Search params keys:', Array.from(searchParams.keys()));
+    
+    const appId = searchParams.get('appId');
     
     // Required parameters
     if (!appId) {
       return NextResponse.json({ error: 'appId is required' }, { status: 400 });
     }
+    
+    // Log the request for debugging
+    console.log(`Events API request with params:`, {
+      appId,
+      start: searchParams.get('start'),
+      end: searchParams.get('end'),
+      region: searchParams.get('masteredRegionName'),
+      division: searchParams.get('masteredDivisionName'),
+      city: searchParams.get('masteredCityName'),
+      organizerId: searchParams.get('organizerId'),
+      category: searchParams.get('category'),
+      venue: searchParams.get('venue')
+    });
     
     // Get filter parameters
     const masteredRegionName = url.searchParams.get('masteredRegionName');
@@ -47,14 +68,36 @@ export async function GET(request) {
     }
     
     // Connect to the database
-    await connectToDatabase();
+    try {
+      await connectToDatabase();
+      console.log('MongoDB connection successful');
+      
+      // Validate model exists
+      if (!Event || typeof Event.find !== 'function') {
+        console.error('Event model is not valid', { Event });
+        throw new Error('Invalid Event model');
+      }
+      
+      // Check model definition
+      console.log('Event schema paths:', Object.keys(Event.schema.paths));
+    } catch (dbError) {
+      console.error('MongoDB connection failed:', dbError);
+      throw new Error(`Database connection failed: ${dbError.message}`);
+    }
     
-    // Build query
-    const query = {
-      appId,
-      startDate: { $gte: startDate },
-      endDate: { $lte: endDate }
-    };
+    // Build query safely - handle potential date issues
+    let query = { appId };
+    
+    // Add date range if dates are valid
+    if (!isNaN(startDate.getTime()) && !isNaN(endDate.getTime())) {
+      query.startDate = { $lte: endDate };
+      query.endDate = { $gte: startDate };
+    } else {
+      console.warn('Invalid date values, skipping date filter', { 
+        startDate: startDate?.toString(), 
+        endDate: endDate?.toString()
+      });
+    }
     
     // Add geo location filters if provided
     if (masteredRegionName) query.masteredRegionName = masteredRegionName;
@@ -63,37 +106,146 @@ export async function GET(request) {
     
     // Add organizer filter if provided
     if (organizerId) {
-      query.$or = [
-        { ownerOrganizerID: organizerId },
-        { grantedOrganizerID: organizerId },
-        { alternateOrganizerID: organizerId }
-      ];
+      try {
+        // Convert string ID to ObjectId
+        const mongoose = (await import('mongoose')).default;
+        const organizerObjectId = new mongoose.Types.ObjectId(organizerId);
+        
+        query.$or = [
+          { ownerOrganizerID: organizerObjectId },
+          { grantedOrganizerID: organizerObjectId },
+          { alternateOrganizerID: organizerObjectId }
+        ];
+      } catch (error) {
+        console.warn(`Invalid organizerId format: ${organizerId}, using as string`);
+        query.$or = [
+          { ownerOrganizerID: organizerId },
+          { grantedOrganizerID: organizerId },
+          { alternateOrganizerID: organizerId }
+        ];
+      }
     }
     
     // Add category filter if provided
     if (category) query.categoryFirst = category;
     
     // Add venue filter if provided
-    if (venueId) query.venueID = venueId;
+    if (venueId) {
+      try {
+        // If organizer is already set with $or, need to handle that
+        if (query.$or) {
+          const existingOr = [...query.$or];
+          delete query.$or;
+          
+          // Convert string ID to ObjectId
+          const mongoose = (await import('mongoose')).default;
+          const venueObjectId = new mongoose.Types.ObjectId(venueId);
+          
+          // Build venue conditions
+          const venueConditions = [
+            { venueID: venueObjectId },
+            { locationID: venueObjectId }
+          ];
+          
+          // Combine with AND
+          query.$and = [
+            { $or: existingOr },
+            { $or: venueConditions }
+          ];
+        } else {
+          // Convert string ID to ObjectId
+          const mongoose = (await import('mongoose')).default;
+          const venueObjectId = new mongoose.Types.ObjectId(venueId);
+          
+          // Simple $or for venue only
+          query.$or = [
+            { venueID: venueObjectId },
+            { locationID: venueObjectId }
+          ];
+        }
+      } catch (error) {
+        console.warn(`Invalid venueId format: ${venueId}, using as string`);
+        
+        // Similar logic for string IDs
+        if (query.$or) {
+          const existingOr = [...query.$or];
+          delete query.$or;
+          
+          // Build venue conditions
+          const venueConditions = [
+            { venueID: venueId },
+            { locationID: venueId }
+          ];
+          
+          // Combine with AND
+          query.$and = [
+            { $or: existingOr },
+            { $or: venueConditions }
+          ];
+        } else {
+          query.$or = [
+            { venueID: venueId },
+            { locationID: venueId }
+          ];
+        }
+      }
+    }
     
-    // Fetch events
-    const events = await Event.find(query)
-      .sort({ startDate: 1 })
-      .limit(400); // Limit to a reasonable number
+    console.log('Final MongoDB query:', JSON.stringify(query, null, 2));
     
-    // Return events
-    return NextResponse.json({
-      events,
-      pagination: {
-        total: events.length,
-        limit: 400
-      },
-      query
-    });
+    try {
+      // Validate Event model
+      if (!Event || typeof Event.find !== 'function') {
+        throw new Error('Event model is not properly defined or imported');
+      }
+      
+      // Fetch events with a try/catch specifically for the query operation
+      const events = await Event.find(query)
+        .sort({ startDate: 1 })
+        .limit(400) // Limit to a reasonable number
+        .lean(); // Use lean() for better performance
+      
+      console.log(`Successfully retrieved ${events.length} events`);
+      return NextResponse.json({
+        events,
+        pagination: {
+          total: events.length,
+          limit: 400
+        },
+        query
+      });
+    } catch (queryError) {
+      console.error('MongoDB query error:', queryError);
+      return NextResponse.json(
+        { 
+          error: 'Database query failed', 
+          details: queryError.message,
+          query: query
+        },
+        { status: 500 }
+      );
+    }
+    
+    // The function returns in the try/catch block above
   } catch (error) {
     console.error('Error fetching events:', error);
+    
+    // Add more debug information
+    const errorDetails = {
+      message: error.message,
+      stack: error.stack,
+      name: error.name
+    };
+    
+    // Log the detailed error
+    console.error('Detailed error:', JSON.stringify(errorDetails, null, 2));
+    
     return NextResponse.json(
-      { error: 'Error fetching events', details: error.message },
+      { 
+        error: 'Error fetching events', 
+        details: error.message,
+        stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
+      },
       { status: 500 }
     );
   }

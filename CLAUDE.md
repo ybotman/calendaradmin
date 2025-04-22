@@ -19,6 +19,35 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - Structure: Maintain separation between API routes, components, and models
 - MongoDB integration: Follow existing model patterns
 
+## API Client Standards
+- **Direct Axios Usage**: For component/hook API calls, use Axios directly:
+  ```javascript
+  import axios from 'axios';
+  
+  // Make API requests
+  const response = await axios.get('/api/route?appId=${appId}');
+  ```
+
+- **API Client Object**: For specialized API operations, use the exported services from api-client.js:
+  ```javascript
+  import { usersApi, organizersApi } from '@/lib/api-client';
+  
+  // Use specific API functions
+  const users = await usersApi.getUsers(appId);
+  ```
+
+- **Never Import Default**: The api-client module exports named services, never use as default import:
+  ```javascript
+  // ❌ INCORRECT
+  import apiClient from '@/lib/api-client'; // Will cause runtime errors!
+  
+  // ✅ CORRECT - Named imports
+  import { usersApi, organizersApi } from '@/lib/api-client';
+  
+  // ✅ CORRECT - Direct axios
+  import axios from 'axios';
+  ```
+
 ## Naming Conventions
 - Components/Models: PascalCase (UserEditForm.js)
 - Functions/Variables: camelCase (getUsers, isLoading)

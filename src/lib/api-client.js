@@ -536,6 +536,100 @@ export const organizersApi = {
   }
 };
 
+// Events API
+export const eventsApi = {
+  getEvents: async (filters = {}, appId = '1') => {
+    try {
+      // Parse filters
+      const { 
+        startDate, 
+        endDate, 
+        regionName, 
+        divisionName, 
+        cityName, 
+        organizerId,
+        category,
+        venue
+      } = filters;
+      
+      // Build query parameters
+      const params = new URLSearchParams({ appId });
+      
+      // Add date filters
+      if (startDate) params.append('start', startDate.toISOString());
+      if (endDate) params.append('end', endDate.toISOString());
+      
+      // Add geo filters
+      if (regionName) params.append('masteredRegionName', regionName);
+      if (divisionName) params.append('masteredDivisionName', divisionName);
+      if (cityName) params.append('masteredCityName', cityName);
+      
+      // Add other filters
+      if (organizerId) params.append('organizerId', organizerId);
+      if (category) params.append('category', category);
+      if (venue) params.append('venueId', venue);
+      
+      console.log(`Fetching events from backend: ${BE_URL}/api/events?${params.toString()}`);
+      
+      // Get events from backend
+      const response = await apiClient.get(`/api/events?${params.toString()}`);
+      
+      // Check response format
+      if (response.data && Array.isArray(response.data.events)) {
+        return response.data.events;
+      } else if (Array.isArray(response.data)) {
+        return response.data;
+      } else {
+        console.warn('Unexpected response format from events API:', response.data);
+        return [];
+      }
+    } catch (error) {
+      console.error('Error fetching events from backend:', error);
+      throw error;
+    }
+  },
+  
+  getEventById: async (eventId, appId = '1') => {
+    try {
+      const response = await apiClient.get(`/api/events/${eventId}?appId=${appId}`);
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching event by ID:', error);
+      throw error;
+    }
+  },
+  
+  createEvent: async (eventData) => {
+    try {
+      const response = await apiClient.post('/api/events', eventData);
+      return response.data;
+    } catch (error) {
+      console.error('Error creating event:', error);
+      throw error;
+    }
+  },
+  
+  updateEvent: async (eventId, eventData) => {
+    try {
+      const response = await apiClient.put(`/api/events/${eventId}?appId=${eventData.appId}`, eventData);
+      return response.data;
+    } catch (error) {
+      console.error('Error updating event:', error);
+      throw error;
+    }
+  },
+  
+  deleteEvent: async (eventId, appId = '1') => {
+    try {
+      const response = await apiClient.delete(`/api/events/${eventId}?appId=${appId}`);
+      return response.data;
+    } catch (error) {
+      console.error('Error deleting event:', error);
+      throw error;
+    }
+  }
+};
+
 // Debug API
 export const debugApi = {
   checkBackend: async () => {
@@ -558,5 +652,6 @@ export default {
   users: usersApi,
   roles: rolesApi,
   organizers: organizersApi,
+  events: eventsApi,
   debug: debugApi
 };
