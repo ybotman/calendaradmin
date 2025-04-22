@@ -61,8 +61,8 @@ export default function GeoHierarchyPage() {
         console.log(`Fetching geo hierarchy for AppId: ${currentApp.id}`);
         
         // Fetch all geo hierarchy data in a single request - simplify to just fetch everything
-        console.log('Fetching ALL geo hierarchy data');
-        const response = await axios.get(`/api/geo-hierarchy?type=all`);
+        console.log(`Fetching ALL geo hierarchy data for AppId: ${currentApp.id}`);
+        const response = await axios.get(`/api/geo-hierarchy?type=all&appId=${currentApp.id}`);
         
         if (response.data) {
           // Process cities - city uses isActive, others use active
@@ -201,16 +201,16 @@ export default function GeoHierarchyPage() {
       
       setLoading(true);
       
-      // Delete the item using the API - hardcode appId to 1
-      const deleteResponse = await axios.delete(`/api/geo-hierarchy/${item.type}/${item.id}?appId=1`);
+      // Delete the item using the API - use currentApp.id
+      const deleteResponse = await axios.delete(`/api/geo-hierarchy/${item.type}/${item.id}?appId=${currentApp.id}`);
       console.log('Delete response:', deleteResponse.data);
       
       // Force a delay before refreshing to allow server-side propagation
       await new Promise(resolve => setTimeout(resolve, 500));
       
       // Refresh the geo hierarchy - simplified query to get all items
-      console.log('Refreshing ALL geo hierarchy data after deletion');
-      const response = await axios.get(`/api/geo-hierarchy?type=all`);
+      console.log(`Refreshing ALL geo hierarchy data for AppId: ${currentApp.id} after deletion`);
+      const response = await axios.get(`/api/geo-hierarchy?type=all&appId=${currentApp.id}`);
       
       if (response.data) {
         // Update state based on the type of deleted item

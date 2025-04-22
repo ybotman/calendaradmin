@@ -132,6 +132,16 @@ async function getModelForType(type) {
 export async function GET(request, { params }) {
   try {
     console.log(`Fetching ${params.type} with ID: ${params.id}`);
+    
+    // Get appId from query params
+    const { searchParams } = new URL(request.url);
+    const appId = searchParams.get('appId');
+    
+    // Validate appId
+    if (!appId) {
+      return NextResponse.json({ error: 'Invalid or missing appId parameter' }, { status: 400 });
+    }
+    
     await connectToDatabase();
     
     const { type, id } = params;
@@ -210,6 +220,16 @@ export async function GET(request, { params }) {
 export async function PUT(request, { params }) {
   try {
     console.log(`Updating ${params.type} with ID: ${params.id}`);
+    
+    // Get appId from query params
+    const { searchParams } = new URL(request.url);
+    const appId = searchParams.get('appId');
+    
+    // Validate appId
+    if (!appId) {
+      return NextResponse.json({ error: 'Invalid or missing appId parameter' }, { status: 400 });
+    }
+    
     await connectToDatabase();
     
     const { type, id } = params;
@@ -289,6 +309,16 @@ export async function PUT(request, { params }) {
 export async function DELETE(request, { params }) {
   try {
     console.log(`Deleting ${params.type} with ID: ${params.id}`);
+    
+    // Get appId from query params
+    const { searchParams } = new URL(request.url);
+    const appId = searchParams.get('appId');
+    
+    // Validate appId
+    if (!appId) {
+      return NextResponse.json({ error: 'Invalid or missing appId parameter' }, { status: 400 });
+    }
+    
     await connectToDatabase();
     
     const { type, id } = params;

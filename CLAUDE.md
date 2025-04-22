@@ -19,34 +19,140 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - Structure: Maintain separation between API routes, components, and models
 - MongoDB integration: Follow existing model patterns
 
-## API Client Standards
-- **Direct Axios Usage**: For component/hook API calls, use Axios directly:
-  ```javascript
-  import axios from 'axios';
-  
-  // Make API requests
-  const response = await axios.get('/api/route?appId=${appId}');
-  ```
+## API Integration Guidelines
 
-- **API Client Object**: For specialized API operations, use the exported services from api-client.js:
-  ```javascript
-  import { usersApi, organizersApi } from '@/lib/api-client';
-  
-  // Use specific API functions
-  const users = await usersApi.getUsers(appId);
-  ```
+### Backend Integration Patterns
+All data access should follow one of these approved patterns to ensure consistency and reliability:
 
-- **Never Import Default**: The api-client module exports named services, never use as default import:
-  ```javascript
-  // ❌ INCORRECT
-  import apiClient from '@/lib/api-client'; // Will cause runtime errors!
+#### 1. Direct Axios for Frontend Component API Calls (PREFERRED)
+For frontend components, always use axios directly to interact with Next.js API routes:
+
+```javascript
+import axios from 'axios';
+
+// Make API requests to the internal Next.js API routes
+const response = await axios.get(`/api/events?appId=${appId}`);
+const events = response.data.events || [];
+
+// For mutations
+const newEvent = await axios.post('/api/events', { 
+  ...eventData,
+  appId 
+});
+```
+
+#### 2. API Client Services (LEGACY PATTERN)
+For backward compatibility only, some parts of the codebase may still use the specialized API services from api-client.js:
+
+```javascript
+import { usersApi, organizersApi } from '@/lib/api-client';
+
+// Use specific API functions
+const users = await usersApi.getUsers(appId);
+const organizer = await organizersApi.getOrganizerById(id, appId);
+```
+
+#### 3. API Route Implementation
+For Next.js API routes, use the proxy pattern to forward requests to the backend:
+
+```javascript
+// src/app/api/resource/route.js
+export async function GET(request) {
+  const url = new URL(request.url);
+  const searchParams = url.searchParams;
+  const appId = searchParams.get('appId');
   
-  // ✅ CORRECT - Named imports
-  import { usersApi, organizersApi } from '@/lib/api-client';
+  if (!appId) {
+    return NextResponse.json({ error: 'appId is required' }, { status: 400 });
+  }
   
-  // ✅ CORRECT - Direct axios
-  import axios from 'axios';
-  ```
+  // Forward to backend
+  const backendUrl = process.env.NEXT_PUBLIC_BE_URL || 'http://localhost:3010';
+  const apiUrl = `${backendUrl}/api/resource?${searchParams.toString()}`;
+  
+  const response = await fetch(apiUrl);
+  const data = await response.json();
+  return NextResponse.json(data);
+}
+```
+
+### Prohibited Patterns
+The following practices should NEVER be used:
+
+1. **Direct MongoDB Access**: Never import mongoose models directly
+   ```javascript
+   // ❌ NEVER DO THIS:
+   import Event from '@/models/Event';
+   const events = await Event.find({ appId });
+   ```
+
+2. **Default Import of API Client**: The api-client module exports named services
+   ```javascript
+   // ❌ INCORRECT
+   import apiClient from '@/lib/api-client'; // Will cause runtime errors!
+   
+   // ✅ CORRECT - Named imports
+   import { usersApi, eventsApi } from '@/lib/api-client';
+   
+   // ✅ CORRECT - Direct axios
+   import axios from 'axios';
+   ```
+
+3. **Mixed Backend Access**: Never mix direct database access with API calls
+   ```javascript
+   // ❌ NEVER MIX PATTERNS:
+   import Event from '@/models/Event';
+   import { usersApi } from '@/lib/api-client';
+   
+   // This creates inconsistent data access patterns
+   const events = await Event.find({ appId });
+   const users = await usersApi.getUsers(appId);
+   ```
+
+### Event API Usage
+For events, use the following best practices with direct axios:
+
+```javascript
+// Getting events with filters
+const params = new URLSearchParams({ 
+  appId,
+  start: startDate.toISOString(),
+  end: endDate.toISOString()
+});
+
+// Add location filters
+if (regionName) params.append('masteredRegionName', regionName);
+if (divisionName) params.append('masteredDivisionName', divisionName);
+if (cityName) params.append('masteredCityName', cityName);
+
+// Add other filters
+if (organizerId) params.append('organizerId', organizerId);
+if (category) params.append('category', category);
+
+const response = await axios.get(`/api/events?${params.toString()}`);
+const events = response.data.events || [];
+
+// Creating an event
+const newEvent = await axios.post('/api/events', {
+  appId,
+  title: 'New Event',
+  startDate: new Date(),
+  endDate: new Date(new Date().setHours(new Date().getHours() + 3)),
+  ownerOrganizerID: organizerId,
+  ownerOrganizerName: organizerName,
+  // Other event properties...
+});
+
+// Updating an event
+const updatedEvent = await axios.put(`/api/events/${eventId}?appId=${appId}`, {
+  appId,
+  title: 'Updated Event Title',
+  // Other fields to update
+});
+
+// Deleting an event
+await axios.delete(`/api/events/${eventId}?appId=${appId}`);
+```
 
 ## Naming Conventions
 - Components/Models: PascalCase (UserEditForm.js)
