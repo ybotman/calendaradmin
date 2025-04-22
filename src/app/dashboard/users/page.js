@@ -77,7 +77,15 @@ export default function UsersPage() {
         return '';
       }
       
-      const role = roles.roles.find(r => r._id === roleId);
+      // Convert roleId to string for safer comparison
+      const roleIdStr = roleId?.toString();
+      
+      // Find role by comparing string versions of IDs
+      const role = roles.roles.find(r => 
+        r._id?.toString() === roleIdStr || 
+        r.id?.toString() === roleIdStr
+      );
+      
       return role?.roleNameCode || '?';
     } catch (error) {
       console.error('Error in getRoleCodeForId:', error);
@@ -249,9 +257,9 @@ export default function UsersPage() {
     }
   };
 
-  // Fetch users and roles on component mount
+  // Fetch roles on component mount
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchRoles = async () => {
       try {
         setLoading(true);
         
@@ -269,12 +277,29 @@ export default function UsersPage() {
           console.error("Error: Roles data is not in expected format:", rolesData);
           setRoles({ roles: [] });
         }
-        
-        // Then refresh users
+      } catch (error) {
+        console.error('Error loading roles data:', error);
+        setRoles({ roles: [] });
+      }
+    };
+
+    fetchRoles();
+  }, [appId]);
+  
+  // Fetch users after roles are loaded
+  useEffect(() => {
+    const fetchUsers = async () => {
+      if (!roles?.roles || !Array.isArray(roles.roles)) {
+        // Roles not loaded yet, skip user processing
+        return;
+      }
+      
+      try {
+        setLoading(true);
+        // Now that roles are loaded, fetch and process users
         await refreshUsers();
       } catch (error) {
-        console.error('Error initializing data:', error);
-        setLoading(false);
+        console.error('Error fetching users:', error);
         setUsers([]);
         setFilteredUsers([]);
       } finally {
@@ -282,8 +307,8 @@ export default function UsersPage() {
       }
     };
 
-    fetchData();
-  }, [appId]);
+    fetchUsers();
+  }, [roles]); // Run when roles changes
 
   // Handle tab change
   const handleTabChange = async (event, newValue) => {
