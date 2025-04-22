@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import connectToDatabase from '@/lib/mongodb';
 import mongoose from 'mongoose';
+import { validateAppId } from '@/utils/api-validation';
 
 // Direct model definitions to avoid importing from calendar-be
 let modelsCache = {};
@@ -128,8 +129,19 @@ export async function GET(request) {
     console.log('API request received:', request.url);
     const { searchParams } = new URL(request.url);
     
-    // Parse query parameters
-    const appId = searchParams.get('appId') || "1";
+    // Extract and validate appId parameter
+    let appId;
+    try {
+      appId = validateAppId(searchParams);
+    } catch (error) {
+      console.error(`AppId validation error: ${error.message}`);
+      return NextResponse.json({ 
+        error: 'Invalid or missing appId parameter', 
+        details: error.message 
+      }, { status: 400 });
+    }
+    
+    // Parse other query parameters
     const limit = parseInt(searchParams.get('limit') || '100', 10);
     const page = parseInt(searchParams.get('page') || '1', 10);
     const isActiveParam = searchParams.get('isActive');

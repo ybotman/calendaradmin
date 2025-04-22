@@ -13,7 +13,7 @@ import {
   Typography
 } from '@mui/material';
 import SearchBar from '@/components/common/SearchBar';
-import apiClient from '@/lib/api-client';
+import axios from 'axios';
 import { useAppContext } from '@/lib/AppContext';
 
 /**
@@ -53,7 +53,7 @@ export default function EventFilterPanel({
     const fetchInitialData = async () => {
       try {
         // Fetch all geo-hierarchy data at once
-        const response = await apiClient.get(`/api/geo-hierarchy?appId=${currentApp.id}`);
+        const response = await axios.get(`/api/geo-hierarchy?appId=${currentApp.id}`);
         const geoData = response.data;
         
         if (geoData) {
@@ -67,8 +67,20 @@ export default function EventFilterPanel({
         }
         
         // Fetch organizers
-        const organizersResponse = await apiClient.get(`/api/organizers?appId=${currentApp.id}`);
-        setOrganizers(organizersResponse.data || []);
+        const organizersResponse = await axios.get(`/api/organizers?appId=${currentApp.id}`);
+        
+        // Handle different response formats
+        let organizersData = [];
+        if (organizersResponse.data) {
+          if (Array.isArray(organizersResponse.data)) {
+            // Direct array
+            organizersData = organizersResponse.data;
+          } else if (organizersResponse.data.organizers && Array.isArray(organizersResponse.data.organizers)) {
+            // Object with organizers array property
+            organizersData = organizersResponse.data.organizers;
+          }
+        }
+        setOrganizers(organizersData);
         
         // Set categories
         const categories = [
@@ -101,7 +113,7 @@ export default function EventFilterPanel({
         const region = regions.find(r => r.regionName === selectedGeoFilter.regionName);
         if (!region) return;
         
-        const response = await apiClient.get(
+        const response = await axios.get(
           `/api/geo-hierarchy?type=division&appId=${currentApp.id}`
         );
         
@@ -134,7 +146,7 @@ export default function EventFilterPanel({
         const division = divisions.find(d => d.divisionName === selectedGeoFilter.divisionName);
         if (!division) return;
         
-        const response = await apiClient.get(
+        const response = await axios.get(
           `/api/geo-hierarchy?type=city&appId=${currentApp.id}`
         );
         
@@ -179,7 +191,7 @@ export default function EventFilterPanel({
           url += `&masteredCityName=${selectedGeoFilter.cityName}`;
         }
         
-        const response = await apiClient.get(url);
+        const response = await axios.get(url);
         
         // Some venues don't have appropriate masteredCity/Region fields
         // Filter venues based on the response
@@ -188,7 +200,7 @@ export default function EventFilterPanel({
         // If no venues found, try to fetch all venues
         if (!filteredVenues.length) {
           // Fallback to a more generic fetch
-          const allVenuesResponse = await apiClient.get(`/api/venues?appId=${currentApp.id}`);
+          const allVenuesResponse = await axios.get(`/api/venues?appId=${currentApp.id}`);
           filteredVenues = allVenuesResponse.data || [];
         }
         
@@ -322,7 +334,7 @@ export default function EventFilterPanel({
               <MenuItem value="">
                 <em>None</em>
               </MenuItem>
-              {regions.map((region) => (
+              {Array.isArray(regions) && regions.map((region) => (
                 <MenuItem key={region._id || region.regionName} value={region.regionName}>
                   {region.regionName}
                 </MenuItem>
@@ -342,7 +354,7 @@ export default function EventFilterPanel({
               <MenuItem value="">
                 <em>None</em>
               </MenuItem>
-              {divisions.map((division) => (
+              {Array.isArray(divisions) && divisions.map((division) => (
                 <MenuItem key={division._id || division.divisionName} value={division.divisionName}>
                   {division.divisionName}
                 </MenuItem>
@@ -362,7 +374,7 @@ export default function EventFilterPanel({
               <MenuItem value="">
                 <em>None</em>
               </MenuItem>
-              {cities.map((city) => (
+              {Array.isArray(cities) && cities.map((city) => (
                 <MenuItem key={city._id || city.cityName} value={city.cityName}>
                   {city.cityName}
                 </MenuItem>
@@ -386,7 +398,7 @@ export default function EventFilterPanel({
               <MenuItem value="">
                 <em>All Organizers</em>
               </MenuItem>
-              {organizers.map((organizer) => (
+              {Array.isArray(organizers) && organizers.map((organizer) => (
                 <MenuItem 
                   key={organizer._id} 
                   value={organizer._id}
@@ -409,7 +421,7 @@ export default function EventFilterPanel({
               <MenuItem value="">
                 <em>All Venues</em>
               </MenuItem>
-              {venues.map((venue) => (
+              {Array.isArray(venues) && venues.map((venue) => (
                 <MenuItem 
                   key={venue._id} 
                   value={venue._id}
@@ -432,7 +444,7 @@ export default function EventFilterPanel({
               <MenuItem value="">
                 <em>All Categories</em>
               </MenuItem>
-              {categories.map((category) => (
+              {Array.isArray(categories) && categories.map((category) => (
                 <MenuItem key={category.id} value={category.id}>
                   {category.name}
                 </MenuItem>
@@ -456,10 +468,6 @@ export default function EventFilterPanel({
             inputProps={{ maxLength: 15 }}
             sx={{ mb: 2 }}
           />
-          <Typography variant="caption" color="text.secondary" sx={{ mt: 0, mb: 2, display: 'block' }}>
-            Case-insensitive, auto-trimmed search in event titles
-          </Typography>
-          
           {/* Description Search */}
           <Typography variant="body2" sx={{ mt: 2 }}>Description Search:</Typography>
           <SearchBar
@@ -470,10 +478,6 @@ export default function EventFilterPanel({
             size="small"
             inputProps={{ maxLength: 20 }}
           />
-          <Typography variant="caption" color="text.secondary" sx={{ mt: 0, mb: 1, display: 'block' }}>
-            Searches event descriptions with wildcard matching
-          </Typography>
-          
           {/* Reset Button */}
           <Box sx={{ mt: 3 }}>
             <Button 

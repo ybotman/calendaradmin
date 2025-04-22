@@ -41,7 +41,7 @@ const drawerWidth = 240;
 
 export default function AdminLayout({ children }) {
   const [mobileOpen, setMobileOpen] = useState(false);
-  const { currentApp, updateCurrentApp } = useAppContext();
+  const { currentApp, availableApps, updateCurrentApp, appError } = useAppContext();
   const [anchorEl, setAnchorEl] = useState(null);
   const [appMenuAnchor, setAppMenuAnchor] = useState(null);
 
@@ -142,8 +142,25 @@ export default function AdminLayout({ children }) {
           </IconButton>
           
           <Typography variant="subtitle1" noWrap component="div" sx={{ flexGrow: 1 }}>
-            <Box onClick={handleAppMenu} sx={{ cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
+            <Box onClick={handleAppMenu} sx={{ 
+              cursor: 'pointer', 
+              display: 'flex', 
+              alignItems: 'center',
+              border: appError ? '1px solid #f44336' : 'none',
+              borderRadius: '4px',
+              padding: appError ? '4px 8px' : '0',
+              backgroundColor: appError ? 'rgba(244, 67, 54, 0.08)' : 'transparent'
+            }}>
               Current Application: {currentApp.name} <AppsIcon sx={{ ml: 1 }} />
+              {appError && (
+                <Typography 
+                  variant="caption" 
+                  color="error" 
+                  sx={{ ml: 2, fontWeight: 'bold' }}
+                >
+                  ⚠️ {appError}
+                </Typography>
+              )}
             </Box>
           </Typography>
           
@@ -153,12 +170,20 @@ export default function AdminLayout({ children }) {
             open={Boolean(appMenuAnchor)}
             onClose={handleAppMenuClose}
           >
-            <MenuItem onClick={() => handleAppChange({ id: '1', name: 'TangoTiempo' })}>
-              TangoTiempo
-            </MenuItem>
-            <MenuItem onClick={() => handleAppChange({ id: '2', name: 'HarmonyJunction' })}>
-              HarmonyJunction
-            </MenuItem>
+            {currentApp && appError && (
+              <MenuItem disabled>
+                <Typography color="error" variant="caption">{appError}</Typography>
+              </MenuItem>
+            )}
+            {availableApps.map((app) => (
+              <MenuItem 
+                key={app.id} 
+                onClick={() => handleAppChange(app)}
+                selected={currentApp.id === app.id}
+              >
+                {app.name}
+              </MenuItem>
+            ))}
           </Menu>
           
           <IconButton
@@ -231,6 +256,28 @@ export default function AdminLayout({ children }) {
           mt: '64px', // AppBar height
         }}
       >
+        {appError ? (
+          <Box 
+            sx={{ 
+              p: 3, 
+              border: '1px solid #f44336',
+              borderRadius: '4px',
+              backgroundColor: 'rgba(244, 67, 54, 0.08)',
+              mb: 3
+            }}
+          >
+            <Typography variant="h6" color="error" sx={{ mb: 1 }}>
+              Application Error
+            </Typography>
+            <Typography>
+              There is an error with the current application setup: {appError}
+            </Typography>
+            <Typography sx={{ mt: 2 }}>
+              Please select a valid application from the dropdown in the header to continue
+              using the system. If this error persists, contact your system administrator.
+            </Typography>
+          </Box>
+        ) : null}
         {children}
       </Box>
     </Box>
