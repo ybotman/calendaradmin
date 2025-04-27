@@ -1,14 +1,14 @@
 [
   {
     "btcId": 10006015,
-    "ttId": "api-error-mock-id",
+    "ttId": "dry-run-id",
     "title": "Boston Weekly Sunday Practica",
-    "dryRun": false
+    "dryRun": true
   },
   {
     "btcId": 10011943,
-    "ttId": "api-error-mock-id",
+    "ttId": "dry-run-id",
     "title": "“PRACTILONGA CAMINITO” –the true Practica in Boston! Every Sunday Class &amp; Practice",
-    "dryRun": false
+    "dryRun": true
   }
 ]
