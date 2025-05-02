@@ -349,89 +349,165 @@ export class ApiErrorHandler {
   async executeWithRetry(apiCall, stage, context = {}) {
     let retries = 0;
     let delay = this.initialDelay;
+    let lastError = null;
+    
+    // Track the specific types of errors for better diagnosing
+    const errorTracker = {
+      networkErrors: 0,
+      authErrors: 0,
+      serverErrors: 0,
+      clientErrors: 0,
+      unknownErrors: 0
+    };
+    
+    // Max number of specific error types before giving up
+    const MAX_AUTH_ERRORS = 2; // Auth errors are unlikely to be resolved with retries
     
     while (true) {
       try {
+        // Add retry count to context if this isn't the first attempt
+        const attemptContext = retries > 0 ? 
+          { ...context, attemptNumber: retries + 1, previousErrors: errorTracker } : 
+          context;
+        
+        // Execute the API call
         return await apiCall();
+        
       } catch (error) {
-        // Check if we've exhausted retry attempts
-        if (retries >= this.maxRetries) {
-          // Log the final failure
-          ErrorLogger.logApiError(
-            `API call failed after ${retries} retries: ${error.message}`,
-            stage,
-            { ...context, retries },
-            error
-          );
-          throw error;
-        }
+        lastError = error;
         
         // Handle specific error cases
         let shouldRetry = false;
         let errorMessage = '';
+        let errorType = 'unknown';
         
         if (error.response) {
           // Server responded with error status
           const { status, data } = error.response;
           
           if (status === 429) {
-            // Rate limit exceeded - always retry
+            // Rate limit exceeded - always retry with longer delays
             shouldRetry = true;
+            errorType = 'rateLimit';
             errorMessage = `Rate limit exceeded (429): ${JSON.stringify(data)}`;
             
-            // Use Retry-After header if available
+            // Use Retry-After header if available, or use a longer default delay
             const retryAfter = error.response.headers['retry-after'];
             if (retryAfter) {
               delay = parseInt(retryAfter, 10) * 1000; // Convert to milliseconds
+            } else {
+              // If no Retry-After header, use a longer delay than normal
+              delay = Math.min(delay * 3, this.maxDelay);
             }
+            
           } else if (status >= 500) {
-            // Server error - retry
+            // Server error - retry with standard backoff
             shouldRetry = true;
+            errorType = 'server';
+            errorTracker.serverErrors++;
             errorMessage = `Server error (${status}): ${JSON.stringify(data)}`;
+            
           } else if (status === 401 || status === 403) {
-            // Authentication/authorization error - don't retry
-            shouldRetry = false;
+            // Authentication/authorization error - limited retries
+            errorType = 'auth';
+            errorTracker.authErrors++;
+            
+            // Only retry auth errors once or twice - they're unlikely to resolve without intervention
+            shouldRetry = errorTracker.authErrors < MAX_AUTH_ERRORS;
             errorMessage = `Authentication error (${status}): ${JSON.stringify(data)}`;
+            
+            // Use a longer delay for auth errors to allow time for potential token refresh
+            delay = Math.min(delay * 2, this.maxDelay);
+            
+          } else if (status === 404) {
+            // Not Found errors - retry only once in case of temporary routing issues
+            errorType = 'notFound';
+            shouldRetry = retries < 1; // Only retry once for 404s
+            errorMessage = `Resource not found (404): ${JSON.stringify(data)}`;
+            
           } else {
-            // Other client errors - don't retry
-            shouldRetry = false;
-            errorMessage = `API error (${status}): ${JSON.stringify(data)}`;
+            // Other client errors - limited retry based on specific status codes
+            errorType = 'client';
+            errorTracker.clientErrors++;
+            
+            // Some 4xx errors might be worth retrying, but most aren't
+            const retryableClientErrors = [408, 425, 449, 503]; // Request Timeout, Too Early, Retry With, Service Unavailable
+            shouldRetry = retryableClientErrors.includes(status) && errorTracker.clientErrors < 3;
+            errorMessage = `API client error (${status}): ${JSON.stringify(data)}`;
           }
+          
         } else if (error.request) {
-          // No response received - retry
+          // No response received - likely network issues, always retry
           shouldRetry = true;
-          errorMessage = 'No response received from server';
+          errorType = 'network';
+          errorTracker.networkErrors++;
+          errorMessage = 'No response received from server (network issue)';
+          
         } else {
-          // Request setup error - don't retry
-          shouldRetry = false;
+          // Request setup error - only retry if it seems like a transient issue
+          errorType = 'setup';
+          errorTracker.unknownErrors++;
+          
+          // Retry for certain errors that might be transient
+          const transientErrorPatterns = [
+            'timeout', 'timed out', 'ETIMEDOUT', 'ECONNRESET', 'ECONNREFUSED', 'socket hang up'
+          ];
+          
+          shouldRetry = transientErrorPatterns.some(pattern => 
+            error.message.toLowerCase().includes(pattern.toLowerCase())
+          ) && errorTracker.unknownErrors < 3;
+          
           errorMessage = `Request setup error: ${error.message}`;
         }
         
-        // Log the error
-        if (shouldRetry) {
+        // Check if we've exhausted retry attempts
+        if (retries >= this.maxRetries || !shouldRetry) {
+          // Create a combined error summary for the final error log
+          const errorSummary = {
+            attempts: retries + 1,
+            errorsByType: errorTracker,
+            finalErrorType: errorType,
+            finalErrorStatus: error.response?.status,
+            finalErrorMessage: errorMessage
+          };
+          
+          // Log the final failure with detailed information
           ErrorLogger.logApiError(
-            `${errorMessage}. Retrying (${retries + 1}/${this.maxRetries})...`,
+            `API call failed after ${retries} attempts: ${errorMessage}`,
             stage,
-            { ...context, retries, delay },
+            { ...context, ...errorSummary },
             error
           );
           
-          // Wait before retrying
-          await new Promise(resolve => setTimeout(resolve, delay));
+          // Add error summary to the error object before throwing
+          if (error.response) {
+            error.response.errorSummary = errorSummary;
+          }
           
-          // Increase delay for next retry (exponential backoff)
-          delay = Math.min(delay * 2, this.maxDelay);
-          retries++;
-        } else {
-          // Log and throw for non-retryable errors
-          ErrorLogger.logApiError(
-            errorMessage,
-            stage,
-            context,
-            error
-          );
           throw error;
         }
+        
+        // Log the error with retry information
+        ErrorLogger.logApiError(
+          `${errorMessage}. Retrying (${retries + 1}/${this.maxRetries})...`,
+          stage,
+          { 
+            ...context, 
+            retries, 
+            delay, 
+            errorType,
+            errorTracker,
+            nextRetryIn: `${delay}ms`
+          },
+          error
+        );
+        
+        // Wait before retrying
+        await new Promise(resolve => setTimeout(resolve, delay));
+        
+        // Increase delay for next retry (exponential backoff)
+        delay = Math.min(delay * 2, this.maxDelay);
+        retries++;
       }
     }
   }
