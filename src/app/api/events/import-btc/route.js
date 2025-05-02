@@ -10,17 +10,84 @@ const logError = (message, error) => {
 };
 
 /**
- * Function to validate a JWT token - basic format check
+ * Function to validate a JWT token with enhanced validation
  * @param {string} token - The JWT token to validate
- * @returns {boolean} - Whether the token is valid
+ * @returns {object} - Validation result with status and details
  */
-function isTokenFormatValid(token) {
-  // Basic token format validation (three parts separated by dots)
+function validateToken(token) {
+  const result = {
+    isValid: false,
+    details: {
+      format: false,
+      expiration: null, // We can't fully validate expiration without decoding
+      structureValid: false
+    },
+    reason: ''
+  };
+  
+  // Check if token is provided
+  if (!token) {
+    result.reason = 'No token provided';
+    return result;
+  }
+  
+  // Check if token has valid format (three parts separated by dots)
   const tokenParts = token.split('.');
-  return tokenParts.length === 3 && 
-         tokenParts[0].length > 0 && 
-         tokenParts[1].length > 0 && 
-         tokenParts[2].length > 0;
+  if (tokenParts.length !== 3) {
+    result.reason = 'Invalid token format: token must have 3 parts';
+    return result;
+  }
+  
+  // Check if each part has content
+  if (!tokenParts[0] || !tokenParts[1] || !tokenParts[2]) {
+    result.reason = 'Invalid token format: empty token part';
+    return result;
+  }
+  
+  result.details.format = true;
+  
+  // Try to decode the payload (middle part) to check structure
+  try {
+    const payload = JSON.parse(Buffer.from(tokenParts[1], 'base64').toString());
+    
+    // Check for critical JWT fields
+    if (!payload.iat) {
+      result.details.structureValid = false;
+      result.reason = 'Token missing "iat" (issued at) claim';
+      return result;
+    }
+    
+    // Check if token has exp claim (for expiration)
+    if (payload.exp) {
+      const expirationDate = new Date(payload.exp * 1000); // Convert to milliseconds
+      const now = new Date();
+      result.details.expiration = {
+        expiresAt: expirationDate.toISOString(),
+        isExpired: expirationDate < now
+      };
+      
+      // If token is expired, mark as invalid
+      if (result.details.expiration.isExpired) {
+        result.reason = 'Token expired';
+        return result;
+      }
+    }
+    
+    // Additional structural checks
+    if (!payload.sub && !payload.userId && !payload.user_id) {
+      console.warn('Token missing subject/user identifier - this is unusual');
+    }
+    
+    // If we got here, token format is valid
+    result.details.structureValid = true;
+    result.isValid = true;
+    return result;
+    
+  } catch (error) {
+    // Error decoding payload
+    result.reason = `Error decoding token payload: ${error.message}`;
+    return result;
+  }
 }
 
 /**
@@ -67,7 +134,11 @@ export async function POST(request) {
         { 
           message: 'Authentication token is required', 
           success: false,
-          error: 'Missing or invalid Authorization header'
+          error: 'Missing or invalid Authorization header',
+          details: {
+            headerPresent: !!authHeader,
+            bearerFormat: authHeader ? authHeader.startsWith('Bearer ') : false
+          }
         },
         { status: 401 }
       );
@@ -75,17 +146,28 @@ export async function POST(request) {
     
     const token = authHeader.slice(7); // Remove 'Bearer ' prefix
     
-    // Validate token format
-    if (!isTokenFormatValid(token)) {
+    // Enhanced token validation
+    const tokenValidation = validateToken(token);
+    
+    if (!tokenValidation.isValid) {
       return NextResponse.json(
         { 
-          message: 'Invalid token format', 
+          message: 'Invalid authentication token', 
           success: false,
-          error: 'Token does not appear to be a valid JWT'
+          error: tokenValidation.reason,
+          details: tokenValidation.details
         },
         { status: 401 }
       );
     }
+    
+    // Log token information for debugging (without sensitive data)
+    console.log(`Using token with validated format. Expiration: ${
+      tokenValidation.details.expiration 
+        ? tokenValidation.details.expiration.expiresAt 
+        : 'Not specified'
+    }`);
+    
     
     // Set environment variables for btc-import.js
     process.env.AUTH_TOKEN = token;
@@ -200,49 +282,167 @@ export async function POST(request) {
     } catch (importError) {
       console.error('Import process error:', importError);
       
-      // Try to capture any partial results
+      // Comprehensive error recovery strategy
+      // 1. Try to capture any partial results
       let partialResults = null;
+      let failedEvents = [];
+      let unmatchedEntities = null;
+      
       try {
-        // If there were partial results in a file, try to read them
-        const partialResultsPath = path.join(outputDir, `import-results-${startDate}.json`);
-        if (fs.existsSync(partialResultsPath)) {
-          const partialResultsData = fs.readFileSync(partialResultsPath, 'utf8');
+        // Check for partial result files
+        const partialResultFiles = {
+          results: path.join(outputDir, `import-results-${startDate}.json`),
+          failedEvents: path.join(outputDir, `failed-events-${startDate}.json`),
+          unmatchedEntities: path.join(outputDir, `unmatched-entities-${startDate}.json`)
+        };
+        
+        // Load partial results if available
+        if (fs.existsSync(partialResultFiles.results)) {
+          const partialResultsData = fs.readFileSync(partialResultFiles.results, 'utf8');
           partialResults = JSON.parse(partialResultsData);
+          console.log(`Found partial results for date ${startDate}`);
+        }
+        
+        // Load failed events if available
+        if (fs.existsSync(partialResultFiles.failedEvents)) {
+          const failedEventsData = fs.readFileSync(partialResultFiles.failedEvents, 'utf8');
+          failedEvents = JSON.parse(failedEventsData);
+          console.log(`Found ${failedEvents.length} failed events for date ${startDate}`);
+        }
+        
+        // Load unmatched entities if available
+        if (fs.existsSync(partialResultFiles.unmatchedEntities)) {
+          const unmatchedEntitiesData = fs.readFileSync(partialResultFiles.unmatchedEntities, 'utf8');
+          unmatchedEntities = JSON.parse(unmatchedEntitiesData);
+          console.log(`Found unmatched entities report for date ${startDate}`);
         }
       } catch (partialResultsError) {
-        console.warn('Could not read partial results:', partialResultsError.message);
+        console.warn('Could not read partial results files:', partialResultsError.message);
       }
       
-      // Log detailed error information
+      // 2. Determine error type for better client-side handling
+      const errorInfo = {
+        type: 'unknown',
+        phase: 'unknown',
+        recoverable: false,
+        timestamp: new Date().toISOString()
+      };
+      
+      // Try to determine the error type and phase
+      if (importError.message.includes('Authentication') || importError.message.includes('auth') || importError.message.includes('token')) {
+        errorInfo.type = 'authentication';
+        errorInfo.phase = 'api_access';
+        errorInfo.recoverable = true; // Can be recovered with a new token
+      } else if (importError.message.includes('network') || importError.message.includes('ECONNREFUSED') || importError.message.includes('timeout')) {
+        errorInfo.type = 'network';
+        errorInfo.phase = 'api_access';
+        errorInfo.recoverable = true; // Can be recovered by retrying
+      } else if (importError.message.includes('entity') || importError.message.includes('resolution')) {
+        errorInfo.type = 'entity_resolution';
+        errorInfo.phase = 'processing';
+        errorInfo.recoverable = partialResults !== null; // Can be recovered if we have partial results
+      } else if (importError.message.includes('validation')) {
+        errorInfo.type = 'validation';
+        errorInfo.phase = 'processing';
+        errorInfo.recoverable = false; // Validation errors need code changes
+      } else {
+        errorInfo.type = 'processing';
+        errorInfo.phase = importError.stage || 'unknown';
+        errorInfo.recoverable = partialResults !== null; // Can be recovered if we have partial results
+      }
+      
+      // 3. Create a comprehensive error report with as much diagnostic info as possible
       const errorDetail = {
-        timestamp: new Date().toISOString(),
-        error: importError.message,
-        stack: importError.stack,
+        timestamp: errorInfo.timestamp,
+        error: {
+          message: importError.message,
+          stack: importError.stack,
+          type: errorInfo.type,
+          phase: errorInfo.phase,
+          recoverable: errorInfo.recoverable
+        },
         parameters: {
           startDate,
           endDate,
           dryRun,
           appId
-        }
+        },
+        partialResults: {
+          available: partialResults !== null,
+          summary: partialResults ? {
+            btcEventsTotal: partialResults.btcEvents?.total || 0,
+            btcEventsProcessed: partialResults.btcEvents?.processed || 0,
+            ttEventsCreated: partialResults.ttEvents?.created || 0,
+            ttEventsFailed: partialResults.ttEvents?.failed || 0
+          } : null
+        },
+        failedEvents: {
+          count: failedEvents.length,
+          categories: categorizeFailures(failedEvents)
+        },
+        unmatchedEntities: unmatchedEntities ? {
+          venues: unmatchedEntities.venues?.length || 0,
+          organizers: unmatchedEntities.organizers?.length || 0,
+          categories: unmatchedEntities.categories?.length || 0
+        } : null
       };
       
+      // Save detailed error report
       try {
         const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
         const errorPath = path.join(outputDir, `import-error-${timestamp}.json`);
         fs.writeFileSync(errorPath, JSON.stringify(errorDetail, null, 2));
+        console.log(`Saved detailed error report to ${errorPath}`);
       } catch (errorLogError) {
         console.warn('Could not log detailed error:', errorLogError.message);
       }
       
+      // 4. Return a helpful response with recovery information
       return NextResponse.json(
         { 
-          message: 'Error during import process', 
+          message: `Error during import process: ${errorInfo.type} error in ${errorInfo.phase} phase`, 
           error: importError.message,
-          partialResults: partialResults,
+          errorType: errorInfo.type,
+          recoverable: errorInfo.recoverable,
+          partialResults: partialResults ? {
+            date: startDate,
+            eventsProcessed: partialResults.btcEvents?.processed || 0,
+            eventsCreated: partialResults.ttEvents?.created || 0,
+            eventsFailed: partialResults.ttEvents?.failed || 0
+          } : null,
+          failedEventsCount: failedEvents.length,
+          failureCategories: errorDetail.failedEvents.categories,
+          retryRecommended: errorInfo.recoverable,
           success: false
         },
         { status: 500 }
       );
+      
+      // Helper function to categorize failures
+      function categorizeFailures(failedEvents) {
+        if (!failedEvents || !failedEvents.length) return {};
+        
+        const categories = {
+          entity_resolution: 0,
+          validation: 0,
+          api_error: 0,
+          other: 0
+        };
+        
+        for (const event of failedEvents) {
+          if (event.stage === 'entity_resolution') {
+            categories.entity_resolution++;
+          } else if (event.stage === 'validation') {
+            categories.validation++;
+          } else if (event.error && (event.error.includes('API') || event.error.includes('api'))) {
+            categories.api_error++;
+          } else {
+            categories.other++;
+          }
+        }
+        
+        return categories;
+      }
     }
   } catch (error) {
     // Log the error

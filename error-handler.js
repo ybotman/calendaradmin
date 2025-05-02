@@ -324,7 +324,7 @@ export class ErrorLogger {
 }
 
 /**
- * API error handler with retry capabilities
+ * API error handler with optimized retry capabilities
  */
 export class ApiErrorHandler {
   /**
@@ -333,14 +333,14 @@ export class ApiErrorHandler {
    * @param {number} initialDelay - Initial delay in milliseconds
    * @param {number} maxDelay - Maximum delay in milliseconds
    */
-  constructor(maxRetries = 3, initialDelay = 1000, maxDelay = 30000) {
+  constructor(maxRetries = 3, initialDelay = 1000, maxDelay = 10000) {
     this.maxRetries = maxRetries;
     this.initialDelay = initialDelay;
     this.maxDelay = maxDelay;
   }
   
   /**
-   * Execute an API call with retry logic
+   * Execute an API call with optimized retry logic
    * @param {Function} apiCall - API call function to execute
    * @param {string} stage - Import stage
    * @param {Object} context - Additional context
@@ -351,23 +351,25 @@ export class ApiErrorHandler {
     let delay = this.initialDelay;
     let lastError = null;
     
-    // Track the specific types of errors for better diagnosing
+    // Track the specific types of errors for better diagnosis
     const errorTracker = {
       networkErrors: 0,
       authErrors: 0,
       serverErrors: 0,
       clientErrors: 0,
-      unknownErrors: 0
+      unknownErrors: 0,
+      lastErrorTimestamp: null
     };
     
     // Max number of specific error types before giving up
-    const MAX_AUTH_ERRORS = 2; // Auth errors are unlikely to be resolved with retries
+    const MAX_AUTH_ERRORS = 1; // Auth errors are unlikely to be resolved with retries
+    const MAX_SERVER_ERRORS = 2; // Only retry server errors twice
     
-    while (true) {
+    while (retries <= this.maxRetries) {
       try {
         // Add retry count to context if this isn't the first attempt
         const attemptContext = retries > 0 ? 
-          { ...context, attemptNumber: retries + 1, previousErrors: errorTracker } : 
+          { ...context, attemptNumber: retries, previousErrors: errorTracker } : 
           context;
         
         // Execute the API call
@@ -375,6 +377,7 @@ export class ApiErrorHandler {
         
       } catch (error) {
         lastError = error;
+        errorTracker.lastErrorTimestamp = new Date().toISOString();
         
         // Handle specific error cases
         let shouldRetry = false;
@@ -386,82 +389,79 @@ export class ApiErrorHandler {
           const { status, data } = error.response;
           
           if (status === 429) {
-            // Rate limit exceeded - always retry with longer delays
-            shouldRetry = true;
+            // Rate limit exceeded - retry with appropriate delays
+            shouldRetry = retries < this.maxRetries;
             errorType = 'rateLimit';
             errorMessage = `Rate limit exceeded (429): ${JSON.stringify(data)}`;
             
-            // Use Retry-After header if available, or use a longer default delay
+            // Use Retry-After header if available, but cap at maxDelay
             const retryAfter = error.response.headers['retry-after'];
             if (retryAfter) {
-              delay = parseInt(retryAfter, 10) * 1000; // Convert to milliseconds
+              delay = Math.min(parseInt(retryAfter, 10) * 1000, this.maxDelay); 
             } else {
-              // If no Retry-After header, use a longer delay than normal
-              delay = Math.min(delay * 3, this.maxDelay);
+              // If no Retry-After header, use a modest delay
+              delay = Math.min(delay * 2, this.maxDelay);
             }
             
           } else if (status >= 500) {
-            // Server error - retry with standard backoff
-            shouldRetry = true;
+            // Server error - limited retries with standard backoff
             errorType = 'server';
             errorTracker.serverErrors++;
+            shouldRetry = errorTracker.serverErrors <= MAX_SERVER_ERRORS;
             errorMessage = `Server error (${status}): ${JSON.stringify(data)}`;
             
           } else if (status === 401 || status === 403) {
-            // Authentication/authorization error - limited retries
+            // Authentication/authorization error - very limited retries
             errorType = 'auth';
             errorTracker.authErrors++;
             
-            // Only retry auth errors once or twice - they're unlikely to resolve without intervention
-            shouldRetry = errorTracker.authErrors < MAX_AUTH_ERRORS;
+            // Only retry auth errors once - they're unlikely to resolve without intervention
+            shouldRetry = errorTracker.authErrors <= MAX_AUTH_ERRORS;
             errorMessage = `Authentication error (${status}): ${JSON.stringify(data)}`;
             
-            // Use a longer delay for auth errors to allow time for potential token refresh
-            delay = Math.min(delay * 2, this.maxDelay);
-            
           } else if (status === 404) {
-            // Not Found errors - retry only once in case of temporary routing issues
+            // Not Found errors - don't retry for 404s, it's probably a real missing resource
             errorType = 'notFound';
-            shouldRetry = retries < 1; // Only retry once for 404s
+            shouldRetry = false;
             errorMessage = `Resource not found (404): ${JSON.stringify(data)}`;
             
           } else {
-            // Other client errors - limited retry based on specific status codes
+            // Other client errors - very limited retry based on specific status codes
             errorType = 'client';
             errorTracker.clientErrors++;
             
-            // Some 4xx errors might be worth retrying, but most aren't
+            // Only retry certain 4xx errors that might be transient
             const retryableClientErrors = [408, 425, 449, 503]; // Request Timeout, Too Early, Retry With, Service Unavailable
-            shouldRetry = retryableClientErrors.includes(status) && errorTracker.clientErrors < 3;
+            shouldRetry = retryableClientErrors.includes(status) && errorTracker.clientErrors <= 1;
             errorMessage = `API client error (${status}): ${JSON.stringify(data)}`;
           }
           
         } else if (error.request) {
-          // No response received - likely network issues, always retry
-          shouldRetry = true;
+          // No response received - likely network issues, retry with limits
           errorType = 'network';
           errorTracker.networkErrors++;
+          shouldRetry = errorTracker.networkErrors <= this.maxRetries;
           errorMessage = 'No response received from server (network issue)';
           
         } else {
-          // Request setup error - only retry if it seems like a transient issue
+          // Request setup error - only retry for known transient issues
           errorType = 'setup';
           errorTracker.unknownErrors++;
           
-          // Retry for certain errors that might be transient
+          // Only retry for specific transient error patterns
           const transientErrorPatterns = [
             'timeout', 'timed out', 'ETIMEDOUT', 'ECONNRESET', 'ECONNREFUSED', 'socket hang up'
           ];
           
           shouldRetry = transientErrorPatterns.some(pattern => 
             error.message.toLowerCase().includes(pattern.toLowerCase())
-          ) && errorTracker.unknownErrors < 3;
+          ) && errorTracker.unknownErrors <= 1;
           
           errorMessage = `Request setup error: ${error.message}`;
         }
         
-        // Check if we've exhausted retry attempts
-        if (retries >= this.maxRetries || !shouldRetry) {
+        // Check if we should retry
+        if (!shouldRetry || retries >= this.maxRetries) {
           // Create a combined error summary for the final error log
           const errorSummary = {
             attempts: retries + 1,
@@ -484,10 +484,25 @@ export class ApiErrorHandler {
             error.response.errorSummary = errorSummary;
           }
           
+          // For certain error types, add more specific information to help troubleshooting
+          if (errorType === 'auth') {
+            console.error(`Authentication error details: Check token validity or permissions for endpoint`);
+            
+            // Try to get auth header info (without exposing full token)
+            const authHeader = error.config?.headers?.Authorization;
+            if (authHeader) {
+              const tokenFormat = authHeader.startsWith('Bearer ') ? 'Bearer token' : 'Other auth type';
+              const tokenLength = authHeader.length;
+              console.error(`Auth header format: ${tokenFormat}, length: ${tokenLength}`);
+            }
+          }
+          
           throw error;
         }
         
         // Log the error with retry information
+        console.log(`API error (${errorType}). Retrying in ${delay/1000} seconds... (attempt ${retries + 1}/${this.maxRetries})`);
+        
         ErrorLogger.logApiError(
           `${errorMessage}. Retrying (${retries + 1}/${this.maxRetries})...`,
           stage,
@@ -505,11 +520,15 @@ export class ApiErrorHandler {
         // Wait before retrying
         await new Promise(resolve => setTimeout(resolve, delay));
         
-        // Increase delay for next retry (exponential backoff)
-        delay = Math.min(delay * 2, this.maxDelay);
+        // Increase delay for next retry (exponential backoff with some jitter for distributed systems)
+        const jitter = Math.random() * 0.3 + 0.85; // Random multiplier between 0.85 and 1.15
+        delay = Math.min(delay * 1.5 * jitter, this.maxDelay);
         retries++;
       }
     }
+    
+    // Should never reach here, but as a fallback
+    throw lastError || new Error('Maximum retries reached with no specific error captured');
   }
 }
 

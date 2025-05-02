@@ -43,7 +43,36 @@ const config = {
   dryRun: process.env.DRY_RUN !== 'false', // Default to dry-run
   
   // Test date in YYYY-MM-DD format
-  testDate: process.env.TEST_DATE || null
+  testDate: process.env.TEST_DATE || null,
+  
+  // Default Boston location information for fallbacks
+  boston: {
+    coordinates: [-71.0589, 42.3601], // [longitude, latitude]
+    masteredCityId: "64f26a9f75bfc0db12ed7a1e",
+    masteredCityName: "Boston",
+    masteredDivisionId: "64f26a9f75bfc0db12ed7a15",
+    masteredDivisionName: "Massachusetts",
+    masteredRegionId: "64f26a9f75bfc0db12ed7a12",
+    masteredRegionName: "New England"
+  },
+  
+  // Entity resolution settings
+  resolution: {
+    createMissingEntities: true, // Create entities that can't be resolved
+    allowPartialResolution: true, // Continue with partial entity matches
+    useMockIds: true, // Use mock IDs when entities can't be created
+    fallbackToBoston: true, // Use Boston geography as a fallback
+    maxRetries: 3 // Maximum retries for entity creation
+  },
+  
+  // Error handling settings
+  errorHandling: {
+    logDetailedErrors: true,
+    saveFailedEvents: true,
+    continueOnErrors: true, // Continue processing other events when one fails
+    retryStrategy: 'exponential', // 'exponential', 'linear', or 'constant'
+    maxApiRetries: 3
+  }
 };
 
 // Log configuration for debugging
@@ -976,16 +1005,20 @@ async function deleteEventsForDate(date) {
 }
 
 /**
- * Creates a TT event
+ * Creates a TT event with enhanced error handling and recovery
  * @param {Object} ttEvent - TT event object
  * @returns {Promise<Object>} Created event
  */
 async function createEvent(ttEvent) {
   const logContext = { 
     title: ttEvent.title,
-    startDate: ttEvent.startDate
+    startDate: ttEvent.startDate,
+    venueId: ttEvent.venueID,
+    organizerId: ttEvent.ownerOrganizerID,
+    categoryId: ttEvent.categoryFirstId
   };
   
+  // Handle dry run mode
   if (config.dryRun) {
     ErrorLogger.logInfo(
       `[DRY RUN] Would create event: ${ttEvent.title}`,
@@ -995,7 +1028,8 @@ async function createEvent(ttEvent) {
     return { 
       _id: 'dry-run-id', 
       ...ttEvent,
-      dryRun: true
+      dryRun: true,
+      created: new Date().toISOString()
     };
   }
   
@@ -1005,72 +1039,192 @@ async function createEvent(ttEvent) {
     logContext
   );
   
+  // Pre-validate the event object to catch common issues early
+  const validationIssues = [];
+  
+  // Check for required fields
+  const requiredFields = [
+    'title', 'startDate', 'endDate', 'venueID', 'ownerOrganizerID', 
+    'categoryFirstId', 'masteredCityId'
+  ];
+  
+  for (const field of requiredFields) {
+    if (!ttEvent[field]) {
+      validationIssues.push(`Missing required field: ${field}`);
+    }
+  }
+  
+  // Check for valid dates
+  const dateFields = ['startDate', 'endDate', 'expiresAt'];
+  for (const field of dateFields) {
+    if (ttEvent[field] && isNaN(new Date(ttEvent[field]).getTime())) {
+      validationIssues.push(`Invalid date format for ${field}: ${ttEvent[field]}`);
+    }
+  }
+  
+  // If we found validation issues, log them and return a mock event
+  if (validationIssues.length > 0) {
+    const validationError = `Event validation failed: ${validationIssues.join('; ')}`;
+    ErrorLogger.logValidationError(
+      validationError,
+      ImportStage.LOADING,
+      { ...logContext, validationIssues },
+      new Error(validationError)
+    );
+    
+    return { 
+      _id: `validation-error-mock-id-${Math.random().toString(36).substring(2, 9)}`, 
+      ...ttEvent,
+      validationError: validationIssues,
+      status: 'validation_failed',
+      dryRun: true,
+      mockType: 'validation-error',
+      errorTimestamp: new Date().toISOString()
+    };
+  }
+  
+  // Try to create the event with robust error handling
   try {
-    // Add retry-specific headers that help troubleshoot auth issues
+    // Add comprehensive request headers for better diagnostics
     const headers = {
       'X-Import-Timestamp': new Date().toISOString(),
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'X-Import-EventId': ttEvent.importId || 'unknown',
+      'X-Import-Source': 'BTC-Import',
+      'X-Client-Version': '1.0.0'
     };
     
     // Only add Authorization header if we have a token
     if (config.authToken) {
+      // For security, we're not logging the actual token
       headers['Authorization'] = `Bearer ${config.authToken}`;
+      console.log('Using authentication token from configuration');
+    } else {
+      console.warn('No authentication token provided - request may fail');
     }
     
+    // Execute API call with retry logic
     const response = await apiHandler.executeWithRetry(
       async () => {
-        return await axios.post(`${config.ttApiBase}/events/post`, ttEvent, { headers });
+        console.log(`Sending event creation request for "${ttEvent.title}" (${new Date().toISOString()})`);
+        return await axios.post(`${config.ttApiBase}/events/post`, ttEvent, { 
+          headers,
+          timeout: 10000 // 10-second timeout for responsiveness
+        });
       },
       ImportStage.LOADING,
       logContext
     );
     
+    // Process successful response
     const createdEvent = response.data;
     
     ErrorLogger.logInfo(
-      `Created event: ${createdEvent.title} (${createdEvent._id})`,
+      `Successfully created event: ${createdEvent.title} (${createdEvent._id})`,
       ImportStage.LOADING,
-      { ...logContext, id: createdEvent._id }
+      { ...logContext, id: createdEvent._id, responseStatus: response.status }
     );
     
-    return createdEvent;
+    return {
+      ...createdEvent,
+      importSuccess: true,
+      importTimestamp: new Date().toISOString()
+    };
   } catch (error) {
-    // Check for auth-related errors specifically
-    if (error.response && (error.response.status === 401 || error.response.status === 403)) {
-      ErrorLogger.logApiError(
-        `Authentication error (${error.response.status}) while creating event: ${ttEvent.title}`,
-        ImportStage.LOADING,
-        { ...logContext, authStatus: error.response.status },
-        error
-      );
+    // Classify the error type for better handling
+    let errorType = 'unknown';
+    let errorDetail = error.message;
+    let mockIdPrefix = 'api-error';
+    let shouldRetry = false;
+    
+    // Determine error type from response or message
+    if (error.response) {
+      const { status } = error.response;
       
-      // For auth errors, return a more specific error object that includes auth issue details
-      return { 
-        _id: 'auth-error-mock-id', 
-        ...ttEvent,
-        apiError: 'Authentication error',
-        status: error.response.status,
-        dryRun: true,
-        mockType: 'auth-error'
-      };
+      // Authentication/Authorization errors
+      if (status === 401 || status === 403) {
+        errorType = 'auth';
+        errorDetail = `Authentication error (${status}): ${JSON.stringify(error.response.data || {})}`;
+        mockIdPrefix = 'auth-error';
+        shouldRetry = false; // Auth errors typically need manual intervention
+      }
+      // Not Found errors
+      else if (status === 404) {
+        errorType = 'not-found';
+        errorDetail = `Resource not found (404): ${error.response.data?.message || 'Endpoint not found'}`;
+        mockIdPrefix = 'not-found-error';
+        shouldRetry = false; // 404s are unlikely to be resolved with retries
+      }
+      // Rate limiting or throttling
+      else if (status === 429) {
+        errorType = 'rate-limit';
+        errorDetail = `Rate limit exceeded (429): ${error.response.data?.message || 'Too many requests'}`;
+        mockIdPrefix = 'rate-limit-error';
+        shouldRetry = true; // Worth retrying after a delay
+      }
+      // Server errors (potentially transient)
+      else if (status >= 500) {
+        errorType = 'server';
+        errorDetail = `Server error (${status}): ${error.response.data?.message || 'Internal server error'}`;
+        mockIdPrefix = 'server-error';
+        shouldRetry = true; // Worth retrying for transient server issues
+      }
+      // Other client errors
+      else {
+        errorType = 'client';
+        errorDetail = `Client error (${status}): ${error.response.data?.message || error.message}`;
+        mockIdPrefix = 'client-error';
+        shouldRetry = false; // Client errors typically need to be fixed in the request
+      }
+    }
+    // Network errors (no response)
+    else if (error.request) {
+      errorType = 'network';
+      errorDetail = `Network error: No response received from server`;
+      mockIdPrefix = 'network-error';
+      shouldRetry = true; // Worth retrying for network issues
+    }
+    // Request setup errors
+    else {
+      errorType = 'setup';
+      errorDetail = `Request setup error: ${error.message}`;
+      mockIdPrefix = 'setup-error';
+      shouldRetry = false; // Setup errors typically need code changes
     }
     
-    // For non-auth errors, log general API error
+    // Log the error with appropriate level and context
     ErrorLogger.logApiError(
-      `Failed to create event: ${ttEvent.title}`,
+      `Failed to create event: ${ttEvent.title} - ${errorDetail}`,
       ImportStage.LOADING,
-      logContext,
+      { 
+        ...logContext, 
+        errorType, 
+        errorDetail,
+        shouldRetry,
+        response: error.response ? {
+          status: error.response.status,
+          statusText: error.response.statusText,
+          data: error.response.data
+        } : null
+      },
       error
     );
     
-    // For any error in non-dry-run mode, return a mock object to continue processing
+    // Create a mock object with detailed error info to continue processing
     return { 
-      _id: `api-error-mock-id-${Math.random().toString(36).substring(2, 9)}`, 
+      _id: `${mockIdPrefix}-${Math.random().toString(36).substring(2, 9)}`, 
       ...ttEvent,
-      apiError: error.message,
-      status: error.response?.status,
+      apiError: {
+        type: errorType,
+        message: errorDetail,
+        detail: error.message,
+        status: error.response?.status,
+        statusText: error.response?.statusText,
+        data: error.response?.data
+      },
+      shouldRetry,
       dryRun: true,
-      mockType: 'api-error',
+      mockType: errorType,
       errorTimestamp: new Date().toISOString()
     };
   }

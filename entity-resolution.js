@@ -39,7 +39,7 @@ const cache = {
 
 /**
  * Maps a category name from BTC to TT
- * Simplified version focusing on three main categories: Milonga, Practica, and Class
+ * Improved version with enhanced matching patterns and robustness
  */
 export function mapToTTCategory(sourceName) {
   // Return null if no source name provided
@@ -48,8 +48,8 @@ export function mapToTTCategory(sourceName) {
   // Lowercase for more flexible matching
   const lowerSourceName = sourceName.toLowerCase();
   
-  // Simplified substring matching for the three main categories
-  // CLASS-related patterns
+  // Enhanced substring matching for the three main categories
+  // CLASS-related patterns - expanded with more keywords
   if (lowerSourceName.includes('class') || 
       lowerSourceName.includes('workshop') ||
       lowerSourceName.includes('lesson') ||
@@ -57,27 +57,62 @@ export function mapToTTCategory(sourceName) {
       lowerSourceName.includes('progressive') ||
       lowerSourceName.includes('first timer') ||
       lowerSourceName.includes('beginner') ||
-      lowerSourceName.includes('advanced')) {
+      lowerSourceName.includes('advanced') ||
+      lowerSourceName.includes('learn') ||
+      lowerSourceName.includes('technique') ||
+      lowerSourceName.includes('seminar') ||
+      lowerSourceName.includes('training') ||
+      lowerSourceName.includes('instruction') ||
+      lowerSourceName.includes('intensive') ||
+      lowerSourceName.includes('fundamentals')) {
     return "Class";
   }
   
-  // MILONGA-related patterns
+  // MILONGA-related patterns - expanded with more keywords
   if (lowerSourceName.includes('milonga') || 
       lowerSourceName.includes('dance') ||
-      lowerSourceName.includes('ball')) {
+      lowerSourceName.includes('ball') ||
+      lowerSourceName.includes('salon') ||
+      lowerSourceName.includes('social dance') ||
+      lowerSourceName.includes('fiesta') ||
+      lowerSourceName.includes('night') ||
+      lowerSourceName.includes('evening') ||
+      lowerSourceName.includes('baile') ||
+      lowerSourceName.includes('soiree')) {
     return "Milonga";
   }
   
-  // PRACTICA-related patterns
+  // PRACTICA-related patterns - expanded with more keywords
   if (lowerSourceName.includes('practica') || 
       lowerSourceName.includes('practice') ||
-      lowerSourceName.includes('practilonga')) {
+      lowerSourceName.includes('practilonga') ||
+      lowerSourceName.includes('guided practice') ||
+      lowerSourceName.includes('open practice') ||
+      lowerSourceName.includes('supervised practice') ||
+      lowerSourceName.includes('practi')) {
     return "Practica";
   }
   
-  // Special case for canceled events
-  if (lowerSourceName.includes('cancel')) {
+  // Special cases
+  if (lowerSourceName.includes('cancel') || 
+      lowerSourceName.includes('postponed') ||
+      lowerSourceName.includes('deleted')) {
     return null;
+  }
+  
+  // Festival/Special event handling
+  if (lowerSourceName.includes('festival') ||
+      lowerSourceName.includes('encuentro') ||
+      lowerSourceName.includes('marathon')) {
+    return "Festival";
+  }
+  
+  // Performance/Show handling
+  if (lowerSourceName.includes('performance') ||
+      lowerSourceName.includes('show') ||
+      lowerSourceName.includes('exhibition') ||
+      lowerSourceName.includes('concert')) {
+    return "Performance";
   }
   
   // Default to "Other" if no match found
@@ -571,14 +606,22 @@ function logOrganizerResolution(logEntry) {
 }
 
 /**
- * Resolves a category from BTC to TangoTiempo
+ * Resolves a category from BTC to TangoTiempo with enhanced fallback strategies
  * @param {Object} btcCategory - Category object from BTC API
  * @returns {Promise<{id: string, name: string}|null>} - TT category info or null if not found
  */
 export async function resolveCategory(btcCategory) {
   if (!btcCategory || !btcCategory.name) {
     console.warn('Empty category object received');
-    return null;
+    
+    // Instead of returning null, provide a default category for robustness
+    const defaultCategoryInfo = { 
+      id: `default-category-${Math.random().toString(36).substring(2, 9)}`, 
+      name: "Other",
+      isDefault: true
+    };
+    console.log(`⚠️ Using default category for empty category object: ${defaultCategoryInfo.id}`);
+    return defaultCategoryInfo;
   }
 
   const categoryName = btcCategory.name;
@@ -595,14 +638,22 @@ export async function resolveCategory(btcCategory) {
   if (!mappedCategoryName) {
     console.warn(`Category explicitly ignored: "${categoryName}"`);
     cache.unmatched.categories.add(categoryName);
-    // Returning null for categories we explicitly want to ignore (like "Canceled")
-    return null;
+    
+    // Instead of returning null, provide a default category for events marked as canceled
+    const canceledCategoryInfo = { 
+      id: `canceled-category-${Math.random().toString(36).substring(2, 9)}`, 
+      name: "Other",
+      isCanceled: true
+    };
+    cache.categories.set(categoryName, canceledCategoryInfo);
+    console.log(`⚠️ Using 'Other' category for ignored category "${categoryName}" -> ${canceledCategoryInfo.id}`);
+    return canceledCategoryInfo;
   }
   
   console.log(`Mapped category "${categoryName}" to "${mappedCategoryName}"`);
   
   // Define the essential categories in order of preference for fallbacks
-  const essentialCategories = ["Class", "Milonga", "Practica", "Other"];
+  const essentialCategories = ["Class", "Milonga", "Practica", "Other", "Festival", "Performance"];
   
   try {
     // If we haven't loaded categories yet, load them all at once for efficiency
@@ -615,9 +666,10 @@ export async function resolveCategory(btcCategory) {
       }
     }
     
-    // Try to find the mapped category in the database
+    // Multi-stage category resolution with progressive fallbacks
+    
+    // Stage 1: Try to find the mapped category in the database by exact name
     try {
-      // First try direct match by category name
       const encodedName = encodeURIComponent(mappedCategoryName);
       const response = await axios.get(`${API_BASE_URL}/categories?appId=${APP_ID}&categoryName=${encodedName}`);
       
@@ -625,7 +677,8 @@ export async function resolveCategory(btcCategory) {
         // Found match
         const categoryInfo = {
           id: response.data.data[0]._id,
-          name: mappedCategoryName
+          name: mappedCategoryName,
+          source: 'exact-match'
         };
         cache.categories.set(categoryName, categoryInfo);
         console.log(`✅ Category matched: "${categoryName}" -> ${categoryInfo.id} (${mappedCategoryName})`);
@@ -633,37 +686,93 @@ export async function resolveCategory(btcCategory) {
       }
     } catch (directMatchError) {
       console.warn(`Direct category lookup failed: ${directMatchError.message}`);
-      // Continue to fallback mechanism
+      // Continue to next stage
     }
     
-    // Fallback: Get all categories and try to find our mapped category or any essential category
+    // Stage 2: Try substring matching
+    try {
+      // If the mapped category name has spaces, try partial matching
+      if (mappedCategoryName.includes(' ')) {
+        const mainWord = mappedCategoryName.split(' ')[0]; // Use the first word
+        if (mainWord.length >= 3) { // Only try if we have at least 3 chars
+          const encodedPartial = encodeURIComponent(mainWord);
+          const partialResponse = await axios.get(`${API_BASE_URL}/categories?appId=${APP_ID}&partialMatch=${encodedPartial}`);
+          
+          if (partialResponse.data && partialResponse.data.data && partialResponse.data.data.length > 0) {
+            // Pick the best match from partial results (preferring exact matches)
+            const bestMatch = partialResponse.data.data.find(c => 
+              c.categoryName.toLowerCase() === mappedCategoryName.toLowerCase()
+            ) || partialResponse.data.data[0];
+            
+            const categoryInfo = {
+              id: bestMatch._id,
+              name: bestMatch.categoryName,
+              source: 'partial-match'
+            };
+            cache.categories.set(categoryName, categoryInfo);
+            console.log(`✅ Category matched by partial name: "${categoryName}" -> ${categoryInfo.id} (${categoryInfo.name})`);
+            return categoryInfo;
+          }
+        }
+      }
+    } catch (partialMatchError) {
+      console.warn(`Partial category lookup failed: ${partialMatchError.message}`);
+      // Continue to next stage
+    }
+    
+    // Stage 3: Get all categories and use fallback hierarchy
     try {
       const allCategoriesResponse = await axios.get(`${API_BASE_URL}/categories?appId=${APP_ID}&limit=100`);
       if (allCategoriesResponse.data && allCategoriesResponse.data.data) {
         const categories = allCategoriesResponse.data.data;
         
         // First, try to find an exact match for our mapped category
-        const exactMatch = categories.find(c => c.categoryName === mappedCategoryName);
+        const exactMatch = categories.find(c => 
+          c.categoryName.toLowerCase() === mappedCategoryName.toLowerCase()
+        );
+        
         if (exactMatch) {
           const categoryInfo = {
             id: exactMatch._id,
-            name: mappedCategoryName
+            name: exactMatch.categoryName,
+            source: 'all-categories-exact'
           };
           cache.categories.set(categoryName, categoryInfo);
-          console.log(`✅ Found exact category match: "${categoryName}" -> ${categoryInfo.id} (${mappedCategoryName})`);
+          console.log(`✅ Found exact category match: "${categoryName}" -> ${categoryInfo.id} (${categoryInfo.name})`);
           return categoryInfo;
         }
         
-        // If exact match not found, try the essential categories in order
+        // Try fuzzy matching (contains the mapped name or vice versa)
+        const fuzzyMatch = categories.find(c => 
+          c.categoryName.toLowerCase().includes(mappedCategoryName.toLowerCase()) ||
+          mappedCategoryName.toLowerCase().includes(c.categoryName.toLowerCase())
+        );
+        
+        if (fuzzyMatch) {
+          const categoryInfo = {
+            id: fuzzyMatch._id,
+            name: fuzzyMatch.categoryName,
+            source: 'fuzzy-match'
+          };
+          cache.categories.set(categoryName, categoryInfo);
+          console.log(`✅ Found fuzzy category match: "${categoryName}" -> ${categoryInfo.id} (${categoryInfo.name})`);
+          return categoryInfo;
+        }
+        
+        // If still no match, try the essential categories in order
         for (const essentialCategory of essentialCategories) {
-          const fallbackCategory = categories.find(c => c.categoryName === essentialCategory);
+          const fallbackCategory = categories.find(c => 
+            c.categoryName.toLowerCase() === essentialCategory.toLowerCase()
+          );
+          
           if (fallbackCategory) {
             const categoryInfo = {
               id: fallbackCategory._id,
-              name: essentialCategory
+              name: fallbackCategory.categoryName,
+              source: 'essential-fallback'
             };
             cache.categories.set(categoryName, categoryInfo);
-            console.log(`✅ Using "${essentialCategory}" as fallback for "${categoryName}" -> ${categoryInfo.id}`);
+            console.log(`✅ Using "${fallbackCategory.categoryName}" as fallback for "${categoryName}" -> ${categoryInfo.id}`);
             return categoryInfo;
           }
         }
@@ -674,7 +783,8 @@ export async function resolveCategory(btcCategory) {
           const firstCategory = categories[0];
           const categoryInfo = {
             id: firstCategory._id,
-            name: firstCategory.categoryName
+            name: firstCategory.categoryName,
+            source: 'first-available'
           };
           cache.categories.set(categoryName, categoryInfo);
           console.log(`⚠️ Using first available category as last resort: "${categoryName}" -> ${categoryInfo.id} (${categoryInfo.name})`);
@@ -683,16 +793,31 @@ export async function resolveCategory(btcCategory) {
       }
     } catch (allCategoriesError) {
       console.error(`Error fetching all categories: ${allCategoriesError.message}`);
-      // Continue to manual fallback creation
+      // Continue to fallback creation
     }
     
-    // If we get here, we couldn't find any category in the database
-    // Create a fallback mock category for dry runs or testing
+    // Stage 4: Check if we have any default essential categories in cache
+    for (const essentialCategory of essentialCategories) {
+      const cacheEntries = [...cache.categories.entries()];
+      const fallbackEntry = cacheEntries.find(([key, value]) => 
+        value.name === essentialCategory && !value.isMock
+      );
+      
+      if (fallbackEntry) {
+        const [cachedKey, categoryInfo] = fallbackEntry;
+        cache.categories.set(categoryName, categoryInfo);
+        console.log(`⚠️ Using cached "${categoryInfo.name}" as fallback for "${categoryName}" -> ${categoryInfo.id}`);
+        return categoryInfo;
+      }
+    }
+    
+    // Stage 5: All resolution stages failed, create a robust mock category
     const mockId = `mock-category-${Math.random().toString(36).substring(2, 9)}`;
     const categoryInfo = { 
       id: mockId, 
       name: mappedCategoryName || "Class",
-      isMock: true
+      isMock: true,
+      source: 'mock-creation'
     };
     cache.categories.set(categoryName, categoryInfo);
     console.log(`⚠️ Created mock category: "${categoryName}" -> ${mockId} (${mappedCategoryName})`);
@@ -701,86 +826,195 @@ export async function resolveCategory(btcCategory) {
   } catch (error) {
     console.error(`❌ Error resolving category "${categoryName}":`, error.message);
     
-    // Even after errors, still provide a mock category to prevent entity resolution failures
-    const mockId = `mock-error-category-${Math.random().toString(36).substring(2, 9)}`;
+    // Even after unexpected errors, still provide a mock category to prevent entity resolution failures
+    const mockId = `error-category-${Math.random().toString(36).substring(2, 9)}`;
     const categoryInfo = { 
       id: mockId, 
-      name: "Class",
+      name: "Class", // Default to Class as it's the most common
       isMock: true,
-      fromError: true
+      fromError: true,
+      source: 'error-fallback',
+      originalError: error.message
     };
     cache.categories.set(categoryName, categoryInfo);
-    console.log(`⚠️ Created mock error category: "${categoryName}" -> ${mockId}`);
+    console.log(`⚠️ Created error fallback category: "${categoryName}" -> ${mockId}`);
     return categoryInfo;
   }
 }
 
 /**
- * Loads all categories from TT API to populate the cache
+ * Loads all categories from TT API and BTC API to populate the cache with proper mappings
  * @returns {Promise<void>}
  */
 export async function loadAllCategories() {
   try {
+    // Step 1: Load TT categories
     const response = await axios.get(`${API_BASE_URL}/categories?appId=${APP_ID}&limit=500`);
     
     if (response.data && response.data.data) {
-      const categories = response.data.data;
-      console.log(`Loaded ${categories.length} categories from API`);
+      const ttCategories = response.data.data;
+      console.log(`Loaded ${ttCategories.length} categories from TT API`);
       
-      // Store default class ID for fallback
-      let defaultClassId = null;
+      // Store category IDs for essential categories
+      const essentialCategoryIds = {
+        Class: null,
+        Milonga: null,
+        Practica: null,
+        Other: null,
+        Performance: null,
+        Festival: null
+      };
       
-      // Create mappings for essential categories
-      const essentialCategories = ["Class", "Milonga", "Practica"];
+      // Step 2: Load BTC categories to build direct mappings
+      let btcCategories = [];
+      try {
+        const btcResponse = await axios.get('https://bostontangocalendar.com/wp-json/tribe/events/v1/categories/');
+        if (btcResponse.data && btcResponse.data.categories) {
+          btcCategories = btcResponse.data.categories;
+          console.log(`Loaded ${btcCategories.length} categories from BTC API`);
+        }
+      } catch (btcError) {
+        console.warn(`Failed to load BTC categories: ${btcError.message}`);
+        // Continue with fallback mappings even if BTC API fails
+      }
       
-      // Process and cache all categories
-      for (const category of categories) {
+      // Step 3: Build mapping of essential categories first
+      for (const category of ttCategories) {
         const ttName = category.categoryName;
         
-        // Store the default class ID for fallback
-        if (ttName === "Class") {
-          defaultClassId = category._id;
-          console.log(`Found default Class category with ID: ${defaultClassId}`);
+        // Store IDs for essential categories
+        if (Object.keys(essentialCategoryIds).includes(ttName)) {
+          essentialCategoryIds[ttName] = category._id;
+          console.log(`Found essential category "${ttName}" with ID: ${category._id}`);
         }
+      }
+      
+      // Step 4: Create direct mappings from BTC to TT categories
+      // Define matching rules - priority order matters!
+      const categoryMatchRules = [
+        // Direct word matches
+        { btcPattern: /class|lesson|workshop/i, ttCategory: "Class" },
+        { btcPattern: /milonga|dance|ball|salon/i, ttCategory: "Milonga" },
+        { btcPattern: /practica|practice|practilonga/i, ttCategory: "Practica" },
+        { btcPattern: /performance|show|exhibition|concert/i, ttCategory: "Performance" },
+        { btcPattern: /festival|encuentro|marathon/i, ttCategory: "Festival" }
+      ];
+      
+      // Process each BTC category and map to TT category
+      for (const btcCategory of btcCategories) {
+        const btcName = btcCategory.name;
+        const btcSlug = btcCategory.slug;
         
-        // Add direct mappings for essential categories and their variations
-        if (ttName === "Class") {
-          cache.categories.set("Class", { id: category._id, name: ttName });
-          cache.categories.set("Drop-in Class", { id: category._id, name: ttName });
-          cache.categories.set("Progressive Class", { id: category._id, name: ttName });
-          cache.categories.set("Workshop", { id: category._id, name: ttName });
-          cache.categories.set("DayWorkshop", { id: category._id, name: ttName });
-          cache.categories.set("First Timer Friendly", { id: category._id, name: ttName });
-        } else if (ttName === "Milonga") {
-          cache.categories.set("Milonga", { id: category._id, name: ttName });
-        } else if (ttName === "Practica") {
-          cache.categories.set("Practica", { id: category._id, name: ttName });
-        }
+        // Try to find a match based on our rules
+        let matched = false;
         
-        // Additional mappings for non-essential categories
-        const additionalMappings = {
-          "Festival": "Festivals",
-          "Trip": "Trips-Hosted",
-          "Virtual": "Virtual",
-          "Gathering": ["Party/Gathering", "Party", "Gathering"],
-          "Orchestra": ["Live Orchestra", "Orchestra"],
-          "Concert": ["Concert/Show", "Concert", "Show"],
-          "Forum": ["Forum/RoundTable/Labs", "Forum"]
-        };
-        
-        for (const [ttCategory, btcCategories] of Object.entries(additionalMappings)) {
-          if (ttName === ttCategory) {
-            const btcCategoryList = Array.isArray(btcCategories) ? btcCategories : [btcCategories];
-            for (const btcCategory of btcCategoryList) {
-              cache.categories.set(btcCategory, { id: category._id, name: ttName });
+        for (const rule of categoryMatchRules) {
+          if (rule.btcPattern.test(btcName) || rule.btcPattern.test(btcSlug)) {
+            const ttCategory = rule.ttCategory;
+            
+            if (essentialCategoryIds[ttCategory]) {
+              // We found a mapping between BTC category and TT category
+              cache.categories.set(btcName, {
+                id: essentialCategoryIds[ttCategory],
+                name: ttCategory,
+                source: 'direct-mapping'
+              });
+              
+              console.log(`Mapped BTC category "${btcName}" to TT category "${ttCategory}"`);
+              matched = true;
+              break;
             }
+          }
+        }
+        
+        // If no match found, map to "Other" if available, otherwise first essential category
+        if (!matched) {
+          const fallbackId = essentialCategoryIds.Other || 
+                           essentialCategoryIds.Class || 
+                           essentialCategoryIds.Milonga ||
+                           essentialCategoryIds.Practica;
+          
+          if (fallbackId) {
+            const fallbackCategory = Object.keys(essentialCategoryIds).find(
+              key => essentialCategoryIds[key] === fallbackId
+            );
+            
+            cache.categories.set(btcName, {
+              id: fallbackId,
+              name: fallbackCategory,
+              source: 'fallback-mapping'
+            });
+            
+            console.log(`Mapped BTC category "${btcName}" to fallback category "${fallbackCategory}"`);
           }
         }
       }
       
-      // Set default class ID for fallback
-      if (defaultClassId) {
-        cache.categories.set("default_class_id", { id: defaultClassId, name: "Class" });
+      // Step 5: Add direct mappings for common variations not in BTC API
+      // Class variations
+      if (essentialCategoryIds.Class) {
+        const classVariations = [
+          "Drop-in Class", "Progressive Class", "Workshop", "DayWorkshop", 
+          "First Timer Friendly", "Beginner Class", "Advanced Class",
+          "Technique", "Seminar", "Training", "Intensive"
+        ];
+        
+        for (const variation of classVariations) {
+          cache.categories.set(variation, {
+            id: essentialCategoryIds.Class,
+            name: "Class",
+            source: 'variation-mapping'
+          });
+        }
+      }
+      
+      // Milonga variations
+      if (essentialCategoryIds.Milonga) {
+        const milongaVariations = [
+          "Dance", "Ball", "Salon", "Social Dance", "Fiesta", 
+          "Milonga Night", "Evening Milonga", "Baile", "Soiree"
+        ];
+        
+        for (const variation of milongaVariations) {
+          cache.categories.set(variation, {
+            id: essentialCategoryIds.Milonga,
+            name: "Milonga",
+            source: 'variation-mapping'
+          });
+        }
+      }
+      
+      // Practica variations
+      if (essentialCategoryIds.Practica) {
+        const practicaVariations = [
+          "Practice", "Guided Practice", "Open Practice", 
+          "Supervised Practice", "Practilonga"
+        ];
+        
+        for (const variation of practicaVariations) {
+          cache.categories.set(variation, {
+            id: essentialCategoryIds.Practica,
+            name: "Practica",
+            source: 'variation-mapping'
+          });
+        }
+      }
+      
+      // Step 6: Add fallback categories for robustness
+      if (essentialCategoryIds.Class) {
+        cache.categories.set("default_class_id", {
+          id: essentialCategoryIds.Class,
+          name: "Class",
+          source: 'default-fallback' 
+        });
+      }
+      
+      if (essentialCategoryIds.Other) {
+        cache.categories.set("default_other_id", {
+          id: essentialCategoryIds.Other,
+          name: "Other",
+          source: 'default-fallback'
+        });
       }
       
       console.log(`Cached ${cache.categories.size} category mappings`);
