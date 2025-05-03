@@ -1,0 +1,26 @@
+{
+  "timestamp": "2025-05-02T18:35:23.256Z",
+  "source": {
+    "id": 29137,
+    "name": "Tango Sueño Academy",
+    "email": "info@tangosueno.com"
+  },
+  "result": {
+    "id": "680669162f92688130212454",
+    "name": "Practica Spark",
+    "source": "btcNiceName"
+  },
+  "attempts": [
+    {
+      "method": "cache",
+      "success": true,
+      "target": {
+        "id": "680669162f92688130212454",
+        "name": "Practica Spark",
+        "source": "btcNiceName"
+      }
+    }
+  ],
+  "success": true,
+  "errorDetails": null
+}

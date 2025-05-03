@@ -1,0 +1,29 @@
+{
+  "timestamp": "2025-05-02T18:15:11.858Z",
+  "source": {
+    "id": 397,
+    "name": "Tango Society of Boston",
+    "email": "info@bostontango.org"
+  },
+  "result": {
+    "id": "680669162f92688130212454",
+    "name": "Practica Spark",
+    "source": "btcNiceName"
+  },
+  "attempts": [
+    {
+      "method": "btcNiceName",
+      "query": "http://localhost:3010/api/organizers?appId=1&btcNiceName=Tango%20Society%20of%20Boston",
+      "success": true,
+      "status": 200,
+      "resultCount": 44,
+      "result": {
+        "id": "680669162f92688130212454",
+        "name": "Practica Spark",
+        "source": "btcNiceName"
+      }
+    }
+  ],
+  "success": true,
+  "errorDetails": null
+}

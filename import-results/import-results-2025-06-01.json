@@ -1,23 +1,23 @@
 {
   "date": "2025-06-01",
-  "startTime": "2025-04-26T20:25:57.877Z",
-  "endTime": "2025-04-26T20:26:03.084Z",
-  "duration": 5.207,
+  "startTime": "2025-05-02T20:58:59.436Z",
+  "endTime": "2025-05-02T20:59:01.155Z",
+  "duration": 1.719,
   "btcEvents": {
-    "total": 5,
-    "processed": 5
+    "total": 4,
+    "processed": 4
   },
   "ttEvents": {
     "deleted": 0,
-    "created": 2,
-    "failed": 3
+    "created": 0,
+    "failed": 4
   },
   "entityResolution": {
-    "success": 2,
-    "failure": 3
+    "success": 0,
+    "failure": 2
   },
   "validation": {
-    "valid": 2,
+    "valid": 0,
     "invalid": 0
   },
   "dryRun": false

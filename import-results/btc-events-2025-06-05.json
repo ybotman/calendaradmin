@@ -1,0 +1,572 @@
+{
+  "events": [
+    {
+      "id": 10016501,
+      "global_id": "bostontangocalendar.com?id=10016501",
+      "global_id_lineage": [
+        "bostontangocalendar.com?id=10016501"
+      ],
+      "author": "49",
+      "status": "publish",
+      "date": "2025-03-02 21:35:52",
+      "date_utc": "2025-03-03 02:35:52",
+      "modified": "2025-03-02 21:35:52",
+      "modified_utc": "2025-03-03 02:35:52",
+      "url": "https://bostontangocalendar.com/event/milonga-sal-azul/2025-06-05/",
+      "rest_url": "https://bostontangocalendar.com/wp-json/tribe/events/v1/events/10016501",
+      "title": "Milonga Sal Azul",
+      "description": "<p><strong>Dear Tango Friends,</strong></p>\n<p>We are thrilled to invite you to <strong>Milonga Sal Azul</strong>, a warm and vibrant Argentine tango gathering every Thursday night at <strong>Blue Salt Restaurant</strong>! 💃🕺</p>\n<p><em>What makes it special?</em><br />\nMilonga Sal Azul is a <strong>community-driven space</strong> where dancers come together to enjoy beautiful tandas, great company, and the magic of tango. Each night offers a unique experience with <strong>rotating hosts and talented DJs</strong> setting the mood.</p>\n<h3>📅 Schedule:</h3>\n<ul>\n<li><strong>7:00 PM – 8:00 PM</strong> | Tango Lesson for Beginners ($10)</li>\n<li><strong>8:00 PM – 12:00 AM</strong> | Milonga ($20, includes a glass of wine 🍷)</li>\n<li>Enjoy a <strong>delicious European fusion dinner</strong> in a cozy and inviting setting. Friends and family are welcome to join for dinner or drinks and watch you dance!</li>\n<li><strong>Plenty of free street parking</strong></li>\n<li><strong>5-minute walk</strong> from the nearest bus stop</li>\n</ul>\n<p>Our goal is to create a <strong>BA-style milonga</strong> where everyone feels at home—whether you’re a seasoned dancer or just beginning your tango journey.</p>\n<p>Come dance with us every Thursday at Blue Salt Restaurant—we can’t wait to share this beautiful experience with you! </p>\n<p>Join our community and stay updated by visiting our <a href=\"https://www.facebook.com/share/g/164N9iXxjU/\" target=\"_blank\"><strong>Facebook group</strong></a>. 💙</p>\n<p>With abrazos,<br />\n<strong>The Milonga Sal Azul Team</strong></p>",
+      "excerpt": "",
+      "slug": "milonga-sal-azul",
+      "image": {
+        "url": "https://i0.wp.com/bostontangocalendar.com/wp-content/uploads/2025/03/480668062_2053493141792484_598107550000165331_n.jpg?fit=1024%2C1024&ssl=1",
+        "id": 40933,
+        "extension": "jpg",
+        "width": 1024,
+        "height": 1024,
+        "filesize": 295299,
+        "sizes": {
+          "medium": {
+            "width": 300,
+            "height": 300,
+            "mime-type": "image/jpeg",
+            "filesize": 23293,
+            "url": "https://i0.wp.com/bostontangocalendar.com/wp-content/uploads/2025/03/480668062_2053493141792484_598107550000165331_n.jpg?fit=300%2C300&ssl=1"
+          },
+          "large": {
+            "width": 600,
+            "height": 600,
+            "mime-type": "image/jpeg",
+            "filesize": 69838,
+            "url": "https://i0.wp.com/bostontangocalendar.com/wp-content/uploads/2025/03/480668062_2053493141792484_598107550000165331_n.jpg?fit=600%2C600&ssl=1"
+          },
+          "thumbnail": {
+            "width": 150,
+            "height": 150,
+            "mime-type": "image/jpeg",
+            "filesize": 7895,
+            "url": "https://i0.wp.com/bostontangocalendar.com/wp-content/uploads/2025/03/480668062_2053493141792484_598107550000165331_n.jpg?resize=150%2C150&ssl=1"
+          },
+          "medium_large": {
+            "width": 768,
+            "height": 768,
+            "mime-type": "image/jpeg",
+            "filesize": 103578,
+            "url": "https://i0.wp.com/bostontangocalendar.com/wp-content/uploads/2025/03/480668062_2053493141792484_598107550000165331_n.jpg?fit=768%2C768&ssl=1"
+          },
+          "thinkup-column1-1/4": {
+            "width": 1024,
+            "height": 285,
+            "mime-type": "image/jpeg",
+            "filesize": 65290,
+            "url": "https://i0.wp.com/bostontangocalendar.com/wp-content/uploads/2025/03/480668062_2053493141792484_598107550000165331_n.jpg?resize=1024%2C285&ssl=1"
+          },
+          "thinkup-column2-2/3": {
+            "width": 570,
+            "height": 380,
+            "mime-type": "image/jpeg",
+            "filesize": 50099,
+            "url": "https://i0.wp.com/bostontangocalendar.com/wp-content/uploads/2025/03/480668062_2053493141792484_598107550000165331_n.jpg?resize=570%2C380&ssl=1"
+          }
+        }
+      },
+      "all_day": false,
+      "start_date": "2025-06-05 19:00:00",
+      "start_date_details": {
+        "year": "2025",
+        "month": "06",
+        "day": "05",
+        "hour": "19",
+        "minutes": "00",
+        "seconds": "00"
+      },
+      "end_date": "2025-06-06 00:00:00",
+      "end_date_details": {
+        "year": "2025",
+        "month": "06",
+        "day": "06",
+        "hour": "00",
+        "minutes": "00",
+        "seconds": "00"
+      },
+      "utc_start_date": "2025-06-05 23:00:00",
+      "utc_start_date_details": {
+        "year": "2025",
+        "month": "06",
+        "day": "05",
+        "hour": "23",
+        "minutes": "00",
+        "seconds": "00"
+      },
+      "utc_end_date": "2025-06-06 04:00:00",
+      "utc_end_date_details": {
+        "year": "2025",
+        "month": "06",
+        "day": "06",
+        "hour": "04",
+        "minutes": "00",
+        "seconds": "00"
+      },
+      "timezone": "America/New_York",
+      "timezone_abbr": "EST",
+      "cost": "$20",
+      "cost_details": {
+        "currency_symbol": "$",
+        "currency_code": "USD",
+        "currency_position": "prefix",
+        "values": [
+          "20"
+        ]
+      },
+      "website": "https://www.facebook.com/share/g/16E3UtJNHX/",
+      "show_map": true,
+      "show_map_link": true,
+      "hide_from_listings": false,
+      "sticky": false,
+      "featured": false,
+      "categories": [
+        {
+          "name": "Milonga",
+          "slug": "milonga",
+          "term_group": 0,
+          "term_taxonomy_id": 37,
+          "taxonomy": "tribe_events_cat",
+          "description": "Milonga typically are evening based, have a dress code, and no 'lessons' on the floor. Newbies may watch, but may have a hard time participating. Solid dance techniques and floor management is expected to attend.",
+          "parent": 0,
+          "count": 372,
+          "filter": "raw",
+          "id": 37,
+          "urls": {
+            "self": "https://bostontangocalendar.com/wp-json/tribe/events/v1/categories/37",
+            "collection": "https://bostontangocalendar.com/wp-json/tribe/events/v1/categories"
+          }
+        }
+      ],
+      "tags": [
+        {
+          "name": "argentine tango",
+          "slug": "argentine-tango",
+          "term_group": 0,
+          "term_taxonomy_id": 137,
+          "taxonomy": "post_tag",
+          "description": "",
+          "parent": 0,
+          "count": 35,
+          "filter": "raw",
+          "id": 137,
+          "urls": {
+            "self": "https://bostontangocalendar.com/wp-json/tribe/events/v1/tags/137",
+            "collection": "https://bostontangocalendar.com/wp-json/tribe/events/v1/tags"
+          }
+        },
+        {
+          "name": "milonga",
+          "slug": "milonga",
+          "term_group": 0,
+          "term_taxonomy_id": 124,
+          "taxonomy": "post_tag",
+          "description": "",
+          "parent": 0,
+          "count": 54,
+          "filter": "raw",
+          "id": 124,
+          "urls": {
+            "self": "https://bostontangocalendar.com/wp-json/tribe/events/v1/tags/124",
+            "collection": "https://bostontangocalendar.com/wp-json/tribe/events/v1/tags"
+          }
+        },
+        {
+          "name": "tango",
+          "slug": "tango",
+          "term_group": 0,
+          "term_taxonomy_id": 125,
+          "taxonomy": "post_tag",
+          "description": "",
+          "parent": 0,
+          "count": 46,
+          "filter": "raw",
+          "id": 125,
+          "urls": {
+            "self": "https://bostontangocalendar.com/wp-json/tribe/events/v1/tags/125",
+            "collection": "https://bostontangocalendar.com/wp-json/tribe/events/v1/tags"
+          }
+        }
+      ],
+      "venue": {
+        "id": 40934,
+        "author": "49",
+        "status": "publish",
+        "date": "2025-03-02 21:21:11",
+        "date_utc": "0000-00-00 00:00:00",
+        "modified": "2025-03-02 21:21:11",
+        "modified_utc": "0000-00-00 00:00:00",
+        "url": "https://bostontangocalendar.com/venue/blue-salt-restaurant/",
+        "venue": "Blue Salt Restaurant",
+        "slug": "blue-salt-restaurant",
+        "address": "1255 Washington St",
+        "city": "Newton",
+        "country": "United States",
+        "zip": "02465",
+        "phone": "+16174663174",
+        "website": "https://bluesaltrestaurant.com/",
+        "show_map": false,
+        "show_map_link": false,
+        "global_id": "bostontangocalendar.com?id=40934",
+        "global_id_lineage": [
+          "bostontangocalendar.com?id=40934"
+        ]
+      },
+      "organizer": [
+        {
+          "id": 40961,
+          "author": "49",
+          "status": "publish",
+          "date": "2025-03-02 21:35:54",
+          "date_utc": "2025-03-03 02:35:54",
+          "modified": "2025-03-14 14:17:35",
+          "modified_utc": "2025-03-14 18:17:35",
+          "url": "https://bostontangocalendar.com/organizer/milonga-sal-azul-team/",
+          "organizer": "Milonga Sal Azul Team",
+          "slug": "milonga-sal-azul-team",
+          "phone": "6177633368",
+          "email": "tural.nt.1@gmail.com",
+          "global_id": "bostontangocalendar.com?id=40961",
+          "global_id_lineage": [
+            "bostontangocalendar.com?id=40961"
+          ]
+        }
+      ],
+      "is_virtual": false,
+      "virtual_url": null,
+      "virtual_video_source": ""
+    },
+    {
+      "id": 10015282,
+      "global_id": "bostontangocalendar.com?id=10015282",
+      "global_id_lineage": [
+        "bostontangocalendar.com?id=10015282"
+      ],
+      "author": "7",
+      "status": "publish",
+      "date": "2025-02-12 01:00:31",
+      "date_utc": "2025-02-12 06:00:31",
+      "modified": "2025-02-12 01:00:31",
+      "modified_utc": "2025-02-12 06:00:31",
+      "url": "https://bostontangocalendar.com/event/ut-beginner-learn-argentine-tango-drop-in-to-any-tuesday-or-thursday-at-730pm/2025-06-05/",
+      "rest_url": "https://bostontangocalendar.com/wp-json/tribe/events/v1/events/10015282",
+      "title": "UT &#8211; Beginner &#8211;  Learn Argentine Tango! &#8211; drop in to any Tuesday or Thursday at 7:30pm",
+      "description": "<div class=\"xdj266r x11i5rnm xat24cr x1mh8g0r x1vvkbs\"><strong><span class=\"html-span xexx8yu x4uap5 x18d9i69 xkhd6sd x1hl2dhg x16tdsg8 x1vvkbs x3nfvp2 x1j61x8r x1fcty0u xdj266r xat24cr xgzva0m xhhsvwb xxymvpz xlup9mm x1kky2od\"><img loading=\"lazy\" decoding=\"async\" class=\"xz74otr\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/tc7/1/16/1f483.png\" alt=\"💃\" width=\"16\" height=\"16\" /></span><span class=\"html-span xexx8yu x4uap5 x18d9i69 xkhd6sd x1hl2dhg x16tdsg8 x1vvkbs x3nfvp2 x1j61x8r x1fcty0u xdj266r xat24cr xgzva0m xhhsvwb xxymvpz xlup9mm x1kky2od\"><img loading=\"lazy\" decoding=\"async\" class=\"xz74otr\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/t97/1/16/1f57a.png\" alt=\"🕺\" width=\"16\" height=\"16\" /></span>IN-PERSON BEGINNER ARGENTINE TANGO</strong></div>\n<div></div>\n<div class=\"x11i5rnm xat24cr x1mh8g0r x1vvkbs xtlvy1s\">Choose from:<br class=\"html-br\" />&#8211; one class experience &#8211; 90 min &#8211; $40<br class=\"html-br\" />&#8211; four consecutive classes experience &#8211; 4&#215;90 min &#8211; $120<br class=\"html-br\" />&#8211; 8 weeks course | Each class is 90-min &#8211; $199</div>\n<div></div>\n<div class=\"x11i5rnm xat24cr x1mh8g0r x1vvkbs xtlvy1s\">Tuesdays or Thursdays at 7:30pm.<br class=\"html-br\" />Free Practica (practice time) follows.</div>\n<div></div>\n<div class=\"x11i5rnm xat24cr x1mh8g0r x1vvkbs xtlvy1s\"><img loading=\"lazy\" decoding=\"async\" class=\"xz74otr\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/te2/1/16/270d.png\" alt=\"✍️\" width=\"16\" height=\"16\" /> <strong>REGISTER HERE:</strong> <a class=\"x1i10hfl xjbqb8w x1ejq31n xd10rxx x1sy0etr x17r0tee x972fbf xcfux6l x1qhh985 xm0m39n x9f619 x1ypdohk xt0psk2 xe8uvvx xdj266r x11i5rnm xat24cr x1mh8g0r xexx8yu x4uap5 x18d9i69 xkhd6sd x16tdsg8 x1hl2dhg xggy1nq x1a2a7pz x1sur9pj xkrqix3 x1fey0fg x1s688f\" role=\"link\" href=\"https://square.link/u/hl9qLyR?fbclid=IwZXh0bgNhZW0CMTAAAR1LibPlt-uo8DDQABz3cdby8-bpJkUzShQx1x5hWWZ-RVLi4Cn_QThA5Q4_aem_miQ8FoQ0RbDjAGLBbMwL3w\" target=\"_blank\" rel=\"nofollow noopener noreferrer\">https://square.link/u/hl9qLyR</a></div>\n<div></div>\n<div class=\"x11i5rnm xat24cr x1mh8g0r x1vvkbs xtlvy1s\">Learning Argentine Tango has a couple of phases, and the Beginner course is one of the most crucial components!</div>\n<div class=\"x11i5rnm xat24cr x1mh8g0r x1vvkbs xtlvy1s\">In the Beginner course, you will learn all Argentine Tango essentials &#8211; a famous tango walk/caminata, baldoza, and 8-count basic to the cross.</div>\n<div></div>\n<div class=\"x11i5rnm xat24cr x1mh8g0r x1vvkbs xtlvy1s\">You will be explained the essence of tango embrace, how to connect and non-verbally communicate with your partner, how to read the body language, and how to convey the intention, express your needs and take care of the couple’s wellbeing.</div>\n<div></div>\n<div class=\"x11i5rnm xat24cr x1mh8g0r x1vvkbs xtlvy1s\">You will also become familiar with the principles of improvisation, navigation, and musicality.</div>\n<div class=\"x11i5rnm xat24cr x1mh8g0r x1vvkbs xtlvy1s\"><span class=\"html-span xexx8yu x4uap5 x18d9i69 xkhd6sd x1hl2dhg x16tdsg8 x1vvkbs x3nfvp2 x1j61x8r x1fcty0u xdj266r xat24cr xgzva0m xhhsvwb xxymvpz xlup9mm x1kky2od\"><img loading=\"lazy\" decoding=\"async\" class=\"xz74otr\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/t33/1/16/2705.png\" alt=\"✅\" width=\"16\" height=\"16\" /></span> Master the Tango: Conquer the foundation in 8 engaging weeks.</div>\n<div class=\"x11i5rnm xat24cr x1mh8g0r x1vvkbs xtlvy1s\"><span class=\"html-span xexx8yu x4uap5 x18d9i69 xkhd6sd x1hl2dhg x16tdsg8 x1vvkbs x3nfvp2 x1j61x8r x1fcty0u xdj266r xat24cr xgzva0m xhhsvwb xxymvpz xlup9mm x1kky2od\"><img loading=\"lazy\" decoding=\"async\" class=\"xz74otr\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/t33/1/16/2705.png\" alt=\"✅\" width=\"16\" height=\"16\" /></span> Unwind &amp; Explore: Discover different genres of tango music.</div>\n<div class=\"x11i5rnm xat24cr x1mh8g0r x1vvkbs xtlvy1s\"><span class=\"html-span xexx8yu x4uap5 x18d9i69 xkhd6sd x1hl2dhg x16tdsg8 x1vvkbs x3nfvp2 x1j61x8r x1fcty0u xdj266r xat24cr xgzva0m xhhsvwb xxymvpz xlup9mm x1kky2od\"><img loading=\"lazy\" decoding=\"async\" class=\"xz74otr\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/t33/1/16/2705.png\" alt=\"✅\" width=\"16\" height=\"16\" /></span> Embrace the Community: Learn etiquette and experience the joy of connection on the dance floor.</div>\n<div class=\"x11i5rnm xat24cr x1mh8g0r x1vvkbs xtlvy1s\"><span class=\"html-span xexx8yu x4uap5 x18d9i69 xkhd6sd x1hl2dhg x16tdsg8 x1vvkbs x3nfvp2 x1j61x8r x1fcty0u xdj266r xat24cr xgzva0m xhhsvwb xxymvpz xlup9mm x1kky2od\"><img loading=\"lazy\" decoding=\"async\" class=\"xz74otr\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/t33/1/16/2705.png\" alt=\"✅\" width=\"16\" height=\"16\" /></span> Bonus: Gain confidence, improve coordination, reduce stress, and make friends!</div>\n<div></div>\n<div class=\"x11i5rnm xat24cr x1mh8g0r x1vvkbs xtlvy1s\">Perfect for: Singles &amp; couples, anyone seeking fun &amp; new experiences.</div>\n<div class=\"x11i5rnm xat24cr x1mh8g0r x1vvkbs xtlvy1s\"><span class=\"html-span xexx8yu x4uap5 x18d9i69 xkhd6sd x1hl2dhg x16tdsg8 x1vvkbs x3nfvp2 x1j61x8r x1fcty0u xdj266r xat24cr xgzva0m xhhsvwb xxymvpz xlup9mm x1kky2od\"><img loading=\"lazy\" decoding=\"async\" class=\"xz74otr\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/tc7/1/16/1f483.png\" alt=\"💃\" width=\"16\" height=\"16\" /></span><span class=\"html-span xexx8yu x4uap5 x18d9i69 xkhd6sd x1hl2dhg x16tdsg8 x1vvkbs x3nfvp2 x1j61x8r x1fcty0u xdj266r xat24cr xgzva0m xhhsvwb xxymvpz xlup9mm x1kky2od\"><img loading=\"lazy\" decoding=\"async\" class=\"xz74otr\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/t97/1/16/1f57a.png\" alt=\"🕺\" width=\"16\" height=\"16\" /></span>No prior dance experience required! No partner necessary.</div>\n<div></div>\n<div class=\"x11i5rnm xat24cr x1mh8g0r x1vvkbs xtlvy1s\"><span class=\"html-span xexx8yu x4uap5 x18d9i69 xkhd6sd x1hl2dhg x16tdsg8 x1vvkbs x3nfvp2 x1j61x8r x1fcty0u xdj266r xat24cr xgzva0m xhhsvwb xxymvpz xlup9mm x1kky2od\"><img loading=\"lazy\" decoding=\"async\" class=\"xz74otr\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/t2/1/16/1f60d.png\" alt=\"😍\" width=\"16\" height=\"16\" /></span><span class=\"html-span xexx8yu x4uap5 x18d9i69 xkhd6sd x1hl2dhg x16tdsg8 x1vvkbs x3nfvp2 x1j61x8r x1fcty0u xdj266r xat24cr xgzva0m xhhsvwb xxymvpz xlup9mm x1kky2od\"><img loading=\"lazy\" decoding=\"async\" class=\"xz74otr\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/t2/1/16/1f60d.png\" alt=\"😍\" width=\"16\" height=\"16\" /></span> The classes are held at 349 Washington St, Malden, MA 02148.<br class=\"html-br\" /><span class=\"html-span xexx8yu x4uap5 x18d9i69 xkhd6sd x1hl2dhg x16tdsg8 x1vvkbs x3nfvp2 x1j61x8r x1fcty0u xdj266r xat24cr xgzva0m xhhsvwb xxymvpz xlup9mm x1kky2od\"><img loading=\"lazy\" decoding=\"async\" class=\"xz74otr\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/t33/1/16/2705.png\" alt=\"✅\" width=\"16\" height=\"16\" /></span> &#8211; 50 parking spots available.<br class=\"html-br\" /><span class=\"html-span xexx8yu x4uap5 x18d9i69 xkhd6sd x1hl2dhg x16tdsg8 x1vvkbs x3nfvp2 x1j61x8r x1fcty0u xdj266r xat24cr xgzva0m xhhsvwb xxymvpz xlup9mm x1kky2od\"><img loading=\"lazy\" decoding=\"async\" class=\"xz74otr\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/t33/1/16/2705.png\" alt=\"✅\" width=\"16\" height=\"16\" /></span> &#8211; 2 min walk from Oak Grove T stop.</div>\n<div class=\"x11i5rnm xat24cr x1mh8g0r x1vvkbs xtlvy1s\"></div>\n<div class=\"x11i5rnm xat24cr x1mh8g0r x1vvkbs xtlvy1s\"><span class=\"html-span xexx8yu x4uap5 x18d9i69 xkhd6sd x1hl2dhg x16tdsg8 x1vvkbs x3nfvp2 x1j61x8r x1fcty0u xdj266r xat24cr xgzva0m xhhsvwb xxymvpz xlup9mm x1kky2od\"><img loading=\"lazy\" decoding=\"async\" class=\"xz74otr\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/tc7/1/16/1f483.png\" alt=\"💃\" width=\"16\" height=\"16\" /></span><span class=\"html-span xexx8yu x4uap5 x18d9i69 xkhd6sd x1hl2dhg x16tdsg8 x1vvkbs x3nfvp2 x1j61x8r x1fcty0u xdj266r xat24cr xgzva0m xhhsvwb xxymvpz xlup9mm x1kky2od\"><img loading=\"lazy\" decoding=\"async\" class=\"xz74otr\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/t97/1/16/1f57a.png\" alt=\"🕺\" width=\"16\" height=\"16\" /></span> <strong>More info here:</strong> <a class=\"x1i10hfl xjbqb8w x1ejq31n xd10rxx x1sy0etr x17r0tee x972fbf xcfux6l x1qhh985 xm0m39n x9f619 x1ypdohk xt0psk2 xe8uvvx xdj266r x11i5rnm xat24cr x1mh8g0r xexx8yu x4uap5 x18d9i69 xkhd6sd x16tdsg8 x1hl2dhg xggy1nq x1a2a7pz x1sur9pj xkrqix3 x1fey0fg x1s688f\" role=\"link\" href=\"https://www.ultimatetango.com/beginner?fbclid=IwZXh0bgNhZW0CMTAAAR3KmahsOlEaOFnRMXuVP0omtctRD0__u42jiOvXDxmp8N7kKZKSMu3i3zA_aem_vbYYnpiNKVQThCwBq0xRxA\" target=\"_blank\" rel=\"nofollow noopener noreferrer\">https://www.ultimatetango.com/beginner</a></div>\n<div class=\"x11i5rnm xat24cr x1mh8g0r x1vvkbs xtlvy1s\"><span class=\"html-span xexx8yu x4uap5 x18d9i69 xkhd6sd x1hl2dhg x16tdsg8 x1vvkbs x3nfvp2 x1j61x8r x1fcty0u xdj266r xat24cr xgzva0m xhhsvwb xxymvpz xlup9mm x1kky2od\"><img loading=\"lazy\" decoding=\"async\" class=\"xz74otr\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/te2/1/16/270d.png\" alt=\"✍️\" width=\"16\" height=\"16\" /></span> <strong>REGISTER HERE:</strong> <a class=\"x1i10hfl xjbqb8w x1ejq31n xd10rxx x1sy0etr x17r0tee x972fbf xcfux6l x1qhh985 xm0m39n x9f619 x1ypdohk xt0psk2 xe8uvvx xdj266r x11i5rnm xat24cr x1mh8g0r xexx8yu x4uap5 x18d9i69 xkhd6sd x16tdsg8 x1hl2dhg xggy1nq x1a2a7pz x1sur9pj xkrqix3 x1fey0fg x1s688f\" role=\"link\" href=\"https://square.link/u/hl9qLyRI?fbclid=IwZXh0bgNhZW0CMTAAAR16eQs566WcD33oX9zT2R-5U_HFBGzpWkuNT4IimITb-e93sOrghdQlqmI_aem_9LbnIk75naS3QpKvZVZgGA\" target=\"_blank\" rel=\"nofollow noopener noreferrer\">https://square.link/u/hl9qLyRI</a></div>",
+      "excerpt": "",
+      "slug": "ut-beginner-learn-argentine-tango-drop-in-to-any-tuesday-or-thursday-at-730pm",
+      "image": {
+        "url": "https://i0.wp.com/bostontangocalendar.com/wp-content/uploads/2025/02/475831993_1697368847793979_2849015568904285125_n-scaled.jpg?fit=2560%2C1059&ssl=1",
+        "id": 40834,
+        "extension": "jpg",
+        "width": 2560,
+        "height": 1059,
+        "filesize": 160402,
+        "sizes": {
+          "medium": {
+            "width": 300,
+            "height": 124,
+            "mime-type": "image/jpeg",
+            "filesize": 6664,
+            "url": "https://i0.wp.com/bostontangocalendar.com/wp-content/uploads/2025/02/475831993_1697368847793979_2849015568904285125_n-scaled.jpg?fit=300%2C124&ssl=1"
+          },
+          "large": {
+            "width": 600,
+            "height": 248,
+            "mime-type": "image/jpeg",
+            "filesize": 16378,
+            "url": "https://i0.wp.com/bostontangocalendar.com/wp-content/uploads/2025/02/475831993_1697368847793979_2849015568904285125_n-scaled.jpg?fit=600%2C248&ssl=1"
+          },
+          "thumbnail": {
+            "width": 150,
+            "height": 150,
+            "mime-type": "image/jpeg",
+            "filesize": 4084,
+            "url": "https://i0.wp.com/bostontangocalendar.com/wp-content/uploads/2025/02/475831993_1697368847793979_2849015568904285125_n-scaled.jpg?resize=150%2C150&ssl=1"
+          },
+          "medium_large": {
+            "width": 768,
+            "height": 318,
+            "mime-type": "image/jpeg",
+            "filesize": 23336,
+            "url": "https://i0.wp.com/bostontangocalendar.com/wp-content/uploads/2025/02/475831993_1697368847793979_2849015568904285125_n-scaled.jpg?fit=768%2C318&ssl=1"
+          },
+          "1536x1536": {
+            "width": 1536,
+            "height": 636,
+            "mime-type": "image/jpeg",
+            "filesize": 67252,
+            "url": "https://i0.wp.com/bostontangocalendar.com/wp-content/uploads/2025/02/475831993_1697368847793979_2849015568904285125_n-scaled.jpg?fit=1536%2C636&ssl=1"
+          },
+          "2048x2048": {
+            "width": 2048,
+            "height": 847,
+            "mime-type": "image/jpeg",
+            "filesize": 108329,
+            "url": "https://i0.wp.com/bostontangocalendar.com/wp-content/uploads/2025/02/475831993_1697368847793979_2849015568904285125_n-scaled.jpg?fit=2048%2C847&ssl=1"
+          },
+          "thinkup-column1-1/4": {
+            "width": 1140,
+            "height": 285,
+            "mime-type": "image/jpeg",
+            "filesize": 27918,
+            "url": "https://i0.wp.com/bostontangocalendar.com/wp-content/uploads/2025/02/475831993_1697368847793979_2849015568904285125_n-scaled.jpg?resize=1140%2C285&ssl=1"
+          },
+          "thinkup-column2-2/3": {
+            "width": 570,
+            "height": 380,
+            "mime-type": "image/jpeg",
+            "filesize": 19325,
+            "url": "https://i0.wp.com/bostontangocalendar.com/wp-content/uploads/2025/02/475831993_1697368847793979_2849015568904285125_n-scaled.jpg?resize=570%2C380&ssl=1"
+          }
+        },
+        "original_image": "475831993_1697368847793979_2849015568904285125_n.jpg"
+      },
+      "all_day": false,
+      "start_date": "2025-06-05 19:30:00",
+      "start_date_details": {
+        "year": "2025",
+        "month": "06",
+        "day": "05",
+        "hour": "19",
+        "minutes": "30",
+        "seconds": "00"
+      },
+      "end_date": "2025-06-05 21:00:00",
+      "end_date_details": {
+        "year": "2025",
+        "month": "06",
+        "day": "05",
+        "hour": "21",
+        "minutes": "00",
+        "seconds": "00"
+      },
+      "utc_start_date": "2025-06-05 23:30:00",
+      "utc_start_date_details": {
+        "year": "2025",
+        "month": "06",
+        "day": "05",
+        "hour": "23",
+        "minutes": "30",
+        "seconds": "00"
+      },
+      "utc_end_date": "2025-06-06 01:00:00",
+      "utc_end_date_details": {
+        "year": "2025",
+        "month": "06",
+        "day": "06",
+        "hour": "01",
+        "minutes": "00",
+        "seconds": "00"
+      },
+      "timezone": "America/New_York",
+      "timezone_abbr": "EST",
+      "cost": "$40 – $199",
+      "cost_details": {
+        "currency_symbol": "",
+        "currency_code": "",
+        "currency_position": "",
+        "values": [
+          "40",
+          "199"
+        ]
+      },
+      "website": "https://www.facebook.com/share/18QVuw7PyG/",
+      "show_map": true,
+      "show_map_link": true,
+      "hide_from_listings": false,
+      "sticky": false,
+      "featured": false,
+      "categories": [
+        {
+          "name": "Drop-in Class",
+          "slug": "drop-in-class",
+          "term_group": 0,
+          "term_taxonomy_id": 69,
+          "taxonomy": "tribe_events_cat",
+          "description": "",
+          "parent": 128,
+          "count": 437,
+          "filter": "raw",
+          "id": 69,
+          "urls": {
+            "self": "https://bostontangocalendar.com/wp-json/tribe/events/v1/categories/69",
+            "collection": "https://bostontangocalendar.com/wp-json/tribe/events/v1/categories",
+            "up": "https://bostontangocalendar.com/wp-json/tribe/events/v1/categories/128"
+          }
+        },
+        {
+          "name": "Progressive Class",
+          "slug": "progressive-class",
+          "term_group": 0,
+          "term_taxonomy_id": 68,
+          "taxonomy": "tribe_events_cat",
+          "description": "Each week adds to the previous weeks lessons",
+          "parent": 128,
+          "count": 310,
+          "filter": "raw",
+          "id": 68,
+          "urls": {
+            "self": "https://bostontangocalendar.com/wp-json/tribe/events/v1/categories/68",
+            "collection": "https://bostontangocalendar.com/wp-json/tribe/events/v1/categories",
+            "up": "https://bostontangocalendar.com/wp-json/tribe/events/v1/categories/128"
+          }
+        },
+        {
+          "name": "WorkShop",
+          "slug": "workshop",
+          "term_group": 0,
+          "term_taxonomy_id": 51,
+          "taxonomy": "tribe_events_cat",
+          "description": "A tango WorkShop.",
+          "parent": 0,
+          "count": 465,
+          "filter": "raw",
+          "id": 51,
+          "urls": {
+            "self": "https://bostontangocalendar.com/wp-json/tribe/events/v1/categories/51",
+            "collection": "https://bostontangocalendar.com/wp-json/tribe/events/v1/categories"
+          }
+        }
+      ],
+      "tags": [
+        {
+          "name": "argentine tango",
+          "slug": "argentine-tango",
+          "term_group": 0,
+          "term_taxonomy_id": 137,
+          "taxonomy": "post_tag",
+          "description": "",
+          "parent": 0,
+          "count": 35,
+          "filter": "raw",
+          "id": 137,
+          "urls": {
+            "self": "https://bostontangocalendar.com/wp-json/tribe/events/v1/tags/137",
+            "collection": "https://bostontangocalendar.com/wp-json/tribe/events/v1/tags"
+          }
+        },
+        {
+          "name": "Beginner",
+          "slug": "beginner",
+          "term_group": 0,
+          "term_taxonomy_id": 66,
+          "taxonomy": "post_tag",
+          "description": "Just starting, but know a step or 2, and have taken some lessons or classes",
+          "parent": 0,
+          "count": 302,
+          "filter": "raw",
+          "id": 66,
+          "urls": {
+            "self": "https://bostontangocalendar.com/wp-json/tribe/events/v1/tags/66",
+            "collection": "https://bostontangocalendar.com/wp-json/tribe/events/v1/tags"
+          }
+        },
+        {
+          "name": "First Timer",
+          "slug": "first-timer",
+          "term_group": 0,
+          "term_taxonomy_id": 67,
+          "taxonomy": "post_tag",
+          "description": "First Timer",
+          "parent": 0,
+          "count": 285,
+          "filter": "raw",
+          "id": 67,
+          "urls": {
+            "self": "https://bostontangocalendar.com/wp-json/tribe/events/v1/tags/67",
+            "collection": "https://bostontangocalendar.com/wp-json/tribe/events/v1/tags"
+          }
+        },
+        {
+          "name": "tango in boston",
+          "slug": "tango-in-boston",
+          "term_group": 0,
+          "term_taxonomy_id": 142,
+          "taxonomy": "post_tag",
+          "description": "",
+          "parent": 0,
+          "count": 6,
+          "filter": "raw",
+          "id": 142,
+          "urls": {
+            "self": "https://bostontangocalendar.com/wp-json/tribe/events/v1/tags/142",
+            "collection": "https://bostontangocalendar.com/wp-json/tribe/events/v1/tags"
+          }
+        }
+      ],
+      "venue": {
+        "id": 29477,
+        "author": "7",
+        "status": "publish",
+        "date": "2023-01-22 21:28:50",
+        "date_utc": "2023-01-23 02:28:50",
+        "modified": "2025-04-26 23:27:46",
+        "modified_utc": "2025-04-27 03:27:46",
+        "url": "https://bostontangocalendar.com/venue/ultimatetangostudio/",
+        "venue": "Ultimate Tango Studio",
+        "slug": "ultimatetangostudio",
+        "address": "349 Washington St",
+        "city": "Malden",
+        "country": "United States",
+        "state": "MA",
+        "zip": "02148",
+        "stateprovince": "MA",
+        "show_map": true,
+        "show_map_link": true,
+        "global_id": "bostontangocalendar.com?id=29477",
+        "global_id_lineage": [
+          "bostontangocalendar.com?id=29477"
+        ]
+      },
+      "organizer": [
+        {
+          "id": 360,
+          "author": "2",
+          "status": "publish",
+          "date": "2018-12-27 10:36:37",
+          "date_utc": "2018-12-27 15:36:37",
+          "modified": "2019-06-20 17:15:38",
+          "modified_utc": "2019-06-20 21:15:38",
+          "url": "https://bostontangocalendar.com/organizer/ultimate-tango/",
+          "organizer": "Ultimate Tango",
+          "description": "<h5 style=\"text-align: center;\">Don&#8217;t Repeat Mindlessly. Learn Through Understanding.</h5>\n<p class=\"lead\">Here, at Ultimate Tango you will find all you need to become a true member of the Tango community in Boston MA and worldwide. We focus on developing in you the true understanding of what Tango is. Argentine Tango is not just a dance. It’s a philosophy.  A way of comprehending the world. A way of building relationships Indeed, a way of understanding yourself.</p>\n<p>Ultimate Tango, the Premier Boston tango studio,  has been helping Boston, MA residents master the art of the tango in exciting ways. We take pride in being the premier Boston, MA tango studio and working with students of all ages and skill levels.</p>",
+          "slug": "ultimate-tango",
+          "image": {
+            "url": "https://i0.wp.com/bostontangocalendar.com/wp-content/uploads/2018/12/img-about.jpg?fit=532%2C492&ssl=1",
+            "id": 358,
+            "extension": "jpg",
+            "width": 532,
+            "height": 492,
+            "sizes": {
+              "thumbnail": {
+                "width": 150,
+                "height": 150,
+                "mime-type": "image/jpeg",
+                "url": "https://i0.wp.com/bostontangocalendar.com/wp-content/uploads/2018/12/img-about.jpg?resize=150%2C150&ssl=1"
+              },
+              "medium": {
+                "width": 300,
+                "height": 277,
+                "mime-type": "image/jpeg",
+                "url": "https://i0.wp.com/bostontangocalendar.com/wp-content/uploads/2018/12/img-about.jpg?fit=300%2C277&ssl=1"
+              }
+            }
+          },
+          "phone": "781-395-9000",
+          "website": "www.ultimatetango.com",
+          "global_id": "bostontangocalendar.com?id=360",
+          "global_id_lineage": [
+            "bostontangocalendar.com?id=360"
+          ]
+        }
+      ],
+      "is_virtual": false,
+      "virtual_url": null,
+      "virtual_video_source": ""
+    }
+  ]
+}

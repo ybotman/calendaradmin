@@ -1,0 +1,239 @@
+{
+  "dateRange": {
+    "start": "2025-06-01",
+    "end": "2025-06-07"
+  },
+  "btcEvents": {
+    "total": 29,
+    "processed": 29
+  },
+  "entityResolution": {
+    "success": 0,
+    "failure": 11
+  },
+  "validation": {
+    "valid": 0,
+    "invalid": 0
+  },
+  "ttEvents": {
+    "deleted": 0,
+    "created": 0,
+    "failed": 29
+  },
+  "dryRun": false,
+  "duration": 9.524000000000001,
+  "dates": [
+    {
+      "date": "2025-06-01",
+      "results": {
+        "date": "2025-06-01",
+        "startTime": "2025-05-02T20:58:59.436Z",
+        "endTime": "2025-05-02T20:59:01.155Z",
+        "duration": 1.719,
+        "btcEvents": {
+          "total": 4,
+          "processed": 4
+        },
+        "ttEvents": {
+          "deleted": 0,
+          "created": 0,
+          "failed": 4
+        },
+        "entityResolution": {
+          "success": 0,
+          "failure": 2
+        },
+        "validation": {
+          "valid": 0,
+          "invalid": 0
+        },
+        "dryRun": false
+      }
+    },
+    {
+      "date": "2025-06-02",
+      "results": {
+        "date": "2025-06-02",
+        "startTime": "2025-05-02T20:59:01.156Z",
+        "endTime": "2025-05-02T20:59:02.172Z",
+        "duration": 1.016,
+        "btcEvents": {
+          "total": 3,
+          "processed": 3
+        },
+        "ttEvents": {
+          "deleted": 0,
+          "created": 0,
+          "failed": 3
+        },
+        "entityResolution": {
+          "success": 0,
+          "failure": 0
+        },
+        "validation": {
+          "valid": 0,
+          "invalid": 0
+        },
+        "dryRun": false
+      }
+    },
+    {
+      "date": "2025-06-03",
+      "results": {
+        "date": "2025-06-03",
+        "startTime": "2025-05-02T20:59:02.173Z",
+        "endTime": "2025-05-02T20:59:03.866Z",
+        "duration": 1.693,
+        "btcEvents": {
+          "total": 7,
+          "processed": 7
+        },
+        "ttEvents": {
+          "deleted": 0,
+          "created": 0,
+          "failed": 7
+        },
+        "entityResolution": {
+          "success": 0,
+          "failure": 1
+        },
+        "validation": {
+          "valid": 0,
+          "invalid": 0
+        },
+        "dryRun": false
+      }
+    },
+    {
+      "date": "2025-06-04",
+      "results": {
+        "date": "2025-06-04",
+        "startTime": "2025-05-02T20:59:03.866Z",
+        "endTime": "2025-05-02T20:59:04.854Z",
+        "duration": 0.989,
+        "btcEvents": {
+          "total": 4,
+          "processed": 4
+        },
+        "ttEvents": {
+          "deleted": 0,
+          "created": 0,
+          "failed": 4
+        },
+        "entityResolution": {
+          "success": 0,
+          "failure": 3
+        },
+        "validation": {
+          "valid": 0,
+          "invalid": 0
+        },
+        "dryRun": false
+      }
+    },
+    {
+      "date": "2025-06-05",
+      "results": {
+        "date": "2025-06-05",
+        "startTime": "2025-05-02T20:59:04.855Z",
+        "endTime": "2025-05-02T20:59:05.662Z",
+        "duration": 0.807,
+        "btcEvents": {
+          "total": 2,
+          "processed": 2
+        },
+        "ttEvents": {
+          "deleted": 0,
+          "created": 0,
+          "failed": 2
+        },
+        "entityResolution": {
+          "success": 0,
+          "failure": 0
+        },
+        "validation": {
+          "valid": 0,
+          "invalid": 0
+        },
+        "dryRun": false
+      }
+    },
+    {
+      "date": "2025-06-06",
+      "results": {
+        "date": "2025-06-06",
+        "startTime": "2025-05-02T20:59:05.664Z",
+        "endTime": "2025-05-02T20:59:07.560Z",
+        "duration": 1.896,
+        "btcEvents": {
+          "total": 2,
+          "processed": 2
+        },
+        "ttEvents": {
+          "deleted": 0,
+          "created": 0,
+          "failed": 2
+        },
+        "entityResolution": {
+          "success": 0,
+          "failure": 1
+        },
+        "validation": {
+          "valid": 0,
+          "invalid": 0
+        },
+        "dryRun": false
+      }
+    },
+    {
+      "date": "2025-06-07",
+      "results": {
+        "date": "2025-06-07",
+        "startTime": "2025-05-02T20:59:07.561Z",
+        "endTime": "2025-05-02T20:59:08.965Z",
+        "duration": 1.404,
+        "btcEvents": {
+          "total": 7,
+          "processed": 7
+        },
+        "ttEvents": {
+          "deleted": 0,
+          "created": 0,
+          "failed": 7
+        },
+        "entityResolution": {
+          "success": 0,
+          "failure": 4
+        },
+        "validation": {
+          "valid": 0,
+          "invalid": 0
+        },
+        "dryRun": false
+      }
+    }
+  ],
+  "startTime": "2025-05-02T20:58:59.436Z",
+  "endTime": "2025-05-02T20:59:08.965Z",
+  "success": true,
+  "assessment": {
+    "canProceed": false,
+    "metrics": {
+      "entityResolutionRate": 0,
+      "validationRate": null,
+      "overallSuccessRate": 0,
+      "entityFailureCount": 11,
+      "validationFailureCount": 0,
+      "processingFailureCount": 29
+    },
+    "thresholds": {
+      "minimumResolutionRate": 0.9,
+      "minimumValidationRate": 0.95,
+      "minimumOverallRate": 0.85
+    },
+    "recommendations": [
+      "Entity resolution rate below threshold. Add missing entities and update mappings.",
+      "Overall success rate below threshold. Review failed events and address issues."
+    ]
+  }
+}

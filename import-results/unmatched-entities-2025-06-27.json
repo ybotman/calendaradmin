@@ -1,0 +1,22 @@
+{
+  "venues": [
+    "Ultimate Tango Studio",
+    "Friends Meeting At Cambridge",
+    "Dance Complex (Cambridge)",
+    "Peka Restaurnt",
+    "Blue Salt Restaurant",
+    "Hardy Elementary School",
+    "Fred Astaire West Hartford, CT",
+    "Milford Arts Council"
+  ],
+  "organizers": [],
+  "categories": [],
+  "stats": {
+    "totalVenues": 11,
+    "totalOrganizers": 15,
+    "totalCategories": 7,
+    "unmatchedVenues": 8,
+    "unmatchedOrganizers": 0,
+    "unmatchedCategories": 0
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "timestamp": "2025-05-02T18:36:26.110Z",
+  "source": {
+    "id": 18114,
+    "name": "FG Dance Academy",
+    "email": "unknown"
+  },
+  "result": {
+    "id": "680669162f92688130212454",
+    "name": "Practica Spark",
+    "source": "btcNiceName"
+  },
+  "attempts": [
+    {
+      "method": "cache",
+      "success": true,
+      "target": {
+        "id": "680669162f92688130212454",
+        "name": "Practica Spark",
+        "source": "btcNiceName"
+      }
+    }
+  ],
+  "success": true,
+  "errorDetails": null
+}

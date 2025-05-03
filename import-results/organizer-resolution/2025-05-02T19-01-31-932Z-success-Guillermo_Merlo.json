@@ -1,0 +1,29 @@
+{
+  "timestamp": "2025-05-02T19:01:31.853Z",
+  "source": {
+    "id": 18554,
+    "name": "Guillermo Merlo",
+    "email": "guillermoyhelen@gmail.com"
+  },
+  "result": {
+    "id": "680669162f92688130212454",
+    "name": "Practica Spark",
+    "source": "btcNiceName"
+  },
+  "attempts": [
+    {
+      "method": "btcNiceName",
+      "query": "http://localhost:3010/api/organizers?appId=1&btcNiceName=Guillermo%20Merlo",
+      "success": true,
+      "status": 200,
+      "resultCount": 44,
+      "result": {
+        "id": "680669162f92688130212454",
+        "name": "Practica Spark",
+        "source": "btcNiceName"
+      }
+    }
+  ],
+  "success": true,
+  "errorDetails": null
+}

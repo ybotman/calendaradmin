@@ -1,0 +1,75 @@
+{
+  "dateRange": {
+    "start": "2025-06-01",
+    "end": "2025-06-07"
+  },
+  "btcEvents": {
+    "total": 5,
+    "processed": 5
+  },
+  "entityResolution": {
+    "success": 5,
+    "failure": 0
+  },
+  "validation": {
+    "valid": 5,
+    "invalid": 0
+  },
+  "ttEvents": {
+    "deleted": 0,
+    "created": 5,
+    "failed": 0
+  },
+  "dryRun": false,
+  "duration": 3.136,
+  "dates": [
+    {
+      "date": "2025-06-01",
+      "results": {
+        "date": "2025-06-01",
+        "startTime": "2025-05-02T17:17:11.321Z",
+        "endTime": "2025-05-02T17:17:14.457Z",
+        "duration": 3.136,
+        "btcEvents": {
+          "total": 5,
+          "processed": 5
+        },
+        "ttEvents": {
+          "deleted": 0,
+          "created": 5,
+          "failed": 0
+        },
+        "entityResolution": {
+          "success": 5,
+          "failure": 0
+        },
+        "validation": {
+          "valid": 5,
+          "invalid": 0
+        },
+        "dryRun": true,
+        "failedEvents": []
+      }
+    }
+  ],
+  "startTime": "2025-05-02T17:17:11.321Z",
+  "endTime": "2025-05-02T17:17:14.459Z",
+  "success": true,
+  "assessment": {
+    "canProceed": true,
+    "metrics": {
+      "entityResolutionRate": 1,
+      "validationRate": 1,
+      "overallSuccessRate": 1,
+      "entityFailureCount": 0,
+      "validationFailureCount": 0,
+      "processingFailureCount": 0
+    },
+    "thresholds": {
+      "minimumResolutionRate": 0.9,
+      "minimumValidationRate": 0.95,
+      "minimumOverallRate": 0.85
+    },
+    "recommendations": []
+  }
+}

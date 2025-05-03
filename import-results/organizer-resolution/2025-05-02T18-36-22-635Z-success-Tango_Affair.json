@@ -1,0 +1,26 @@
+{
+  "timestamp": "2025-05-02T18:36:22.635Z",
+  "source": {
+    "id": 5429,
+    "name": "Tango Affair",
+    "email": "Simonida Cekovic-Vuletic simonida@tangoaffair.com"
+  },
+  "result": {
+    "id": "680669162f92688130212454",
+    "name": "Practica Spark",
+    "source": "btcNiceName"
+  },
+  "attempts": [
+    {
+      "method": "cache",
+      "success": true,
+      "target": {
+        "id": "680669162f92688130212454",
+        "name": "Practica Spark",
+        "source": "btcNiceName"
+      }
+    }
+  ],
+  "success": true,
+  "errorDetails": null
+}

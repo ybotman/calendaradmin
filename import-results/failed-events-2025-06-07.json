@@ -1,0 +1,138 @@
+[
+  {
+    "btcId": 10009781,
+    "title": "Argentine Tango in West Hartford, CT",
+    "stage": "processing",
+    "error": "BOSTON_DEFAULTS is not defined",
+    "source": {
+      "venue": "Fred Astaire West Hartford, CT",
+      "organizer": "Tango Sueño Academy",
+      "categories": "Drop-in Class"
+    },
+    "debugInfo": {
+      "errorName": "ReferenceError",
+      "errorStack": "ReferenceError: BOSTON_DEFAULTS is not defined\n    at resolveEventEntities (webpack-internal:///(rsc)/./btc-import.js:393:30)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at async processSingleDayImport (webpack-internal:///(rsc)/./btc-import.js:897:42)\n    at async POST (webpack-internal:///(rsc)/./src/app/api/events/import-btc/route.js:191:37)\n    at async /Users/tobybalsley/MyDocs/AppDev/MasterCalendar/calops/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:6:57228\n    at async eT.execute (/Users/tobybalsley/MyDocs/AppDev/MasterCalendar/calops/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:6:46851)\n    at async eT.handle (/Users/tobybalsley/MyDocs/AppDev/MasterCalendar/calops/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:6:58760)\n    at async doRender (/Users/tobybalsley/MyDocs/AppDev/MasterCalendar/calops/node_modules/next/dist/server/base-server.js:1366:42)\n    at async cacheEntry.responseCache.get.routeKind (/Users/tobybalsley/MyDocs/AppDev/MasterCalendar/calops/node_modules/next/dist/server/base-server.js:1588:28)\n    at async DevServer.renderToResponseWithComponentsImpl (/Users/tobybalsley/MyDocs/AppDev/MasterCalendar/calops/node_modules/next/dist/server/base-server.js:1496:28)\n    at async DevServer.renderPageComponent (/Users/tobybalsley/MyDocs/AppDev/MasterCalendar/calops/node_modules/next/dist/server/base-server.js:1924:24)\n    at async DevServer.renderToResponseImpl (/Users/tobybalsley/MyDocs/AppDev/MasterCalendar/calops/node_modules/next/dist/server/base-server.js:1962:32)\n    at async DevServer.pipeImpl (/Users/tobybalsley/MyDocs/AppDev/MasterCalendar/calops/node_modules/next/dist/server/base-server.js:922:25)\n    at async NextNodeServer.handleCatchallRenderRequest (/Users/tobybalsley/MyDocs/AppDev/MasterCalendar/calops/node_modules/next/dist/server/next-server.js:272:17)\n    at async DevServer.handleRequestImpl (/Users/tobybalsley/MyDocs/AppDev/MasterCalendar/calops/node_modules/next/dist/server/base-server.js:818:17)\n    at async /Users/tobybalsley/MyDocs/AppDev/MasterCalendar/calops/node_modules/next/dist/server/dev/next-dev-server.js:339:20\n    at async Span.traceAsyncFn (/Users/tobybalsley/MyDocs/AppDev/MasterCalendar/calops/node_modules/next/dist/trace/trace.js:154:20)\n    at async DevServer.handleRequest (/Users/tobybalsley/MyDocs/AppDev/MasterCalendar/calops/node_modules/next/dist/server/dev/next-dev-server.js:336:24)\n    at async invokeRender (/Users/tobybalsley/MyDocs/AppDev/MasterCalendar/calops/node_modules/next/dist/server/lib/router-server.js:178:21)\n    at async handleRequest (/Users/tobybalsley/MyDocs/AppDev/MasterCalendar/calops/node_modules/next/dist/server/lib/router-server.js:355:24)\n    at async requestHandlerImpl (/Users/tobybalsley/MyDocs/AppDev/MasterCalendar/calops/node_modules/next/dist/server/lib/router-server.js:379:13)\n    at async Server.requestListener (/Users/tobybalsley/MyDocs/AppDev/MasterCalendar/calops/node_modules/next/dist/server/lib/start-server.js:141:13)",
+      "processingStage": "Unknown"
+    }
+  },
+  {
+    "btcId": 10015309,
+    "title": "TANGO 1: BEGINNER",
+    "stage": "entity_resolution",
+    "errors": [],
+    "source": {
+      "venue": "FG Dance Academy",
+      "organizer": "FG Dance Academy",
+      "categories": "First Timer Friendly, Progressive Class"
+    },
+    "target": {
+      "venueId": "680c5115ef6308b31e5b56b2",
+      "organizerId": "680669162f92688130212454",
+      "categoryFirstId": "Class"
+    },
+    "resolution": {
+      "venueResolved": true,
+      "organizerResolved": true,
+      "categoryResolved": true,
+      "geographyResolved": false
+    }
+  },
+  {
+    "btcId": 10015568,
+    "title": "TANGO 2 + 3: INTERMEDIATE",
+    "stage": "entity_resolution",
+    "errors": [],
+    "source": {
+      "venue": "FG Dance Academy",
+      "organizer": "FG Dance Academy",
+      "categories": "Progressive Class"
+    },
+    "target": {
+      "venueId": "680c5115ef6308b31e5b56b2",
+      "organizerId": "680669162f92688130212454",
+      "categoryFirstId": "Class"
+    },
+    "resolution": {
+      "venueResolved": true,
+      "organizerResolved": true,
+      "categoryResolved": true,
+      "geographyResolved": false
+    }
+  },
+  {
+    "btcId": 10016384,
+    "title": "UT &#8211; Open Level &#8211;  CHE TANGO! – Saturday Afternoon Practica at ULTIMATE TANGO",
+    "stage": "processing",
+    "error": "BOSTON_DEFAULTS is not defined",
+    "source": {
+      "venue": "Ultimate Tango Studio",
+      "organizer": "Ultimate Tango",
+      "categories": "Practica"
+    },
+    "debugInfo": {
+      "errorName": "ReferenceError",
+      "errorStack": "ReferenceError: BOSTON_DEFAULTS is not defined\n    at resolveEventEntities (webpack-internal:///(rsc)/./btc-import.js:393:30)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at async processSingleDayImport (webpack-internal:///(rsc)/./btc-import.js:897:42)\n    at async POST (webpack-internal:///(rsc)/./src/app/api/events/import-btc/route.js:191:37)\n    at async /Users/tobybalsley/MyDocs/AppDev/MasterCalendar/calops/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:6:57228\n    at async eT.execute (/Users/tobybalsley/MyDocs/AppDev/MasterCalendar/calops/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:6:46851)\n    at async eT.handle (/Users/tobybalsley/MyDocs/AppDev/MasterCalendar/calops/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:6:58760)\n    at async doRender (/Users/tobybalsley/MyDocs/AppDev/MasterCalendar/calops/node_modules/next/dist/server/base-server.js:1366:42)\n    at async cacheEntry.responseCache.get.routeKind (/Users/tobybalsley/MyDocs/AppDev/MasterCalendar/calops/node_modules/next/dist/server/base-server.js:1588:28)\n    at async DevServer.renderToResponseWithComponentsImpl (/Users/tobybalsley/MyDocs/AppDev/MasterCalendar/calops/node_modules/next/dist/server/base-server.js:1496:28)\n    at async DevServer.renderPageComponent (/Users/tobybalsley/MyDocs/AppDev/MasterCalendar/calops/node_modules/next/dist/server/base-server.js:1924:24)\n    at async DevServer.renderToResponseImpl (/Users/tobybalsley/MyDocs/AppDev/MasterCalendar/calops/node_modules/next/dist/server/base-server.js:1962:32)\n    at async DevServer.pipeImpl (/Users/tobybalsley/MyDocs/AppDev/MasterCalendar/calops/node_modules/next/dist/server/base-server.js:922:25)\n    at async NextNodeServer.handleCatchallRenderRequest (/Users/tobybalsley/MyDocs/AppDev/MasterCalendar/calops/node_modules/next/dist/server/next-server.js:272:17)\n    at async DevServer.handleRequestImpl (/Users/tobybalsley/MyDocs/AppDev/MasterCalendar/calops/node_modules/next/dist/server/base-server.js:818:17)\n    at async /Users/tobybalsley/MyDocs/AppDev/MasterCalendar/calops/node_modules/next/dist/server/dev/next-dev-server.js:339:20\n    at async Span.traceAsyncFn (/Users/tobybalsley/MyDocs/AppDev/MasterCalendar/calops/node_modules/next/dist/trace/trace.js:154:20)\n    at async DevServer.handleRequest (/Users/tobybalsley/MyDocs/AppDev/MasterCalendar/calops/node_modules/next/dist/server/dev/next-dev-server.js:336:24)\n    at async invokeRender (/Users/tobybalsley/MyDocs/AppDev/MasterCalendar/calops/node_modules/next/dist/server/lib/router-server.js:178:21)\n    at async handleRequest (/Users/tobybalsley/MyDocs/AppDev/MasterCalendar/calops/node_modules/next/dist/server/lib/router-server.js:355:24)\n    at async requestHandlerImpl (/Users/tobybalsley/MyDocs/AppDev/MasterCalendar/calops/node_modules/next/dist/server/lib/router-server.js:379:13)\n    at async Server.requestListener (/Users/tobybalsley/MyDocs/AppDev/MasterCalendar/calops/node_modules/next/dist/server/lib/start-server.js:141:13)",
+      "processingStage": "Unknown"
+    }
+  },
+  {
+    "btcId": 10016763,
+    "title": "Tango Encuentros for advanced dancers",
+    "stage": "entity_resolution",
+    "errors": [],
+    "source": {
+      "venue": "Dance Union",
+      "organizer": "Laura Grandi",
+      "categories": "Class, Drop-in Class, Practica, WorkShop"
+    },
+    "target": {
+      "venueId": "680c5122ef6308b31e5b57c1",
+      "organizerId": "680669162f92688130212454",
+      "categoryFirstId": "Class"
+    },
+    "resolution": {
+      "venueResolved": true,
+      "organizerResolved": true,
+      "categoryResolved": true,
+      "geographyResolved": false
+    }
+  },
+  {
+    "btcId": 10016418,
+    "title": "UT &#8211; Advanced Level &#8211; Elevating Technique, Connection, and Expression &#8211; couples only only",
+    "stage": "processing",
+    "error": "BOSTON_DEFAULTS is not defined",
+    "source": {
+      "venue": "Ultimate Tango Studio",
+      "organizer": "Ultimate Tango",
+      "categories": "Drop-in Class, Progressive Class"
+    },
+    "debugInfo": {
+      "errorName": "ReferenceError",
+      "errorStack": "ReferenceError: BOSTON_DEFAULTS is not defined\n    at resolveEventEntities (webpack-internal:///(rsc)/./btc-import.js:393:30)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at async processSingleDayImport (webpack-internal:///(rsc)/./btc-import.js:897:42)\n    at async POST (webpack-internal:///(rsc)/./src/app/api/events/import-btc/route.js:191:37)\n    at async /Users/tobybalsley/MyDocs/AppDev/MasterCalendar/calops/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:6:57228\n    at async eT.execute (/Users/tobybalsley/MyDocs/AppDev/MasterCalendar/calops/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:6:46851)\n    at async eT.handle (/Users/tobybalsley/MyDocs/AppDev/MasterCalendar/calops/node_modules/next/dist/compiled/next-server/app-route.runtime.dev.js:6:58760)\n    at async doRender (/Users/tobybalsley/MyDocs/AppDev/MasterCalendar/calops/node_modules/next/dist/server/base-server.js:1366:42)\n    at async cacheEntry.responseCache.get.routeKind (/Users/tobybalsley/MyDocs/AppDev/MasterCalendar/calops/node_modules/next/dist/server/base-server.js:1588:28)\n    at async DevServer.renderToResponseWithComponentsImpl (/Users/tobybalsley/MyDocs/AppDev/MasterCalendar/calops/node_modules/next/dist/server/base-server.js:1496:28)\n    at async DevServer.renderPageComponent (/Users/tobybalsley/MyDocs/AppDev/MasterCalendar/calops/node_modules/next/dist/server/base-server.js:1924:24)\n    at async DevServer.renderToResponseImpl (/Users/tobybalsley/MyDocs/AppDev/MasterCalendar/calops/node_modules/next/dist/server/base-server.js:1962:32)\n    at async DevServer.pipeImpl (/Users/tobybalsley/MyDocs/AppDev/MasterCalendar/calops/node_modules/next/dist/server/base-server.js:922:25)\n    at async NextNodeServer.handleCatchallRenderRequest (/Users/tobybalsley/MyDocs/AppDev/MasterCalendar/calops/node_modules/next/dist/server/next-server.js:272:17)\n    at async DevServer.handleRequestImpl (/Users/tobybalsley/MyDocs/AppDev/MasterCalendar/calops/node_modules/next/dist/server/base-server.js:818:17)\n    at async /Users/tobybalsley/MyDocs/AppDev/MasterCalendar/calops/node_modules/next/dist/server/dev/next-dev-server.js:339:20\n    at async Span.traceAsyncFn (/Users/tobybalsley/MyDocs/AppDev/MasterCalendar/calops/node_modules/next/dist/trace/trace.js:154:20)\n    at async DevServer.handleRequest (/Users/tobybalsley/MyDocs/AppDev/MasterCalendar/calops/node_modules/next/dist/server/dev/next-dev-server.js:336:24)\n    at async invokeRender (/Users/tobybalsley/MyDocs/AppDev/MasterCalendar/calops/node_modules/next/dist/server/lib/router-server.js:178:21)\n    at async handleRequest (/Users/tobybalsley/MyDocs/AppDev/MasterCalendar/calops/node_modules/next/dist/server/lib/router-server.js:355:24)\n    at async requestHandlerImpl (/Users/tobybalsley/MyDocs/AppDev/MasterCalendar/calops/node_modules/next/dist/server/lib/router-server.js:379:13)\n    at async Server.requestListener (/Users/tobybalsley/MyDocs/AppDev/MasterCalendar/calops/node_modules/next/dist/server/lib/start-server.js:141:13)",
+      "processingStage": "Unknown"
+    }
+  },
+  {
+    "btcId": 10014757,
+    "title": "Milonga NUEVA",
+    "stage": "entity_resolution",
+    "errors": [],
+    "source": {
+      "venue": "Dance Union",
+      "organizer": "Milton and Corin",
+      "categories": "Milonga"
+    },
+    "target": {
+      "venueId": "680c5122ef6308b31e5b57c1",
+      "organizerId": "680669162f92688130212454",
+      "categoryFirstId": "Milonga"
+    },
+    "resolution": {
+      "venueResolved": true,
+      "organizerResolved": true,
+      "categoryResolved": true,
+      "geographyResolved": false
+    }
+  }
+]

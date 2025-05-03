@@ -1,12 +1,12 @@
 {
   "canProceed": false,
   "metrics": {
-    "entityResolutionRate": 0.4,
-    "validationRate": 1,
-    "overallSuccessRate": 0.4,
-    "entityFailureCount": 3,
+    "entityResolutionRate": 0,
+    "validationRate": null,
+    "overallSuccessRate": 0,
+    "entityFailureCount": 11,
     "validationFailureCount": 0,
-    "processingFailureCount": 3
+    "processingFailureCount": 29
   },
   "thresholds": {
     "minimumResolutionRate": 0.9,

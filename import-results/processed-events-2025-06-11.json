@@ -1,0 +1,20 @@
+[
+  {
+    "btcId": 10010832,
+    "ttId": "dry-run-id",
+    "title": "Wednesday Tango Break– 7pm Beginner Tango Classes",
+    "dryRun": true
+  },
+  {
+    "btcId": 10011355,
+    "ttId": "dry-run-id",
+    "title": "Wednesday Tango Break– 8pm Intermediate Tango Classes",
+    "dryRun": true
+  },
+  {
+    "btcId": 10011094,
+    "ttId": "dry-run-id",
+    "title": "Wednesday Tango Break  –Dancing",
+    "dryRun": true
+  }
+]

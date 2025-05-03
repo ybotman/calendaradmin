@@ -1,0 +1,13 @@
+{
+  "venues": [],
+  "organizers": [],
+  "categories": [],
+  "stats": {
+    "totalVenues": 3,
+    "totalOrganizers": 6,
+    "totalCategories": 6,
+    "unmatchedVenues": 0,
+    "unmatchedOrganizers": 0,
+    "unmatchedCategories": 0
+  }
+}

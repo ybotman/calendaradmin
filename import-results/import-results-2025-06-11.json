@@ -1,0 +1,24 @@
+{
+  "date": "2025-06-11",
+  "startTime": "2025-05-02T20:25:12.053Z",
+  "endTime": "2025-05-02T20:25:12.888Z",
+  "duration": 0.836,
+  "btcEvents": {
+    "total": 4,
+    "processed": 4
+  },
+  "ttEvents": {
+    "deleted": 0,
+    "created": 3,
+    "failed": 1
+  },
+  "entityResolution": {
+    "success": 3,
+    "failure": 0
+  },
+  "validation": {
+    "valid": 3,
+    "invalid": 0
+  },
+  "dryRun": true
+}

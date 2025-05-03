@@ -115,6 +115,12 @@ const BtcImportTab = () => {
     setProgress({ step: 'initializing', message: 'Starting import process...' });
     
     try {
+      // Sanitize token to ISO-8859-1 compatible
+      let cleanToken = authToken.normalize('NFKC').replace(/[^\x00-\xFF]/g, '');
+      if (cleanToken !== authToken) {
+        console.warn('Authentication token contained non-ISO-8859-1 characters; sanitized.');
+      }
+
       // Format dates for API
       const startDateStr = afterEqualDate.toISOString().split('T')[0];
       const endDateStr = beforeEqualDate.toISOString().split('T')[0];
@@ -124,7 +130,7 @@ const BtcImportTab = () => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${authToken}`
+          'Authorization': `Bearer ${cleanToken}`
         },
         body: JSON.stringify({
           startDate: startDateStr,

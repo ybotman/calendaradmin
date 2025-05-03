@@ -1,0 +1,803 @@
+{
+  "dateRange": {
+    "start": "2025-06-01",
+    "end": "2025-06-28"
+  },
+  "btcEvents": {
+    "total": 120,
+    "processed": 120
+  },
+  "entityResolution": {
+    "success": 120,
+    "failure": 0
+  },
+  "validation": {
+    "valid": 120,
+    "invalid": 0
+  },
+  "ttEvents": {
+    "deleted": 0,
+    "created": 120,
+    "failed": 0
+  },
+  "dryRun": false,
+  "duration": 318.31600000000003,
+  "dates": [
+    {
+      "date": "2025-06-01",
+      "results": {
+        "date": "2025-06-01",
+        "startTime": "2025-05-02T18:31:26.396Z",
+        "endTime": "2025-05-02T18:31:41.440Z",
+        "duration": 15.044,
+        "btcEvents": {
+          "total": 5,
+          "processed": 5
+        },
+        "ttEvents": {
+          "deleted": 0,
+          "created": 5,
+          "failed": 0
+        },
+        "entityResolution": {
+          "success": 5,
+          "failure": 0
+        },
+        "validation": {
+          "valid": 5,
+          "invalid": 0
+        },
+        "dryRun": false
+      }
+    },
+    {
+      "date": "2025-06-02",
+      "results": {
+        "date": "2025-06-02",
+        "startTime": "2025-05-02T18:31:41.441Z",
+        "endTime": "2025-05-02T18:31:49.787Z",
+        "duration": 8.346,
+        "btcEvents": {
+          "total": 3,
+          "processed": 3
+        },
+        "ttEvents": {
+          "deleted": 0,
+          "created": 3,
+          "failed": 0
+        },
+        "entityResolution": {
+          "success": 3,
+          "failure": 0
+        },
+        "validation": {
+          "valid": 3,
+          "invalid": 0
+        },
+        "dryRun": false
+      }
+    },
+    {
+      "date": "2025-06-03",
+      "results": {
+        "date": "2025-06-03",
+        "startTime": "2025-05-02T18:31:49.787Z",
+        "endTime": "2025-05-02T18:32:05.370Z",
+        "duration": 15.583,
+        "btcEvents": {
+          "total": 6,
+          "processed": 6
+        },
+        "ttEvents": {
+          "deleted": 0,
+          "created": 6,
+          "failed": 0
+        },
+        "entityResolution": {
+          "success": 6,
+          "failure": 0
+        },
+        "validation": {
+          "valid": 6,
+          "invalid": 0
+        },
+        "dryRun": false
+      }
+    },
+    {
+      "date": "2025-06-04",
+      "results": {
+        "date": "2025-06-04",
+        "startTime": "2025-05-02T18:32:05.370Z",
+        "endTime": "2025-05-02T18:32:19.372Z",
+        "duration": 14.002,
+        "btcEvents": {
+          "total": 5,
+          "processed": 5
+        },
+        "ttEvents": {
+          "deleted": 0,
+          "created": 5,
+          "failed": 0
+        },
+        "entityResolution": {
+          "success": 5,
+          "failure": 0
+        },
+        "validation": {
+          "valid": 5,
+          "invalid": 0
+        },
+        "dryRun": false
+      }
+    },
+    {
+      "date": "2025-06-05",
+      "results": {
+        "date": "2025-06-05",
+        "startTime": "2025-05-02T18:32:19.373Z",
+        "endTime": "2025-05-02T18:32:25.573Z",
+        "duration": 6.2,
+        "btcEvents": {
+          "total": 2,
+          "processed": 2
+        },
+        "ttEvents": {
+          "deleted": 0,
+          "created": 2,
+          "failed": 0
+        },
+        "entityResolution": {
+          "success": 2,
+          "failure": 0
+        },
+        "validation": {
+          "valid": 2,
+          "invalid": 0
+        },
+        "dryRun": false
+      }
+    },
+    {
+      "date": "2025-06-06",
+      "results": {
+        "date": "2025-06-06",
+        "startTime": "2025-05-02T18:32:25.573Z",
+        "endTime": "2025-05-02T18:32:33.050Z",
+        "duration": 7.477,
+        "btcEvents": {
+          "total": 2,
+          "processed": 2
+        },
+        "ttEvents": {
+          "deleted": 0,
+          "created": 2,
+          "failed": 0
+        },
+        "entityResolution": {
+          "success": 2,
+          "failure": 0
+        },
+        "validation": {
+          "valid": 2,
+          "invalid": 0
+        },
+        "dryRun": false
+      }
+    },
+    {
+      "date": "2025-06-07",
+      "results": {
+        "date": "2025-06-07",
+        "startTime": "2025-05-02T18:32:33.051Z",
+        "endTime": "2025-05-02T18:32:55.727Z",
+        "duration": 22.676,
+        "btcEvents": {
+          "total": 8,
+          "processed": 8
+        },
+        "ttEvents": {
+          "deleted": 0,
+          "created": 8,
+          "failed": 0
+        },
+        "entityResolution": {
+          "success": 8,
+          "failure": 0
+        },
+        "validation": {
+          "valid": 8,
+          "invalid": 0
+        },
+        "dryRun": false
+      }
+    },
+    {
+      "date": "2025-06-08",
+      "results": {
+        "date": "2025-06-08",
+        "startTime": "2025-05-02T18:32:55.728Z",
+        "endTime": "2025-05-02T18:33:07.124Z",
+        "duration": 11.396,
+        "btcEvents": {
+          "total": 4,
+          "processed": 4
+        },
+        "ttEvents": {
+          "deleted": 0,
+          "created": 4,
+          "failed": 0
+        },
+        "entityResolution": {
+          "success": 4,
+          "failure": 0
+        },
+        "validation": {
+          "valid": 4,
+          "invalid": 0
+        },
+        "dryRun": false
+      }
+    },
+    {
+      "date": "2025-06-09",
+      "results": {
+        "date": "2025-06-09",
+        "startTime": "2025-05-02T18:33:07.125Z",
+        "endTime": "2025-05-02T18:33:15.617Z",
+        "duration": 8.492,
+        "btcEvents": {
+          "total": 3,
+          "processed": 3
+        },
+        "ttEvents": {
+          "deleted": 0,
+          "created": 3,
+          "failed": 0
+        },
+        "entityResolution": {
+          "success": 3,
+          "failure": 0
+        },
+        "validation": {
+          "valid": 3,
+          "invalid": 0
+        },
+        "dryRun": false
+      }
+    },
+    {
+      "date": "2025-06-10",
+      "results": {
+        "date": "2025-06-10",
+        "startTime": "2025-05-02T18:33:15.617Z",
+        "endTime": "2025-05-02T18:33:33.028Z",
+        "duration": 17.411,
+        "btcEvents": {
+          "total": 7,
+          "processed": 7
+        },
+        "ttEvents": {
+          "deleted": 0,
+          "created": 7,
+          "failed": 0
+        },
+        "entityResolution": {
+          "success": 7,
+          "failure": 0
+        },
+        "validation": {
+          "valid": 7,
+          "invalid": 0
+        },
+        "dryRun": false
+      }
+    },
+    {
+      "date": "2025-06-11",
+      "results": {
+        "date": "2025-06-11",
+        "startTime": "2025-05-02T18:33:33.028Z",
+        "endTime": "2025-05-02T18:33:44.380Z",
+        "duration": 11.352,
+        "btcEvents": {
+          "total": 4,
+          "processed": 4
+        },
+        "ttEvents": {
+          "deleted": 0,
+          "created": 4,
+          "failed": 0
+        },
+        "entityResolution": {
+          "success": 4,
+          "failure": 0
+        },
+        "validation": {
+          "valid": 4,
+          "invalid": 0
+        },
+        "dryRun": false
+      }
+    },
+    {
+      "date": "2025-06-12",
+      "results": {
+        "date": "2025-06-12",
+        "startTime": "2025-05-02T18:33:44.380Z",
+        "endTime": "2025-05-02T18:33:50.085Z",
+        "duration": 5.705,
+        "btcEvents": {
+          "total": 2,
+          "processed": 2
+        },
+        "ttEvents": {
+          "deleted": 0,
+          "created": 2,
+          "failed": 0
+        },
+        "entityResolution": {
+          "success": 2,
+          "failure": 0
+        },
+        "validation": {
+          "valid": 2,
+          "invalid": 0
+        },
+        "dryRun": false
+      }
+    },
+    {
+      "date": "2025-06-13",
+      "results": {
+        "date": "2025-06-13",
+        "startTime": "2025-05-02T18:33:50.085Z",
+        "endTime": "2025-05-02T18:33:57.780Z",
+        "duration": 7.695,
+        "btcEvents": {
+          "total": 3,
+          "processed": 3
+        },
+        "ttEvents": {
+          "deleted": 0,
+          "created": 3,
+          "failed": 0
+        },
+        "entityResolution": {
+          "success": 3,
+          "failure": 0
+        },
+        "validation": {
+          "valid": 3,
+          "invalid": 0
+        },
+        "dryRun": false
+      }
+    },
+    {
+      "date": "2025-06-14",
+      "results": {
+        "date": "2025-06-14",
+        "startTime": "2025-05-02T18:33:57.780Z",
+        "endTime": "2025-05-02T18:34:13.710Z",
+        "duration": 15.93,
+        "btcEvents": {
+          "total": 6,
+          "processed": 6
+        },
+        "ttEvents": {
+          "deleted": 0,
+          "created": 6,
+          "failed": 0
+        },
+        "entityResolution": {
+          "success": 6,
+          "failure": 0
+        },
+        "validation": {
+          "valid": 6,
+          "invalid": 0
+        },
+        "dryRun": false
+      }
+    },
+    {
+      "date": "2025-06-15",
+      "results": {
+        "date": "2025-06-15",
+        "startTime": "2025-05-02T18:34:13.710Z",
+        "endTime": "2025-05-02T18:34:23.226Z",
+        "duration": 9.516,
+        "btcEvents": {
+          "total": 4,
+          "processed": 4
+        },
+        "ttEvents": {
+          "deleted": 0,
+          "created": 4,
+          "failed": 0
+        },
+        "entityResolution": {
+          "success": 4,
+          "failure": 0
+        },
+        "validation": {
+          "valid": 4,
+          "invalid": 0
+        },
+        "dryRun": false
+      }
+    },
+    {
+      "date": "2025-06-16",
+      "results": {
+        "date": "2025-06-16",
+        "startTime": "2025-05-02T18:34:23.226Z",
+        "endTime": "2025-05-02T18:34:32.925Z",
+        "duration": 9.699,
+        "btcEvents": {
+          "total": 4,
+          "processed": 4
+        },
+        "ttEvents": {
+          "deleted": 0,
+          "created": 4,
+          "failed": 0
+        },
+        "entityResolution": {
+          "success": 4,
+          "failure": 0
+        },
+        "validation": {
+          "valid": 4,
+          "invalid": 0
+        },
+        "dryRun": false
+      }
+    },
+    {
+      "date": "2025-06-17",
+      "results": {
+        "date": "2025-06-17",
+        "startTime": "2025-05-02T18:34:32.926Z",
+        "endTime": "2025-05-02T18:34:47.661Z",
+        "duration": 14.735,
+        "btcEvents": {
+          "total": 6,
+          "processed": 6
+        },
+        "ttEvents": {
+          "deleted": 0,
+          "created": 6,
+          "failed": 0
+        },
+        "entityResolution": {
+          "success": 6,
+          "failure": 0
+        },
+        "validation": {
+          "valid": 6,
+          "invalid": 0
+        },
+        "dryRun": false
+      }
+    },
+    {
+      "date": "2025-06-18",
+      "results": {
+        "date": "2025-06-18",
+        "startTime": "2025-05-02T18:34:47.661Z",
+        "endTime": "2025-05-02T18:34:57.579Z",
+        "duration": 9.918,
+        "btcEvents": {
+          "total": 4,
+          "processed": 4
+        },
+        "ttEvents": {
+          "deleted": 0,
+          "created": 4,
+          "failed": 0
+        },
+        "entityResolution": {
+          "success": 4,
+          "failure": 0
+        },
+        "validation": {
+          "valid": 4,
+          "invalid": 0
+        },
+        "dryRun": false
+      }
+    },
+    {
+      "date": "2025-06-19",
+      "results": {
+        "date": "2025-06-19",
+        "startTime": "2025-05-02T18:34:57.580Z",
+        "endTime": "2025-05-02T18:35:05.337Z",
+        "duration": 7.757,
+        "btcEvents": {
+          "total": 3,
+          "processed": 3
+        },
+        "ttEvents": {
+          "deleted": 0,
+          "created": 3,
+          "failed": 0
+        },
+        "entityResolution": {
+          "success": 3,
+          "failure": 0
+        },
+        "validation": {
+          "valid": 3,
+          "invalid": 0
+        },
+        "dryRun": false
+      }
+    },
+    {
+      "date": "2025-06-20",
+      "results": {
+        "date": "2025-06-20",
+        "startTime": "2025-05-02T18:35:05.337Z",
+        "endTime": "2025-05-02T18:35:10.681Z",
+        "duration": 5.344,
+        "btcEvents": {
+          "total": 2,
+          "processed": 2
+        },
+        "ttEvents": {
+          "deleted": 0,
+          "created": 2,
+          "failed": 0
+        },
+        "entityResolution": {
+          "success": 2,
+          "failure": 0
+        },
+        "validation": {
+          "valid": 2,
+          "invalid": 0
+        },
+        "dryRun": false
+      }
+    },
+    {
+      "date": "2025-06-21",
+      "results": {
+        "date": "2025-06-21",
+        "startTime": "2025-05-02T18:35:10.681Z",
+        "endTime": "2025-05-02T18:35:27.685Z",
+        "duration": 17.004,
+        "btcEvents": {
+          "total": 7,
+          "processed": 7
+        },
+        "ttEvents": {
+          "deleted": 0,
+          "created": 7,
+          "failed": 0
+        },
+        "entityResolution": {
+          "success": 7,
+          "failure": 0
+        },
+        "validation": {
+          "valid": 7,
+          "invalid": 0
+        },
+        "dryRun": false
+      }
+    },
+    {
+      "date": "2025-06-22",
+      "results": {
+        "date": "2025-06-22",
+        "startTime": "2025-05-02T18:35:27.686Z",
+        "endTime": "2025-05-02T18:35:40.463Z",
+        "duration": 12.777,
+        "btcEvents": {
+          "total": 5,
+          "processed": 5
+        },
+        "ttEvents": {
+          "deleted": 0,
+          "created": 5,
+          "failed": 0
+        },
+        "entityResolution": {
+          "success": 5,
+          "failure": 0
+        },
+        "validation": {
+          "valid": 5,
+          "invalid": 0
+        },
+        "dryRun": false
+      }
+    },
+    {
+      "date": "2025-06-23",
+      "results": {
+        "date": "2025-06-23",
+        "startTime": "2025-05-02T18:35:40.463Z",
+        "endTime": "2025-05-02T18:35:49.516Z",
+        "duration": 9.053,
+        "btcEvents": {
+          "total": 3,
+          "processed": 3
+        },
+        "ttEvents": {
+          "deleted": 0,
+          "created": 3,
+          "failed": 0
+        },
+        "entityResolution": {
+          "success": 3,
+          "failure": 0
+        },
+        "validation": {
+          "valid": 3,
+          "invalid": 0
+        },
+        "dryRun": false
+      }
+    },
+    {
+      "date": "2025-06-24",
+      "results": {
+        "date": "2025-06-24",
+        "startTime": "2025-05-02T18:35:49.516Z",
+        "endTime": "2025-05-02T18:35:59.835Z",
+        "duration": 10.319,
+        "btcEvents": {
+          "total": 4,
+          "processed": 4
+        },
+        "ttEvents": {
+          "deleted": 0,
+          "created": 4,
+          "failed": 0
+        },
+        "entityResolution": {
+          "success": 4,
+          "failure": 0
+        },
+        "validation": {
+          "valid": 4,
+          "invalid": 0
+        },
+        "dryRun": false
+      }
+    },
+    {
+      "date": "2025-06-25",
+      "results": {
+        "date": "2025-06-25",
+        "startTime": "2025-05-02T18:35:59.841Z",
+        "endTime": "2025-05-02T18:36:12.161Z",
+        "duration": 12.32,
+        "btcEvents": {
+          "total": 5,
+          "processed": 5
+        },
+        "ttEvents": {
+          "deleted": 0,
+          "created": 5,
+          "failed": 0
+        },
+        "entityResolution": {
+          "success": 5,
+          "failure": 0
+        },
+        "validation": {
+          "valid": 5,
+          "invalid": 0
+        },
+        "dryRun": false
+      }
+    },
+    {
+      "date": "2025-06-26",
+      "results": {
+        "date": "2025-06-26",
+        "startTime": "2025-05-02T18:36:12.161Z",
+        "endTime": "2025-05-02T18:36:17.318Z",
+        "duration": 5.157,
+        "btcEvents": {
+          "total": 2,
+          "processed": 2
+        },
+        "ttEvents": {
+          "deleted": 0,
+          "created": 2,
+          "failed": 0
+        },
+        "entityResolution": {
+          "success": 2,
+          "failure": 0
+        },
+        "validation": {
+          "valid": 2,
+          "invalid": 0
+        },
+        "dryRun": false
+      }
+    },
+    {
+      "date": "2025-06-27",
+      "results": {
+        "date": "2025-06-27",
+        "startTime": "2025-05-02T18:36:17.318Z",
+        "endTime": "2025-05-02T18:36:24.803Z",
+        "duration": 7.485,
+        "btcEvents": {
+          "total": 3,
+          "processed": 3
+        },
+        "ttEvents": {
+          "deleted": 0,
+          "created": 3,
+          "failed": 0
+        },
+        "entityResolution": {
+          "success": 3,
+          "failure": 0
+        },
+        "validation": {
+          "valid": 3,
+          "invalid": 0
+        },
+        "dryRun": false
+      }
+    },
+    {
+      "date": "2025-06-28",
+      "results": {
+        "date": "2025-06-28",
+        "startTime": "2025-05-02T18:36:24.803Z",
+        "endTime": "2025-05-02T18:36:44.726Z",
+        "duration": 19.923,
+        "btcEvents": {
+          "total": 8,
+          "processed": 8
+        },
+        "ttEvents": {
+          "deleted": 0,
+          "created": 8,
+          "failed": 0
+        },
+        "entityResolution": {
+          "success": 8,
+          "failure": 0
+        },
+        "validation": {
+          "valid": 8,
+          "invalid": 0
+        },
+        "dryRun": false
+      }
+    }
+  ],
+  "startTime": "2025-05-02T18:31:26.395Z",
+  "endTime": "2025-05-02T18:36:44.726Z",
+  "success": true,
+  "assessment": {
+    "canProceed": true,
+    "metrics": {
+      "entityResolutionRate": 1,
+      "validationRate": 1,
+      "overallSuccessRate": 1,
+      "entityFailureCount": 0,
+      "validationFailureCount": 0,
+      "processingFailureCount": 0
+    },
+    "thresholds": {
+      "minimumResolutionRate": 0.9,
+      "minimumValidationRate": 0.95,
+      "minimumOverallRate": 0.85
+    },
+    "recommendations": []
+  }
+}

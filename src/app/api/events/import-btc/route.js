@@ -211,51 +211,30 @@ export async function POST(request) {
         success: true
       };
       
-      // Only process the start date initially for simplicity
-      // In a future enhancement, we could process the entire date range
-      const currentDate = startDateObj.toISOString().split('T')[0];
-      
-      // Run the import process for the current date
-      console.log(`Processing import for date: ${currentDate}`);
-      const dateResults = await processSingleDayImport(currentDate);
-      
-      // Aggregate results
-      overallResults.btcEvents.total += dateResults.btcEvents.total;
-      overallResults.btcEvents.processed += dateResults.btcEvents.processed;
-      overallResults.entityResolution.success += dateResults.entityResolution.success;
-      overallResults.entityResolution.failure += dateResults.entityResolution.failure;
-      overallResults.validation.valid += dateResults.validation.valid;
-      overallResults.validation.invalid += dateResults.validation.invalid;
-      overallResults.ttEvents.deleted += dateResults.ttEvents.deleted;
-      overallResults.ttEvents.created += dateResults.ttEvents.created;
-      overallResults.ttEvents.failed += dateResults.ttEvents.failed;
-      overallResults.duration += dateResults.duration;
-      
-      // Get the failed events from the output directory
-      try {
-        const failedEventsPath = path.join(outputDir, `failed-events-${currentDate}.json`);
-        if (fs.existsSync(failedEventsPath)) {
-          const failedEventsData = fs.readFileSync(failedEventsPath, 'utf8');
-          dateResults.failedEvents = JSON.parse(failedEventsData);
-        }
-      } catch (readError) {
-        console.error('Failed to read failed events file:', readError);
-        // Continue anyway - this is non-critical
+      // Process each date from startDate to endDate
+      for (let d = new Date(startDateObj); d <= endDateObj; d.setDate(d.getDate() + 1)) {
+        const currentDate = d.toISOString().split('T')[0];
+        console.log(`Processing import for date: ${currentDate}`);
+        const dateResults = await processSingleDayImport(currentDate);
+        overallResults.btcEvents.total += dateResults.btcEvents.total;
+        overallResults.btcEvents.processed += dateResults.btcEvents.processed;
+        overallResults.entityResolution.success += dateResults.entityResolution.success;
+        overallResults.entityResolution.failure += dateResults.entityResolution.failure;
+        overallResults.validation.valid += dateResults.validation.valid;
+        overallResults.validation.invalid += dateResults.validation.invalid;
+        overallResults.ttEvents.deleted += dateResults.ttEvents.deleted;
+        overallResults.ttEvents.created += dateResults.ttEvents.created;
+        overallResults.ttEvents.failed += dateResults.ttEvents.failed;
+        overallResults.duration += dateResults.duration;
+        overallResults.dates.push({ date: currentDate, results: dateResults });
       }
-      
-      // Add date-specific results
-      overallResults.dates.push({
-        date: currentDate,
-        results: dateResults
-      });
-      
-      // Complete the results
+
       overallResults.endTime = new Date().toISOString();
-      
-      // Perform Go/No-Go assessment on overall results
+
+      // Perform Go/No-Go assessment on combined range
       const assessment = performGoNoGoAssessment(overallResults);
-      
-      // Save the overall results for later analysis
+
+      // Save combined results as before
       try {
         const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
         const resultsPath = path.join(outputDir, `combined-results-${timestamp}.json`);

@@ -1,0 +1,1303 @@
+{
+  "events": [
+    {
+      "id": 10018054,
+      "global_id": "bostontangocalendar.com?id=10018054",
+      "global_id_lineage": [
+        "bostontangocalendar.com?id=10018054"
+      ],
+      "author": "5",
+      "status": "publish",
+      "date": "2025-04-15 13:33:08",
+      "date_utc": "2025-04-15 17:33:08",
+      "modified": "2025-04-15 13:48:43",
+      "modified_utc": "2025-04-15 17:48:43",
+      "url": "https://bostontangocalendar.com/event/academy-absolute-beginner-class-social/2025-06-11/",
+      "rest_url": "https://bostontangocalendar.com/wp-json/tribe/events/v1/events/10018054",
+      "title": "Academy: Absolute Beginner Class + Social",
+      "description": "<p><img data-recalc-dims=\"1\" loading=\"lazy\" decoding=\"async\" class=\"alignnone size-medium wp-image-41289\" src=\"https://i0.wp.com/bostontangocalendar.com/wp-content/uploads/2025/04/IMG_0551.jpeg?resize=200%2C300&#038;ssl=1\" alt=\"\" width=\"200\" height=\"300\" /> <img data-recalc-dims=\"1\" loading=\"lazy\" decoding=\"async\" class=\"alignnone size-medium wp-image-41291\" src=\"https://i0.wp.com/bostontangocalendar.com/wp-content/uploads/2025/04/IMG_0552-1.jpeg?resize=200%2C300&#038;ssl=1\" alt=\"\" width=\"200\" height=\"300\" /></p>\n<table role=\"presentation\" border=\"0\" width=\"100%\" cellspacing=\"0\" cellpadding=\"0\">\n<tbody>\n<tr>\n<td class=\"field-name\"></td>\n</tr>\n<tr class=\"field-textarea\">\n<td class=\"field-value\">Join us every third Wednesday of the month for a community night of Tango at Peka Restaurant! Argentine Tango is meant to be a social activity- this not only means dance, it also means friends, music, food and a glass of good wine. Please join us for a social evening at Peka Restaurant where you can enjoy all of these things together.</p>\n<p>This event is meant to welcome EVERYONE. Join us for an absolute beginner class before hand, and then stay to keep dancing, or just to socialize.</p>\n<p><span dir=\"ltr\">6:00 &#8211; 7:00</span> \\\\ Absolute Beginner Class</p>\n<p><span dir=\"ltr\">7:30 &#8211; 10:00</span> \\\\ Tango Social (Dancing, Eating + Drinking with friends!)</p>\n<p>$20 &#8211; Entrance + 1 drink</p>\n<p>PEKA RESTAURANT <span dir=\"ltr\">304 Washington St., Brighton, MA 02315</span></p>\n<p>Reserve a table: <span dir=\"ltr\">617 &#8211; 817 &#8211; 0382</span></td>\n</tr>\n</tbody>\n</table>",
+      "excerpt": "",
+      "slug": "academy-absolute-beginner-class-social",
+      "image": {
+        "url": "https://i0.wp.com/bostontangocalendar.com/wp-content/uploads/2025/04/IMG_0552-e1744739309225.jpeg?fit=200%2C146&ssl=1",
+        "id": 41288,
+        "extension": "jpeg",
+        "width": 200,
+        "height": 146,
+        "filesize": 40104,
+        "sizes": {
+          "medium": {
+            "width": 300,
+            "height": 219,
+            "mime-type": "image/jpeg",
+            "filesize": 48199,
+            "url": "https://i0.wp.com/bostontangocalendar.com/wp-content/uploads/2025/04/IMG_0552-e1744739309225.jpeg?fit=300%2C219&ssl=1"
+          },
+          "large": {
+            "width": 600,
+            "height": 438,
+            "mime-type": "image/jpeg",
+            "filesize": 79891,
+            "url": "https://i0.wp.com/bostontangocalendar.com/wp-content/uploads/2025/04/IMG_0552-e1744739309225.jpeg?fit=600%2C438&ssl=1"
+          },
+          "thumbnail": {
+            "width": 150,
+            "height": 150,
+            "mime-type": "image/jpeg",
+            "filesize": 37661,
+            "url": "https://i0.wp.com/bostontangocalendar.com/wp-content/uploads/2025/04/IMG_0552-e1744739309225.jpeg?resize=150%2C146&ssl=1"
+          },
+          "medium_large": {
+            "width": 768,
+            "height": 560,
+            "mime-type": "image/jpeg",
+            "filesize": 101168,
+            "url": "https://i0.wp.com/bostontangocalendar.com/wp-content/uploads/2025/04/IMG_0552-e1744739309225.jpeg?fit=768%2C560&ssl=1"
+          },
+          "1536x1536": {
+            "width": 1023,
+            "height": 1536,
+            "mime-type": "image/jpeg",
+            "filesize": 241119,
+            "url": "https://i0.wp.com/bostontangocalendar.com/wp-content/uploads/2025/04/IMG_0552-e1744739309225.jpeg?fit=1023%2C1536&ssl=1"
+          },
+          "thinkup-column1-1/4": {
+            "width": 1060,
+            "height": 285,
+            "mime-type": "image/jpeg",
+            "filesize": 81797,
+            "url": "https://i0.wp.com/bostontangocalendar.com/wp-content/uploads/2025/04/IMG_0552-e1744739309225.jpeg?resize=200%2C146&ssl=1"
+          },
+          "thinkup-column2-2/3": {
+            "width": 570,
+            "height": 380,
+            "mime-type": "image/jpeg",
+            "filesize": 72824,
+            "url": "https://i0.wp.com/bostontangocalendar.com/wp-content/uploads/2025/04/IMG_0552-e1744739309225.jpeg?resize=200%2C146&ssl=1"
+          }
+        }
+      },
+      "all_day": false,
+      "start_date": "2025-06-11 18:00:00",
+      "start_date_details": {
+        "year": "2025",
+        "month": "06",
+        "day": "11",
+        "hour": "18",
+        "minutes": "00",
+        "seconds": "00"
+      },
+      "end_date": "2025-06-11 22:00:00",
+      "end_date_details": {
+        "year": "2025",
+        "month": "06",
+        "day": "11",
+        "hour": "22",
+        "minutes": "00",
+        "seconds": "00"
+      },
+      "utc_start_date": "2025-06-11 22:00:00",
+      "utc_start_date_details": {
+        "year": "2025",
+        "month": "06",
+        "day": "11",
+        "hour": "22",
+        "minutes": "00",
+        "seconds": "00"
+      },
+      "utc_end_date": "2025-06-12 02:00:00",
+      "utc_end_date_details": {
+        "year": "2025",
+        "month": "06",
+        "day": "12",
+        "hour": "02",
+        "minutes": "00",
+        "seconds": "00"
+      },
+      "timezone": "America/New_York",
+      "timezone_abbr": "EDT",
+      "cost": "",
+      "cost_details": {
+        "currency_symbol": "$",
+        "currency_code": "USD",
+        "currency_position": "prefix",
+        "values": []
+      },
+      "website": "",
+      "show_map": true,
+      "show_map_link": true,
+      "hide_from_listings": false,
+      "sticky": false,
+      "featured": false,
+      "categories": [
+        {
+          "name": "First Timer Friendly",
+          "slug": "first-timer-friendly",
+          "term_group": 0,
+          "term_taxonomy_id": 63,
+          "taxonomy": "tribe_events_cat",
+          "description": "No Experince Necessary",
+          "parent": 0,
+          "count": 353,
+          "filter": "raw",
+          "id": 63,
+          "urls": {
+            "self": "https://bostontangocalendar.com/wp-json/tribe/events/v1/categories/63",
+            "collection": "https://bostontangocalendar.com/wp-json/tribe/events/v1/categories"
+          }
+        },
+        {
+          "name": "Milonga",
+          "slug": "milonga",
+          "term_group": 0,
+          "term_taxonomy_id": 37,
+          "taxonomy": "tribe_events_cat",
+          "description": "Milonga typically are evening based, have a dress code, and no 'lessons' on the floor. Newbies may watch, but may have a hard time participating. Solid dance techniques and floor management is expected to attend.",
+          "parent": 0,
+          "count": 372,
+          "filter": "raw",
+          "id": 37,
+          "urls": {
+            "self": "https://bostontangocalendar.com/wp-json/tribe/events/v1/categories/37",
+            "collection": "https://bostontangocalendar.com/wp-json/tribe/events/v1/categories"
+          }
+        },
+        {
+          "name": "Other",
+          "slug": "other",
+          "term_group": 0,
+          "term_taxonomy_id": 127,
+          "taxonomy": "tribe_events_cat",
+          "description": "",
+          "parent": 0,
+          "count": 2,
+          "filter": "raw",
+          "id": 127,
+          "urls": {
+            "self": "https://bostontangocalendar.com/wp-json/tribe/events/v1/categories/127",
+            "collection": "https://bostontangocalendar.com/wp-json/tribe/events/v1/categories"
+          }
+        },
+        {
+          "name": "Party/Gathering",
+          "slug": "party-gathering",
+          "term_group": 0,
+          "term_taxonomy_id": 126,
+          "taxonomy": "tribe_events_cat",
+          "description": "",
+          "parent": 127,
+          "count": 5,
+          "filter": "raw",
+          "id": 126,
+          "urls": {
+            "self": "https://bostontangocalendar.com/wp-json/tribe/events/v1/categories/126",
+            "collection": "https://bostontangocalendar.com/wp-json/tribe/events/v1/categories",
+            "up": "https://bostontangocalendar.com/wp-json/tribe/events/v1/categories/127"
+          }
+        }
+      ],
+      "tags": [],
+      "venue": {
+        "id": 41286,
+        "author": "5",
+        "status": "publish",
+        "date": "2025-04-15 13:36:16",
+        "date_utc": "2025-04-15 17:36:16",
+        "modified": "2025-04-15 13:36:24",
+        "modified_utc": "2025-04-15 17:36:24",
+        "url": "https://bostontangocalendar.com/venue/peka-restaurnt/",
+        "venue": "Peka Restaurnt",
+        "slug": "peka-restaurnt",
+        "address": "304 washington",
+        "city": "brighton",
+        "country": "United States",
+        "state": "MA",
+        "zip": "02315",
+        "stateprovince": "MA",
+        "show_map": true,
+        "show_map_link": true,
+        "global_id": "bostontangocalendar.com?id=41286",
+        "global_id_lineage": [
+          "bostontangocalendar.com?id=41286"
+        ]
+      },
+      "organizer": [
+        {
+          "id": 41179,
+          "author": "15",
+          "status": "publish",
+          "date": "2025-03-26 12:53:07",
+          "date_utc": "2025-03-26 16:53:07",
+          "modified": "2025-03-26 12:53:07",
+          "modified_utc": "2025-03-26 16:53:07",
+          "url": "https://bostontangocalendar.com/organizer/tango-academy-of-boston/",
+          "organizer": "Tango Academy of Boston",
+          "description": "<p><strong>Fernanda Ghi </strong><br />\nFernanda Ghi is a true legend in the world of Argentine Tango. Celebrated for her elegant style, unique interpretation, creative choreography and powerful command of the stage, she has toured internationally for over two decades.  </p>\n<p>Ghi performed in countless shows and exhibitions, and became the World Argentine Tango Champion IDO in 1999. She and and her partner were the first non-Asians ever invited to perform at the Imperial Theater in Tokyo and were the feature dancers on the PBS special ‘Tango Magic’ with Pablo Ziegler and the Orpheus Orchestra. Ghi has performed in concert with several Symphony Orchestras (New Mexico, Long Beach, Costa Mesa) and was commissioned the creation of a tango ballet for the Tulsa Ballet Dance Company. In 2017 and 2018, Ghi served as a judge at the ‘Tango Mundial,’ the World Competition for Argentine Tango. </p>\n<p>Ghi is the founder of the Fernanda Ghi Dance Company which creates a fusion between Argentine Tango and other art forms, such a theater, visual arts, opera and other styles of dance. The Boston Tango Academy is founded around Ghi’s pedagogy. The Academy provides training for professional and amateur dancers, and is the premier location to learn authentic Argentine Tango in the Boston metro area.<br />\n<strong><br />\nMia Dalgish</strong><br />\nMia is a professional Argentine tango dancer and co-manages The Tango Academy of Boston. She teaches private lessons, group classes and workshops for students of all levels. Mia sees Tango as a way of being and a dance. Her approach to teaching is to create a clear and consistent understanding of body mechanics. Since 2010, Mia has trained with her mentor, Fernanda Ghi. From 2012 &#8211; 2019, she was the Manager and an Instructor at Artango Dance School, founded by Fernanda Ghi and + Guillermo Merlo. </p>\n<p>Mia has 15 years of experience in production and curation for both visual and movement arts. Since 2010, Mia has been a Co- Curator at Pictura, a renowned fine art gallery for contemporary photography. In 2015 Mia co-founded Hybridmotion a contemporary dance theatre company. As a Director + Dramaturg, Mia focused on the story-telling element of the company’s work. She was instrumental in developing and conveying the concepts, emotions, and aesthetics of projects. These projects included the creation of full length shows for the stage, as well as working with clients such as HBO, Netflix and the Boston Pops Orchestra. She served as a Co-Artistic Director until 2022 and now consults on various projects. </p>",
+          "slug": "tango-academy-of-boston",
+          "image": {
+            "url": "https://i0.wp.com/bostontangocalendar.com/wp-content/uploads/2025/03/Screenshot-2025-03-26-at-12.49.39 PM.png?fit=2304%2C984&ssl=1",
+            "id": 41181,
+            "extension": "png",
+            "width": 2304,
+            "height": 984,
+            "filesize": 1613343,
+            "sizes": {
+              "medium": {
+                "width": 300,
+                "height": 128,
+                "mime-type": "image/png",
+                "filesize": 36932,
+                "url": "https://i0.wp.com/bostontangocalendar.com/wp-content/uploads/2025/03/Screenshot-2025-03-26-at-12.49.39 PM.png?fit=300%2C128&ssl=1"
+              },
+              "large": {
+                "width": 600,
+                "height": 256,
+                "mime-type": "image/png",
+                "filesize": 121273,
+                "url": "https://i0.wp.com/bostontangocalendar.com/wp-content/uploads/2025/03/Screenshot-2025-03-26-at-12.49.39 PM.png?fit=600%2C256&ssl=1"
+              },
+              "thumbnail": {
+                "width": 150,
+                "height": 150,
+                "mime-type": "image/png",
+                "filesize": 20020,
+                "url": "https://i0.wp.com/bostontangocalendar.com/wp-content/uploads/2025/03/Screenshot-2025-03-26-at-12.49.39 PM.png?resize=150%2C150&ssl=1"
+              },
+              "medium_large": {
+                "width": 768,
+                "height": 328,
+                "mime-type": "image/png",
+                "filesize": 184183,
+                "url": "https://i0.wp.com/bostontangocalendar.com/wp-content/uploads/2025/03/Screenshot-2025-03-26-at-12.49.39 PM.png?fit=768%2C328&ssl=1"
+              },
+              "1536x1536": {
+                "width": 1536,
+                "height": 656,
+                "mime-type": "image/png",
+                "filesize": 556705,
+                "url": "https://i0.wp.com/bostontangocalendar.com/wp-content/uploads/2025/03/Screenshot-2025-03-26-at-12.49.39 PM.png?fit=1536%2C656&ssl=1"
+              },
+              "2048x2048": {
+                "width": 2048,
+                "height": 875,
+                "mime-type": "image/png",
+                "filesize": 860517,
+                "url": "https://i0.wp.com/bostontangocalendar.com/wp-content/uploads/2025/03/Screenshot-2025-03-26-at-12.49.39 PM.png?fit=2048%2C875&ssl=1"
+              },
+              "thinkup-column1-1/4": {
+                "width": 1140,
+                "height": 285,
+                "mime-type": "image/png",
+                "filesize": 211971,
+                "url": "https://i0.wp.com/bostontangocalendar.com/wp-content/uploads/2025/03/Screenshot-2025-03-26-at-12.49.39 PM.png?resize=1140%2C285&ssl=1"
+              },
+              "thinkup-column2-2/3": {
+                "width": 570,
+                "height": 380,
+                "mime-type": "image/png",
+                "filesize": 148563,
+                "url": "https://i0.wp.com/bostontangocalendar.com/wp-content/uploads/2025/03/Screenshot-2025-03-26-at-12.49.39 PM.png?resize=570%2C380&ssl=1"
+              }
+            }
+          },
+          "website": "https://tangoacademyofboston.com",
+          "global_id": "bostontangocalendar.com?id=41179",
+          "global_id_lineage": [
+            "bostontangocalendar.com?id=41179"
+          ]
+        }
+      ],
+      "is_virtual": false,
+      "virtual_url": null,
+      "virtual_video_source": ""
+    },
+    {
+      "id": 10010832,
+      "global_id": "bostontangocalendar.com?id=10010832",
+      "global_id_lineage": [
+        "bostontangocalendar.com?id=10010832"
+      ],
+      "author": "46",
+      "status": "publish",
+      "date": "2024-02-12 16:48:26",
+      "date_utc": "2024-02-12 21:48:26",
+      "modified": "2025-01-15 21:35:29",
+      "modified_utc": "2025-01-16 02:35:29",
+      "url": "https://bostontangocalendar.com/event/wednesday-tango-break-tango-classes-february/2025-06-11/",
+      "rest_url": "https://bostontangocalendar.com/wp-json/tribe/events/v1/events/10010832",
+      "title": "Wednesday Tango Break– 7pm Beginner Tango Classes",
+      "description": "<p>The Tango Society of Boston sponsors Mid-week Tango Dance breaks every Wednesday &#8212; Boston&#8217;s largest informal Milonga (Tango social dance) and Tango lessons.</p>\n<p>Features a lesson in Argentine Tango for Beginning to intermediate dancers (and open to newcomers). No prior experience or partner required.</p>\n<p>Schedule<br />\n7:00-8:00: Beginners Tango with Guillermo Merlo. This class is for beginners and those wishing to brush up some new techniques.<br />\n8:00-9:00: Adv-Intermediate Tango Class with Guillermo Merlo &#8211;Theme changes every month</p>\n<p>&nbsp;</p>\n<div>\n<div class=\"xdj266r x11i5rnm xat24cr x1mh8g0r x1vvkbs\"><span class=\"x3nfvp2 x1j61x8r x1fcty0u xdj266r xhhsvwb xat24cr xgzva0m xxymvpz xlup9mm x1kky2od\"><img loading=\"lazy\" decoding=\"async\" class=\"xz74otr\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/t2d/2/16/2665.png\" alt=\"♥\" width=\"16\" height=\"16\" /></span> <span class=\"x3nfvp2 x1j61x8r x1fcty0u xdj266r xhhsvwb xat24cr xgzva0m xxymvpz xlup9mm x1kky2od\"><img loading=\"lazy\" decoding=\"async\" class=\"xz74otr\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/t2d/2/16/2665.png\" alt=\"♥\" width=\"16\" height=\"16\" /></span><span class=\"x3nfvp2 x1j61x8r x1fcty0u xdj266r xhhsvwb xat24cr xgzva0m xxymvpz xlup9mm x1kky2od\"><img loading=\"lazy\" decoding=\"async\" class=\"xz74otr\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/t38/2/16/1f33a.png\" alt=\"🌺\" width=\"16\" height=\"16\" /></span><span class=\"x3nfvp2 x1j61x8r x1fcty0u xdj266r xhhsvwb xat24cr xgzva0m xxymvpz xlup9mm x1kky2od\"><img loading=\"lazy\" decoding=\"async\" class=\"xz74otr\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/t10/2/16/1f339.png\" alt=\"🌹\" width=\"16\" height=\"16\" /></span><span class=\"x3nfvp2 x1j61x8r x1fcty0u xdj266r xhhsvwb xat24cr xgzva0m xxymvpz xlup9mm x1kky2od\"><img loading=\"lazy\" decoding=\"async\" class=\"xz74otr\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/t2d/2/16/2665.png\" alt=\"♥\" width=\"16\" height=\"16\" /></span> <span class=\"x3nfvp2 x1j61x8r x1fcty0u xdj266r xhhsvwb xat24cr xgzva0m xxymvpz xlup9mm x1kky2od\"><img loading=\"lazy\" decoding=\"async\" class=\"xz74otr\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/t2d/2/16/2665.png\" alt=\"♥\" width=\"16\" height=\"16\" /></span><span class=\"x3nfvp2 x1j61x8r x1fcty0u xdj266r xhhsvwb xat24cr xgzva0m xxymvpz xlup9mm x1kky2od\"><img loading=\"lazy\" decoding=\"async\" class=\"xz74otr\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/t38/2/16/1f33a.png\" alt=\"🌺\" width=\"16\" height=\"16\" /></span><span class=\"x3nfvp2 x1j61x8r x1fcty0u xdj266r xhhsvwb xat24cr xgzva0m xxymvpz xlup9mm x1kky2od\"><img loading=\"lazy\" decoding=\"async\" class=\"xz74otr\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/t10/2/16/1f339.png\" alt=\"🌹\" width=\"16\" height=\"16\" /></span></div>\n</div>\n<div></div>\n<div></div>\n<div>\n<div class=\"x11i5rnm xat24cr x1mh8g0r x1vvkbs xtlvy1s\"><strong>WELCOME FEBRUARY&#8211;THE MONTH OF LOVE AND FRIENDSHIP!!</strong></div>\n</div>\n<div></div>\n<div></div>\n<div class=\"x11i5rnm xat24cr x1mh8g0r x1vvkbs xtlvy1s\"><span class=\"x3nfvp2 x1j61x8r x1fcty0u xdj266r xhhsvwb xat24cr xgzva0m xxymvpz xlup9mm x1kky2od\"><img loading=\"lazy\" decoding=\"async\" class=\"xz74otr\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/t2d/2/16/2665.png\" alt=\"♥\" width=\"16\" height=\"16\" /></span> <span class=\"x3nfvp2 x1j61x8r x1fcty0u xdj266r xhhsvwb xat24cr xgzva0m xxymvpz xlup9mm x1kky2od\"><img loading=\"lazy\" decoding=\"async\" class=\"xz74otr\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/t2d/2/16/2665.png\" alt=\"♥\" width=\"16\" height=\"16\" /></span><span class=\"x3nfvp2 x1j61x8r x1fcty0u xdj266r xhhsvwb xat24cr xgzva0m xxymvpz xlup9mm x1kky2od\"><img loading=\"lazy\" decoding=\"async\" class=\"xz74otr\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/t38/2/16/1f33a.png\" alt=\"🌺\" width=\"16\" height=\"16\" /></span><span class=\"x3nfvp2 x1j61x8r x1fcty0u xdj266r xhhsvwb xat24cr xgzva0m xxymvpz xlup9mm x1kky2od\"><img loading=\"lazy\" decoding=\"async\" class=\"xz74otr\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/t10/2/16/1f339.png\" alt=\"🌹\" width=\"16\" height=\"16\" /></span><span class=\"x3nfvp2 x1j61x8r x1fcty0u xdj266r xhhsvwb xat24cr xgzva0m xxymvpz xlup9mm x1kky2od\"><img loading=\"lazy\" decoding=\"async\" class=\"xz74otr\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/t2d/2/16/2665.png\" alt=\"♥\" width=\"16\" height=\"16\" /></span> <span class=\"x3nfvp2 x1j61x8r x1fcty0u xdj266r xhhsvwb xat24cr xgzva0m xxymvpz xlup9mm x1kky2od\"><img loading=\"lazy\" decoding=\"async\" class=\"xz74otr\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/t2d/2/16/2665.png\" alt=\"♥\" width=\"16\" height=\"16\" /></span><span class=\"x3nfvp2 x1j61x8r x1fcty0u xdj266r xhhsvwb xat24cr xgzva0m xxymvpz xlup9mm x1kky2od\"><img loading=\"lazy\" decoding=\"async\" class=\"xz74otr\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/t38/2/16/1f33a.png\" alt=\"🌺\" width=\"16\" height=\"16\" /></span><span class=\"x3nfvp2 x1j61x8r x1fcty0u xdj266r xhhsvwb xat24cr xgzva0m xxymvpz xlup9mm x1kky2od\"><img loading=\"lazy\" decoding=\"async\" class=\"xz74otr\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/t10/2/16/1f339.png\" alt=\"🌹\" width=\"16\" height=\"16\" /></span></div>\n<div class=\"x11i5rnm xat24cr x1mh8g0r x1vvkbs xtlvy1s\"></div>\n<div></div>\n<div class=\"x11i5rnm xat24cr x1mh8g0r x1vvkbs xtlvy1s\"></div>\n<div class=\"x11i5rnm xat24cr x1mh8g0r x1vvkbs xtlvy1s\">𝑪𝒐𝒎𝒆 𝒋𝒐𝒊𝒏 𝒖𝒔 𝒇𝒐𝒓 𝑪𝒍𝒂𝒔𝒔𝒆𝒔 𝒂𝒏𝒅 𝒅𝒂𝒏𝒄𝒊𝒏𝒈 with 𝑮𝒖𝒊𝒍𝒍𝒆𝒓𝒎𝒐 𝑴𝒆𝒓𝒍𝒐 this week and for the month of February.</div>\n<div></div>\n<div class=\"x11i5rnm xat24cr x1mh8g0r x1vvkbs xtlvy1s\">7-9𝙥𝙢 𝘾𝙡𝙖𝙨𝙨𝙚𝙨</div>\n<div></div>\n<div></div>\n<div class=\"x11i5rnm xat24cr x1mh8g0r x1vvkbs xtlvy1s\">9𝙥𝙢-12𝙖𝙢 &#8211; 𝘿𝙖𝙣𝙘𝙞𝙣𝙜 𝙬𝙞𝙩𝙝 𝙜𝙪𝙚𝙨𝙩 DJs</div>\n<div></div>\n<div></div>\n<div>\n<div class=\"x11i5rnm xat24cr x1mh8g0r x1vvkbs xtlvy1s\"><span class=\"x3nfvp2 x1j61x8r x1fcty0u xdj266r xhhsvwb xat24cr xgzva0m xxymvpz xlup9mm x1kky2od\"><img loading=\"lazy\" decoding=\"async\" class=\"xz74otr\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/t38/2/16/1f33a.png\" alt=\"🌺\" width=\"16\" height=\"16\" /></span><span class=\"x3nfvp2 x1j61x8r x1fcty0u xdj266r xhhsvwb xat24cr xgzva0m xxymvpz xlup9mm x1kky2od\"><img loading=\"lazy\" decoding=\"async\" class=\"xz74otr\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/t10/2/16/1f339.png\" alt=\"🌹\" width=\"16\" height=\"16\" /></span> 7-8𝒑𝒎 &#8212; 𝑩𝑬𝑮𝑰𝑵𝑵𝑬𝑹;<br />\n𝑻𝒉𝒆 𝑩𝒂𝒔𝒊𝒄 𝑻𝒂𝒏𝒈𝒐 𝑺𝒕𝒆𝒑𝒔 𝑰𝒇 𝒚𝒐𝒖 𝒉𝒂𝒗𝒆 𝒏𝒆𝒗𝒆𝒓 𝒕𝒂𝒌𝒆𝒏 𝒂 𝑻𝒂𝒏𝒈𝒐 𝒄𝒍𝒂𝒔𝒔, 𝒕𝒉𝒊𝒔 𝒊𝒔 𝒇𝒐𝒓 𝒚𝒐𝒖. 𝒀𝒐𝒖 𝒘𝒊𝒍𝒍 𝒃𝒆 𝒂𝒃𝒍𝒆 𝒕𝒐 𝒂𝒄𝒕𝒖𝒂𝒍𝒍𝒚 𝒈𝒆𝒕 𝒐𝒏 𝒕𝒉𝒆 𝒅𝒂𝒏𝒄𝒆 𝒇𝒍𝒐𝒐𝒓 𝒂𝒏𝒅 𝒔𝒉𝒐𝒘 𝒚𝒐𝒖𝒓 𝒇𝒓𝒊𝒆𝒏𝒅𝒔 𝒉𝒐𝒘 𝒕𝒐 𝑻𝒂𝒏𝒈𝒐!! 𝑨𝒏𝒅&#8212;𝒆𝒗𝒆𝒓𝒚𝒐𝒏𝒆 𝒏𝒆𝒆𝒅𝒔 𝒂 𝒍𝒊𝒕𝒕𝒍𝒆 ‘𝒃𝒆𝒈𝒊𝒏𝒏𝒆𝒓 𝒄𝒍𝒂𝒔𝒔’ 𝒊𝒏 𝒕𝒉𝒆𝒊𝒓 𝒍𝒊𝒗𝒆𝒔—𝒆𝒗𝒆𝒏 𝒕𝒉𝒐𝒔𝒆 𝒘𝒉𝒐 𝒂𝒓𝒆 𝒂𝒍𝒓𝒆𝒂𝒅𝒚 𝑻𝒂𝒏𝒈𝒐 𝒂𝒅𝒅𝒊𝒄𝒕𝒔.</div>\n</div>\n<div class=\"x11i5rnm xat24cr x1mh8g0r x1vvkbs xtlvy1s\"></div>\n<div></div>\n<div></div>\n<div>\n<div class=\"x11i5rnm xat24cr x1mh8g0r x1vvkbs xtlvy1s\"><span class=\"x3nfvp2 x1j61x8r x1fcty0u xdj266r xhhsvwb xat24cr xgzva0m xxymvpz xlup9mm x1kky2od\"><img loading=\"lazy\" decoding=\"async\" class=\"xz74otr\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/t38/2/16/1f33a.png\" alt=\"🌺\" width=\"16\" height=\"16\" /></span><span class=\"x3nfvp2 x1j61x8r x1fcty0u xdj266r xhhsvwb xat24cr xgzva0m xxymvpz xlup9mm x1kky2od\"><img loading=\"lazy\" decoding=\"async\" class=\"xz74otr\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/t10/2/16/1f339.png\" alt=\"🌹\" width=\"16\" height=\"16\" /></span> 8-9𝒑𝒎 &#8212; 𝑰𝑵𝑻𝑬𝑹𝑴𝑬𝑫𝑰𝑨𝑻𝑬 + 𝑻𝒂𝒏𝒈𝒐&#8211;<br />\n&#8221; Ganchos Internos&#8221; &#8212; see description under the intermediate class</div>\n</div>\n<div class=\"x11i5rnm xat24cr x1mh8g0r x1vvkbs xtlvy1s\"></div>\n<div></div>\n<div></div>\n<div>\n<div class=\"x11i5rnm xat24cr x1mh8g0r x1vvkbs xtlvy1s\"><span class=\"x3nfvp2 x1j61x8r x1fcty0u xdj266r xhhsvwb xat24cr xgzva0m xxymvpz xlup9mm x1kky2od\"><img loading=\"lazy\" decoding=\"async\" class=\"xz74otr\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/t38/2/16/1f33a.png\" alt=\"🌺\" width=\"16\" height=\"16\" /></span><span class=\"x3nfvp2 x1j61x8r x1fcty0u xdj266r xhhsvwb xat24cr xgzva0m xxymvpz xlup9mm x1kky2od\"><img loading=\"lazy\" decoding=\"async\" class=\"xz74otr\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/t10/2/16/1f339.png\" alt=\"🌹\" width=\"16\" height=\"16\" /></span><span class=\"x3nfvp2 x1j61x8r x1fcty0u xdj266r xhhsvwb xat24cr xgzva0m xxymvpz xlup9mm x1kky2od\"><img loading=\"lazy\" decoding=\"async\" class=\"xz74otr\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/t38/2/16/1f33a.png\" alt=\"🌺\" width=\"16\" height=\"16\" /></span><span class=\"x3nfvp2 x1j61x8r x1fcty0u xdj266r xhhsvwb xat24cr xgzva0m xxymvpz xlup9mm x1kky2od\"><img loading=\"lazy\" decoding=\"async\" class=\"xz74otr\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/t10/2/16/1f339.png\" alt=\"🌹\" width=\"16\" height=\"16\" /></span> 9:00𝒑𝒎-12:00𝒂𝒎—𝑫𝒂𝒏𝒄𝒊𝒏𝒈<br />\n𝑮𝒖𝒆𝒔t DJ: weekly guest DJs</div>\n</div>\n<div></div>\n<div></div>\n<div></div>\n<div class=\"x11i5rnm xat24cr x1mh8g0r x1vvkbs xtlvy1s\">𝑨𝒍𝒍 𝑪𝒍𝒂𝒔𝒔𝒆𝒔 𝒂𝒓𝒆 $20 𝒆𝒂𝒄𝒉 𝒇𝒐𝒓 𝒃𝒆𝒈𝒊𝒏𝒏𝒆𝒓 𝒂𝒏𝒅 𝑰𝒏𝒕𝒆𝒓𝒎𝒆𝒅𝒊𝒂𝒕𝒆.</div>\n<div class=\"x11i5rnm xat24cr x1mh8g0r x1vvkbs xtlvy1s\">𝘽𝙪𝙮 𝙮𝙤𝙪r 𝙋𝙖𝙘𝙠𝙖𝙜𝙚 𝙤𝙣 the first day of the new cycle 𝙖𝙣𝙙 𝙜𝙚𝙩 𝙖 10% 𝙙𝙞𝙨𝙘𝙤𝙪𝙣𝙩</div>\n<div class=\"x11i5rnm xat24cr x1mh8g0r x1vvkbs xtlvy1s\"></div>\n<div></div>\n<div class=\"x11i5rnm xat24cr x1mh8g0r x1vvkbs xtlvy1s\">𝑷𝑨𝑪𝑲𝑨𝑮𝑬𝑺<br />\n4 𝒄𝒍𝒂𝒔𝒔𝒆𝒔 = $70 &#8212; regular price</div>\n<div class=\"x11i5rnm xat24cr x1mh8g0r x1vvkbs xtlvy1s\"></div>\n<div></div>\n<div class=\"x11i5rnm xat24cr x1mh8g0r x1vvkbs xtlvy1s\">𝑨𝑫𝑫𝑰𝑻𝑰𝑶𝑵𝑨𝑳 𝑷𝑹𝑰𝑪𝑬 𝑭𝑶𝑹 𝑴𝑰𝑳𝑶𝑵𝑮𝑨:<br />\n$10 𝒇𝒐𝒓 𝒕𝒉𝒆 𝑴𝒊𝒍𝒐𝒏𝒈𝒂 𝒊𝒇 𝒚𝒐𝒖 𝒕𝒂𝒌𝒆 𝒂 𝒄𝒍𝒂𝒔𝒔.<br />\n$5 𝒇𝒐𝒓 𝒔𝒕𝒖𝒅𝒆𝒏𝒕𝒔</div>\n<div></div>\n<div class=\"x11i5rnm xat24cr x1mh8g0r x1vvkbs xtlvy1s\">𝑺𝑷𝑬𝑪𝑰𝑨𝑳: $10 𝒊𝒇 𝒚𝒐𝒖 𝒂𝒓𝒆 𝒕𝒂𝒌𝒊𝒏𝒈 𝒕𝒉𝒆 𝒄𝒍𝒂𝒔𝒔𝒆𝒔 ***𝑺𝑻𝑼𝑫𝑬𝑵𝑻 𝑫𝑰𝑺𝑪𝑶𝑼𝑵𝑻 𝑭𝑶𝑹 𝑫𝑨𝑵𝑪𝑰𝑵𝑮 𝑶𝑵𝑳𝒀</div>\n<div class=\"x11i5rnm xat24cr x1mh8g0r x1vvkbs xtlvy1s\"></div>\n<div class=\"x11i5rnm xat24cr x1mh8g0r x1vvkbs xtlvy1s\"></div>\n<div class=\"x11i5rnm xat24cr x1mh8g0r x1vvkbs xtlvy1s\">𝑫𝒂𝒏𝒄𝒊𝒏𝒈 𝒊𝒔: $15/𝒑𝒆𝒓𝒔𝒐𝒏 &#8211;𝒊𝒇 𝒚𝒐𝒖 𝒂𝒓𝒆 𝒏𝒐𝒕 𝒕𝒂𝒌𝒊𝒏𝒈 𝒄𝒍𝒂𝒔𝒔𝒆𝒔<br />\n$10 𝒔𝒕𝒖𝒅𝒆𝒏𝒕𝒔</div>\n<div class=\"x11i5rnm xat24cr x1mh8g0r x1vvkbs xtlvy1s\">𝑺𝑷𝑬𝑪𝑰𝑨𝑳: $10 𝒊𝒇 𝒚𝒐𝒖 𝒂𝒓𝒆 𝒕𝒂𝒌𝒊𝒏𝒈 𝒕𝒉𝒆 𝒄𝒍𝒂𝒔𝒔𝒆𝒔 ***𝑺𝑻𝑼𝑫𝑬𝑵𝑻 𝑫𝑰𝑺𝑪𝑶𝑼𝑵𝑻 𝑭𝑶𝑹 𝑫𝑨𝑵𝑪𝑰𝑵𝑮 𝑶𝑵𝑳𝒀</div>\n<div class=\"x11i5rnm xat24cr x1mh8g0r x1vvkbs xtlvy1s\">_________</div>\n<div class=\"x11i5rnm xat24cr x1mh8g0r x1vvkbs xtlvy1s\">MILONGA PASS: $50 &#8211;only to be used on Wednesdays</div>\n<div class=\"x11i5rnm xat24cr x1mh8g0r x1vvkbs xtlvy1s\">In order to get the full benefit of our classes, we recommend that you advantage of one of the packages. However, drop in are welcome.</div>\n<div class=\"x11i5rnm xat24cr x1mh8g0r x1vvkbs xtlvy1s\">Class card is not refundable and must be used within the month it is bought.</div>\n<div class=\"x11i5rnm xat24cr x1mh8g0r x1vvkbs xtlvy1s\"></div>\n<div class=\"x11i5rnm xat24cr x1mh8g0r x1vvkbs xtlvy1s\"></div>\n<div class=\"x11i5rnm xat24cr x1mh8g0r x1vvkbs xtlvy1s\"><span class=\"x3nfvp2 x1j61x8r x1fcty0u xdj266r xhhsvwb xat24cr xgzva0m xxymvpz xlup9mm x1kky2od\"><img loading=\"lazy\" decoding=\"async\" class=\"xz74otr\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/t2d/2/16/2665.png\" alt=\"♥\" width=\"16\" height=\"16\" /></span> <span class=\"x3nfvp2 x1j61x8r x1fcty0u xdj266r xhhsvwb xat24cr xgzva0m xxymvpz xlup9mm x1kky2od\"><img loading=\"lazy\" decoding=\"async\" class=\"xz74otr\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/t2d/2/16/2665.png\" alt=\"♥\" width=\"16\" height=\"16\" /></span><span class=\"x3nfvp2 x1j61x8r x1fcty0u xdj266r xhhsvwb xat24cr xgzva0m xxymvpz xlup9mm x1kky2od\"><img loading=\"lazy\" decoding=\"async\" class=\"xz74otr\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/t38/2/16/1f33a.png\" alt=\"🌺\" width=\"16\" height=\"16\" /></span><span class=\"x3nfvp2 x1j61x8r x1fcty0u xdj266r xhhsvwb xat24cr xgzva0m xxymvpz xlup9mm x1kky2od\"><img loading=\"lazy\" decoding=\"async\" class=\"xz74otr\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/t10/2/16/1f339.png\" alt=\"🌹\" width=\"16\" height=\"16\" /></span> <span class=\"x3nfvp2 x1j61x8r x1fcty0u xdj266r xhhsvwb xat24cr xgzva0m xxymvpz xlup9mm x1kky2od\"><img loading=\"lazy\" decoding=\"async\" class=\"xz74otr\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/t2d/2/16/2665.png\" alt=\"♥\" width=\"16\" height=\"16\" /></span> <span class=\"x3nfvp2 x1j61x8r x1fcty0u xdj266r xhhsvwb xat24cr xgzva0m xxymvpz xlup9mm x1kky2od\"><img loading=\"lazy\" decoding=\"async\" class=\"xz74otr\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/t2d/2/16/2665.png\" alt=\"♥\" width=\"16\" height=\"16\" /></span><span class=\"x3nfvp2 x1j61x8r x1fcty0u xdj266r xhhsvwb xat24cr xgzva0m xxymvpz xlup9mm x1kky2od\"><img loading=\"lazy\" decoding=\"async\" class=\"xz74otr\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/t38/2/16/1f33a.png\" alt=\"🌺\" width=\"16\" height=\"16\" /></span><span class=\"x3nfvp2 x1j61x8r x1fcty0u xdj266r xhhsvwb xat24cr xgzva0m xxymvpz xlup9mm x1kky2od\"><img loading=\"lazy\" decoding=\"async\" class=\"xz74otr\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/t10/2/16/1f339.png\" alt=\"🌹\" width=\"16\" height=\"16\" /></span></div>\n<div></div>\n<div class=\"x11i5rnm xat24cr x1mh8g0r x1vvkbs xtlvy1s\">PAYMENT ONLINE:<br />\nCash<br />\nChecks<br />\nVenmo: @danceunionstudio</div>\n<div class=\"x11i5rnm xat24cr x1mh8g0r x1vvkbs xtlvy1s\">You can purchase a Milonga Pass and get a discount!<br />\nNo need to worry about carrying cash all the time when you can carry your milonga pass!</div>\n<div></div>\n<div class=\"x11i5rnm xat24cr x1mh8g0r x1vvkbs xtlvy1s\">__________________________________</div>\n<div class=\"x11i5rnm xat24cr x1mh8g0r x1vvkbs xtlvy1s\">PROTOCOLS: PLEASE READ CAREFULLY<br />\nWe are doing our best to keep the studio clean and safe for everyone to enjoy, but we need your cooperation to make sure it stays safe at all times<br />\nll result in you not being allowed to participate in our events.</div>\n<p>&nbsp;</p>\n<p>**See other posting for Tango Classes information.</p>\n<p>Call Vicky if you have any questions at 617-721-4872</p>\n<p>More information; www.bostontango.org</p>",
+      "excerpt": "",
+      "slug": "wednesday-tango-break-tango-classes-february",
+      "image": {
+        "url": "https://i0.wp.com/bostontangocalendar.com/wp-content/uploads/2024/02/WTB-February-2024.jpg?fit=1640%2C924&ssl=1",
+        "id": 38252,
+        "extension": "jpg",
+        "width": 1640,
+        "height": 924,
+        "filesize": 170707,
+        "sizes": {
+          "medium": {
+            "width": 300,
+            "height": 169,
+            "mime-type": "image/jpeg",
+            "filesize": 16971,
+            "url": "https://i0.wp.com/bostontangocalendar.com/wp-content/uploads/2024/02/WTB-February-2024.jpg?fit=300%2C169&ssl=1"
+          },
+          "large": {
+            "width": 600,
+            "height": 338,
+            "mime-type": "image/jpeg",
+            "filesize": 41675,
+            "url": "https://i0.wp.com/bostontangocalendar.com/wp-content/uploads/2024/02/WTB-February-2024.jpg?fit=600%2C338&ssl=1"
+          },
+          "thumbnail": {
+            "width": 150,
+            "height": 150,
+            "mime-type": "image/jpeg",
+            "filesize": 11441,
+            "url": "https://i0.wp.com/bostontangocalendar.com/wp-content/uploads/2024/02/WTB-February-2024.jpg?resize=150%2C150&ssl=1"
+          },
+          "medium_large": {
+            "width": 768,
+            "height": 433,
+            "mime-type": "image/jpeg",
+            "filesize": 58375,
+            "url": "https://i0.wp.com/bostontangocalendar.com/wp-content/uploads/2024/02/WTB-February-2024.jpg?fit=768%2C433&ssl=1"
+          },
+          "1536x1536": {
+            "width": 1536,
+            "height": 865,
+            "mime-type": "image/jpeg",
+            "filesize": 146213,
+            "url": "https://i0.wp.com/bostontangocalendar.com/wp-content/uploads/2024/02/WTB-February-2024.jpg?fit=1536%2C865&ssl=1"
+          },
+          "thinkup-column1-1/4": {
+            "width": 1140,
+            "height": 285,
+            "mime-type": "image/jpeg",
+            "filesize": 43736,
+            "url": "https://i0.wp.com/bostontangocalendar.com/wp-content/uploads/2024/02/WTB-February-2024.jpg?resize=1140%2C285&ssl=1"
+          },
+          "thinkup-column2-2/3": {
+            "width": 570,
+            "height": 380,
+            "mime-type": "image/jpeg",
+            "filesize": 43430,
+            "url": "https://i0.wp.com/bostontangocalendar.com/wp-content/uploads/2024/02/WTB-February-2024.jpg?resize=570%2C380&ssl=1"
+          }
+        }
+      },
+      "all_day": false,
+      "start_date": "2025-06-11 19:00:00",
+      "start_date_details": {
+        "year": "2025",
+        "month": "06",
+        "day": "11",
+        "hour": "19",
+        "minutes": "00",
+        "seconds": "00"
+      },
+      "end_date": "2025-06-11 20:00:00",
+      "end_date_details": {
+        "year": "2025",
+        "month": "06",
+        "day": "11",
+        "hour": "20",
+        "minutes": "00",
+        "seconds": "00"
+      },
+      "utc_start_date": "2025-06-11 23:00:00",
+      "utc_start_date_details": {
+        "year": "2025",
+        "month": "06",
+        "day": "11",
+        "hour": "23",
+        "minutes": "00",
+        "seconds": "00"
+      },
+      "utc_end_date": "2025-06-12 00:00:00",
+      "utc_end_date_details": {
+        "year": "2025",
+        "month": "06",
+        "day": "12",
+        "hour": "00",
+        "minutes": "00",
+        "seconds": "00"
+      },
+      "timezone": "America/New_York",
+      "timezone_abbr": "EST",
+      "cost": "",
+      "cost_details": {
+        "currency_symbol": "",
+        "currency_code": "",
+        "currency_position": "",
+        "values": []
+      },
+      "website": "http://www.bostontango.org",
+      "show_map": true,
+      "show_map_link": true,
+      "hide_from_listings": false,
+      "sticky": false,
+      "featured": false,
+      "categories": [
+        {
+          "name": "Drop-in Class",
+          "slug": "drop-in-class",
+          "term_group": 0,
+          "term_taxonomy_id": 69,
+          "taxonomy": "tribe_events_cat",
+          "description": "",
+          "parent": 128,
+          "count": 437,
+          "filter": "raw",
+          "id": 69,
+          "urls": {
+            "self": "https://bostontangocalendar.com/wp-json/tribe/events/v1/categories/69",
+            "collection": "https://bostontangocalendar.com/wp-json/tribe/events/v1/categories",
+            "up": "https://bostontangocalendar.com/wp-json/tribe/events/v1/categories/128"
+          }
+        },
+        {
+          "name": "First Timer Friendly",
+          "slug": "first-timer-friendly",
+          "term_group": 0,
+          "term_taxonomy_id": 63,
+          "taxonomy": "tribe_events_cat",
+          "description": "No Experince Necessary",
+          "parent": 0,
+          "count": 353,
+          "filter": "raw",
+          "id": 63,
+          "urls": {
+            "self": "https://bostontangocalendar.com/wp-json/tribe/events/v1/categories/63",
+            "collection": "https://bostontangocalendar.com/wp-json/tribe/events/v1/categories"
+          }
+        },
+        {
+          "name": "Progressive Class",
+          "slug": "progressive-class",
+          "term_group": 0,
+          "term_taxonomy_id": 68,
+          "taxonomy": "tribe_events_cat",
+          "description": "Each week adds to the previous weeks lessons",
+          "parent": 128,
+          "count": 310,
+          "filter": "raw",
+          "id": 68,
+          "urls": {
+            "self": "https://bostontangocalendar.com/wp-json/tribe/events/v1/categories/68",
+            "collection": "https://bostontangocalendar.com/wp-json/tribe/events/v1/categories",
+            "up": "https://bostontangocalendar.com/wp-json/tribe/events/v1/categories/128"
+          }
+        }
+      ],
+      "tags": [
+        {
+          "name": "Beginner",
+          "slug": "beginner",
+          "term_group": 0,
+          "term_taxonomy_id": 66,
+          "taxonomy": "post_tag",
+          "description": "Just starting, but know a step or 2, and have taken some lessons or classes",
+          "parent": 0,
+          "count": 302,
+          "filter": "raw",
+          "id": 66,
+          "urls": {
+            "self": "https://bostontangocalendar.com/wp-json/tribe/events/v1/tags/66",
+            "collection": "https://bostontangocalendar.com/wp-json/tribe/events/v1/tags"
+          }
+        },
+        {
+          "name": "First Timer",
+          "slug": "first-timer",
+          "term_group": 0,
+          "term_taxonomy_id": 67,
+          "taxonomy": "post_tag",
+          "description": "First Timer",
+          "parent": 0,
+          "count": 285,
+          "filter": "raw",
+          "id": 67,
+          "urls": {
+            "self": "https://bostontangocalendar.com/wp-json/tribe/events/v1/tags/67",
+            "collection": "https://bostontangocalendar.com/wp-json/tribe/events/v1/tags"
+          }
+        },
+        {
+          "name": "Open Level",
+          "slug": "open-level",
+          "term_group": 0,
+          "term_taxonomy_id": 71,
+          "taxonomy": "post_tag",
+          "description": "Anyone (Non-beginner) is open to come,",
+          "parent": 0,
+          "count": 435,
+          "filter": "raw",
+          "id": 71,
+          "urls": {
+            "self": "https://bostontangocalendar.com/wp-json/tribe/events/v1/tags/71",
+            "collection": "https://bostontangocalendar.com/wp-json/tribe/events/v1/tags"
+          }
+        }
+      ],
+      "venue": {
+        "id": 365,
+        "author": "15",
+        "status": "publish",
+        "date": "2018-12-27 10:53:07",
+        "date_utc": "2018-12-27 15:53:07",
+        "modified": "2024-10-15 11:53:41",
+        "modified_utc": "2024-10-15 15:53:41",
+        "url": "https://bostontangocalendar.com/venue/dance-union/",
+        "venue": "Dance Union",
+        "description": "<p>Home of The Tango Society of Boston Events.</p>",
+        "slug": "dance-union",
+        "image": {
+          "url": "https://i0.wp.com/bostontangocalendar.com/wp-content/uploads/2018/12/Screenshot-2018-12-31-14.06.29.png?fit=615%2C465&ssl=1",
+          "id": 5756,
+          "extension": "png",
+          "width": 615,
+          "height": 465,
+          "sizes": {
+            "thumbnail": {
+              "width": 150,
+              "height": 150,
+              "mime-type": "image/png",
+              "url": "https://i0.wp.com/bostontangocalendar.com/wp-content/uploads/2018/12/Screenshot-2018-12-31-14.06.29.png?resize=150%2C150&ssl=1"
+            },
+            "medium": {
+              "width": 300,
+              "height": 227,
+              "mime-type": "image/png",
+              "url": "https://i0.wp.com/bostontangocalendar.com/wp-content/uploads/2018/12/Screenshot-2018-12-31-14.06.29.png?fit=300%2C227&ssl=1"
+            },
+            "large": {
+              "width": 600,
+              "height": 454,
+              "mime-type": "image/png",
+              "url": "https://i0.wp.com/bostontangocalendar.com/wp-content/uploads/2018/12/Screenshot-2018-12-31-14.06.29.png?fit=600%2C454&ssl=1"
+            }
+          }
+        },
+        "address": "16 bow street",
+        "city": "Somerville",
+        "country": "United States",
+        "province": "MA",
+        "state": "MA",
+        "zip": "02143",
+        "phone": "(617) 721-4872",
+        "stateprovince": "MA",
+        "geo_lat": 42.3807113,
+        "geo_lng": -71.0972088,
+        "show_map": true,
+        "show_map_link": false,
+        "global_id": "bostontangocalendar.com?id=365",
+        "global_id_lineage": [
+          "bostontangocalendar.com?id=365"
+        ]
+      },
+      "organizer": [
+        {
+          "id": 397,
+          "author": "2",
+          "status": "publish",
+          "date": "2018-12-27 14:24:38",
+          "date_utc": "2018-12-27 19:24:38",
+          "modified": "2019-07-17 16:56:51",
+          "modified_utc": "2019-07-17 20:56:51",
+          "url": "https://bostontangocalendar.com/organizer/tangosociety/",
+          "organizer": "Tango Society of Boston",
+          "description": "<h2><strong>Who Are We?</strong></h2>\n<p>The Tango Society of Boston was incorporated in June 1997 as a Massachusetts non-profit organization dedicated to the support and growth of the Argentine Tango. Within 5 months, it already had 250 members, and the numbers are growing weekly! While there are many facets to the Argentine Tango—the music and the culture being among the most prominent—it is the dance that brings most of us together.<br />\nThe Tango is a social and participant’s dance and is for everyone to learn and enjoy, regardless of dance background!</p>\n<p>Our membership has people from all walks of life, and has probably 20 or more countries represented! !</p>\n<h2><strong>What Do We Do?</strong></h2>\n<p>We are not just a paper organization! Our numerous activities fall into two broad categories:</p>\n<p><strong>1. Planning Tango events</strong></p>\n<p>Weekly Wednesday evening Tango dances at 16 Bow St, Union Sq, Somerville open to all, with a 1-hour lesson at the beginning<br />\nWeekend Tango seminars several times a year with the best Tango teachers in the world (usually from Argentina), such as the one with the renowned Pablo Veron, Fernanda Ghi and Guillermo Merlo, Daniela Arcuri, Hector Falcon, to name a few.<br />\nMilongas (Tango dance socials), some with live music<br />\nSpecial and unusual Tango events such as outdoor “Tango by Moonlight” nights in summer<br />\nOur Annual Boston Tango Festival in June</p>\n<p><strong>2. Supporting the growth of the Tango community</strong></p>\n<p>We sponsor TangoLine™, a 24-hour Tango hotline publicizing events for all Tango organizers in the Boston area&#8211;<br />\ntry it at 617-699-OCHO (-6246)<br />\nSupport local Tango organizers, musicians, etc., through our events, affiliations, and publicity and information channels<br />\nOutreach efforts via newspaper, radio and TV publicity<br />\nJoint events with other local and regional art and cultural institutions, both commercial and non-profit (e.g., Museum of Fine Arts, First Night Boston, movie houses showing Tango-related films, Tango festivals, etc.)</p>",
+          "slug": "tangosociety",
+          "image": {
+            "url": "https://i0.wp.com/bostontangocalendar.com/wp-content/uploads/2018/12/Screenshot-2018-12-27-14.22.34.png?fit=956%2C230&ssl=1",
+            "id": 398,
+            "extension": "png",
+            "width": 956,
+            "height": 230,
+            "sizes": {
+              "thumbnail": {
+                "width": 150,
+                "height": 150,
+                "mime-type": "image/png",
+                "url": "https://i0.wp.com/bostontangocalendar.com/wp-content/uploads/2018/12/Screenshot-2018-12-27-14.22.34.png?resize=150%2C150&ssl=1"
+              },
+              "medium": {
+                "width": 300,
+                "height": 72,
+                "mime-type": "image/png",
+                "url": "https://i0.wp.com/bostontangocalendar.com/wp-content/uploads/2018/12/Screenshot-2018-12-27-14.22.34.png?fit=300%2C72&ssl=1"
+              },
+              "medium_large": {
+                "width": 768,
+                "height": 185,
+                "mime-type": "image/png",
+                "url": "https://i0.wp.com/bostontangocalendar.com/wp-content/uploads/2018/12/Screenshot-2018-12-27-14.22.34.png?fit=768%2C185&ssl=1"
+              }
+            }
+          },
+          "phone": "617-699-OCHO",
+          "website": "http://www.bostontango.org/",
+          "email": "info@bostontango.org",
+          "global_id": "bostontangocalendar.com?id=397",
+          "global_id_lineage": [
+            "bostontangocalendar.com?id=397"
+          ]
+        }
+      ],
+      "is_virtual": false,
+      "virtual_url": null,
+      "virtual_video_source": ""
+    },
+    {
+      "id": 10011355,
+      "global_id": "bostontangocalendar.com?id=10011355",
+      "global_id_lineage": [
+        "bostontangocalendar.com?id=10011355"
+      ],
+      "author": "46",
+      "status": "publish",
+      "date": "2024-02-12 22:28:19",
+      "date_utc": "2024-02-13 03:28:19",
+      "modified": "2025-01-15 21:37:56",
+      "modified_utc": "2025-01-16 02:37:56",
+      "url": "https://bostontangocalendar.com/event/wednesday-tango-break-8pm-intermediate-tango-classes/2025-06-11/",
+      "rest_url": "https://bostontangocalendar.com/wp-json/tribe/events/v1/events/10011355",
+      "title": "Wednesday Tango Break– 8pm Intermediate Tango Classes",
+      "description": "<div class=\"xdj266r x11i5rnm xat24cr x1mh8g0r x1vvkbs\"><span class=\"x3nfvp2 x1j61x8r x1fcty0u xdj266r xhhsvwb xat24cr xgzva0m xxymvpz xlup9mm x1kky2od\"><img loading=\"lazy\" decoding=\"async\" class=\"xz74otr\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/t2d/2/16/2665.png\" alt=\"♥\" width=\"16\" height=\"16\" /></span> <span class=\"x3nfvp2 x1j61x8r x1fcty0u xdj266r xhhsvwb xat24cr xgzva0m xxymvpz xlup9mm x1kky2od\"><img loading=\"lazy\" decoding=\"async\" class=\"xz74otr\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/t2d/2/16/2665.png\" alt=\"♥\" width=\"16\" height=\"16\" /></span><span class=\"x3nfvp2 x1j61x8r x1fcty0u xdj266r xhhsvwb xat24cr xgzva0m xxymvpz xlup9mm x1kky2od\"><img loading=\"lazy\" decoding=\"async\" class=\"xz74otr\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/t38/2/16/1f33a.png\" alt=\"🌺\" width=\"16\" height=\"16\" /></span><span class=\"x3nfvp2 x1j61x8r x1fcty0u xdj266r xhhsvwb xat24cr xgzva0m xxymvpz xlup9mm x1kky2od\"><img loading=\"lazy\" decoding=\"async\" class=\"xz74otr\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/t10/2/16/1f339.png\" alt=\"🌹\" width=\"16\" height=\"16\" /></span><span class=\"x3nfvp2 x1j61x8r x1fcty0u xdj266r xhhsvwb xat24cr xgzva0m xxymvpz xlup9mm x1kky2od\"><img loading=\"lazy\" decoding=\"async\" class=\"xz74otr\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/t2d/2/16/2665.png\" alt=\"♥\" width=\"16\" height=\"16\" /></span> <span class=\"x3nfvp2 x1j61x8r x1fcty0u xdj266r xhhsvwb xat24cr xgzva0m xxymvpz xlup9mm x1kky2od\"><img loading=\"lazy\" decoding=\"async\" class=\"xz74otr\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/t2d/2/16/2665.png\" alt=\"♥\" width=\"16\" height=\"16\" /></span><span class=\"x3nfvp2 x1j61x8r x1fcty0u xdj266r xhhsvwb xat24cr xgzva0m xxymvpz xlup9mm x1kky2od\"><img loading=\"lazy\" decoding=\"async\" class=\"xz74otr\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/t38/2/16/1f33a.png\" alt=\"🌺\" width=\"16\" height=\"16\" /></span><span class=\"x3nfvp2 x1j61x8r x1fcty0u xdj266r xhhsvwb xat24cr xgzva0m xxymvpz xlup9mm x1kky2od\"><img loading=\"lazy\" decoding=\"async\" class=\"xz74otr\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/t10/2/16/1f339.png\" alt=\"🌹\" width=\"16\" height=\"16\" /></span></div>\n<div class=\"x11i5rnm xat24cr x1mh8g0r x1vvkbs xtlvy1s\"><strong>WELCOME FEBRUARY&#8211;THE MONTH OF LOVE AND FRIENDSHIP!!</strong></div>\n<div>\n<div class=\"tribe-events-event-image\"></div>\n<div class=\"tribe-events-single-event-description tribe-events-content\">\n<p>The Tango Society of Boston sponsors Mid-week Tango Dance breaks every Wednesday — Boston’s largest informal Milonga (Tango social dance) and Tango lessons.</p>\n<p>Features a lesson in Argentine Tango for Beginning to intermediate dancers (and open to newcomers). No prior experience or partner required.</p>\n<p>Schedule<br />\n7:00-8:00: Beginners Tango with Guillermo Merlo. This class is for beginners and those wishing to brush up some new techniques.<br />\n8:00-9:00: Adv-Intermediate Tango Class with Guillermo Merlo –Theme changes every month</p>\n</div>\n</div>\n<div></div>\n<div><span class=\"x3nfvp2 x1j61x8r x1fcty0u xdj266r xhhsvwb xat24cr xgzva0m xxymvpz xlup9mm x1kky2od\"><img loading=\"lazy\" decoding=\"async\" class=\"xz74otr\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/t2d/2/16/2665.png\" alt=\"♥\" width=\"16\" height=\"16\" /></span><span class=\"x3nfvp2 x1j61x8r x1fcty0u xdj266r xhhsvwb xat24cr xgzva0m xxymvpz xlup9mm x1kky2od\"><img loading=\"lazy\" decoding=\"async\" class=\"xz74otr\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/t38/2/16/1f33a.png\" alt=\"🌺\" width=\"16\" height=\"16\" /></span><span class=\"x3nfvp2 x1j61x8r x1fcty0u xdj266r xhhsvwb xat24cr xgzva0m xxymvpz xlup9mm x1kky2od\"><img loading=\"lazy\" decoding=\"async\" class=\"xz74otr\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/t10/2/16/1f339.png\" alt=\"🌹\" width=\"16\" height=\"16\" /></span></div>\n<div></div>\n<div class=\"x11i5rnm xat24cr x1mh8g0r x1vvkbs xtlvy1s\">This month, the Intermediate+ class wilL work on:</div>\n<div class=\"x11i5rnm xat24cr x1mh8g0r x1vvkbs xtlvy1s\"><strong>&#8220;GANCHOS INTERNOS&#8221;. (Inside Ganchos)</strong></div>\n<div></div>\n<div class=\"x11i5rnm xat24cr x1mh8g0r x1vvkbs xtlvy1s\">“Ganchos Internos” &#8220;inside hooks&#8221; are movements where one of the partner&#8217;s legs hooks around or behind the partner&#8217;s leg in a fluid and coordinated manner.</div>\n<div class=\"x11i5rnm xat24cr x1mh8g0r x1vvkbs xtlvy1s\">These Ganchos can be done by both the leader and the follower, to create a dynamic and expressive connection during the dance. They are also used to add variety and embellishments to the dance as well as to communicate emotions and sensations during the dance</div>\n<div class=\"x11i5rnm xat24cr x1mh8g0r x1vvkbs xtlvy1s\"></div>\n<div class=\"x11i5rnm xat24cr x1mh8g0r x1vvkbs xtlvy1s\">Because Ganchos Internos require good control of balance, posture and embrace technique to ensure they are performed safely and harmoniously, Maestro Guillermo will review and emphasize the correct techniques to practice to achieve this.</div>\n<div></div>\n<div></div>\n<div></div>\n<div></div>\n<div class=\"x11i5rnm xat24cr x1mh8g0r x1vvkbs xtlvy1s\"><span class=\"x3nfvp2 x1j61x8r x1fcty0u xdj266r xhhsvwb xat24cr xgzva0m xxymvpz xlup9mm x1kky2od\"><img loading=\"lazy\" decoding=\"async\" class=\"xz74otr\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/t2d/2/16/2665.png\" alt=\"♥\" width=\"16\" height=\"16\" /></span> <span class=\"x3nfvp2 x1j61x8r x1fcty0u xdj266r xhhsvwb xat24cr xgzva0m xxymvpz xlup9mm x1kky2od\"><img loading=\"lazy\" decoding=\"async\" class=\"xz74otr\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/t2d/2/16/2665.png\" alt=\"♥\" width=\"16\" height=\"16\" /></span><span class=\"x3nfvp2 x1j61x8r x1fcty0u xdj266r xhhsvwb xat24cr xgzva0m xxymvpz xlup9mm x1kky2od\"><img loading=\"lazy\" decoding=\"async\" class=\"xz74otr\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/t38/2/16/1f33a.png\" alt=\"🌺\" width=\"16\" height=\"16\" /></span><span class=\"x3nfvp2 x1j61x8r x1fcty0u xdj266r xhhsvwb xat24cr xgzva0m xxymvpz xlup9mm x1kky2od\"><img loading=\"lazy\" decoding=\"async\" class=\"xz74otr\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/t10/2/16/1f339.png\" alt=\"🌹\" width=\"16\" height=\"16\" /></span><span class=\"x3nfvp2 x1j61x8r x1fcty0u xdj266r xhhsvwb xat24cr xgzva0m xxymvpz xlup9mm x1kky2od\"><img loading=\"lazy\" decoding=\"async\" class=\"xz74otr\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/t2d/2/16/2665.png\" alt=\"♥\" width=\"16\" height=\"16\" /></span> <span class=\"x3nfvp2 x1j61x8r x1fcty0u xdj266r xhhsvwb xat24cr xgzva0m xxymvpz xlup9mm x1kky2od\"><img loading=\"lazy\" decoding=\"async\" class=\"xz74otr\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/t2d/2/16/2665.png\" alt=\"♥\" width=\"16\" height=\"16\" /></span><span class=\"x3nfvp2 x1j61x8r x1fcty0u xdj266r xhhsvwb xat24cr xgzva0m xxymvpz xlup9mm x1kky2od\"><img loading=\"lazy\" decoding=\"async\" class=\"xz74otr\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/t38/2/16/1f33a.png\" alt=\"🌺\" width=\"16\" height=\"16\" /></span><span class=\"x3nfvp2 x1j61x8r x1fcty0u xdj266r xhhsvwb xat24cr xgzva0m xxymvpz xlup9mm x1kky2od\"><img loading=\"lazy\" decoding=\"async\" class=\"xz74otr\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/t10/2/16/1f339.png\" alt=\"🌹\" width=\"16\" height=\"16\" /></span></div>\n<div class=\"x11i5rnm xat24cr x1mh8g0r x1vvkbs xtlvy1s\"></div>\n<div class=\"x11i5rnm xat24cr x1mh8g0r x1vvkbs xtlvy1s\"><span class=\"x3nfvp2 x1j61x8r x1fcty0u xdj266r xhhsvwb xat24cr xgzva0m xxymvpz xlup9mm x1kky2od\"><img loading=\"lazy\" decoding=\"async\" class=\"xz74otr\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/t38/2/16/1f33a.png\" alt=\"🌺\" width=\"16\" height=\"16\" /></span><span class=\"x3nfvp2 x1j61x8r x1fcty0u xdj266r xhhsvwb xat24cr xgzva0m xxymvpz xlup9mm x1kky2od\"><img loading=\"lazy\" decoding=\"async\" class=\"xz74otr\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/t10/2/16/1f339.png\" alt=\"🌹\" width=\"16\" height=\"16\" /></span><span class=\"x3nfvp2 x1j61x8r x1fcty0u xdj266r xhhsvwb xat24cr xgzva0m xxymvpz xlup9mm x1kky2od\"><img loading=\"lazy\" decoding=\"async\" class=\"xz74otr\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/t38/2/16/1f33a.png\" alt=\"🌺\" width=\"16\" height=\"16\" /></span><span class=\"x3nfvp2 x1j61x8r x1fcty0u xdj266r xhhsvwb xat24cr xgzva0m xxymvpz xlup9mm x1kky2od\"><img loading=\"lazy\" decoding=\"async\" class=\"xz74otr\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/t10/2/16/1f339.png\" alt=\"🌹\" width=\"16\" height=\"16\" /></span></div>\n<div class=\"x11i5rnm xat24cr x1mh8g0r x1vvkbs xtlvy1s\">𝑪𝒐𝒎𝒆 𝒋𝒐𝒊𝒏 𝒖𝒔 𝒇𝒐𝒓 𝑪𝒍𝒂𝒔𝒔𝒆𝒔 𝒂𝒏𝒅 𝒅𝒂𝒏𝒄𝒊𝒏𝒈 with 𝑮𝒖𝒊𝒍𝒍𝒆𝒓𝒎𝒐 𝑴𝒆𝒓𝒍𝒐 this week and for the month of February.</div>\n<div class=\"x11i5rnm xat24cr x1mh8g0r x1vvkbs xtlvy1s\">7-9𝙥𝙢 𝘾𝙡𝙖𝙨𝙨𝙚𝙨<br />\n9𝙥𝙢-12𝙖𝙢 &#8211; 𝘿𝙖𝙣𝙘𝙞𝙣𝙜 𝙬𝙞𝙩𝙝 𝙜𝙪𝙚𝙨𝙩</div>\n<div class=\"x11i5rnm xat24cr x1mh8g0r x1vvkbs xtlvy1s\">𝑨𝒍𝒍 𝑪𝒍𝒂𝒔𝒔𝒆𝒔 𝒂𝒓𝒆 $20 𝒆𝒂𝒄𝒉 𝒇𝒐𝒓 𝒃𝒆𝒈𝒊𝒏𝒏𝒆𝒓 𝒂𝒏𝒅 𝑰𝒏𝒕𝒆𝒓𝒎𝒆𝒅𝒊𝒂𝒕𝒆.</div>\n<div class=\"x11i5rnm xat24cr x1mh8g0r x1vvkbs xtlvy1s\">𝘽𝙪𝙮 𝙮𝙤𝙪r 𝙋𝙖𝙘𝙠𝙖𝙜𝙚 𝙤𝙣 the first day of the new cycle 𝙖𝙣𝙙 𝙜𝙚𝙩 𝙖 10% 𝙙𝙞𝙨𝙘𝙤𝙪𝙣𝙩</div>\n<div class=\"x11i5rnm xat24cr x1mh8g0r x1vvkbs xtlvy1s\"></div>\n<div class=\"x11i5rnm xat24cr x1mh8g0r x1vvkbs xtlvy1s\">𝑷𝑨𝑪𝑲𝑨𝑮𝑬𝑺<br />\n4 𝒄𝒍𝒂𝒔𝒔𝒆𝒔 = $70 &#8212; regular price</div>\n<div class=\"x11i5rnm xat24cr x1mh8g0r x1vvkbs xtlvy1s\"></div>\n<div class=\"x11i5rnm xat24cr x1mh8g0r x1vvkbs xtlvy1s\">𝑨𝑫𝑫𝑰𝑻𝑰𝑶𝑵𝑨𝑳 𝑷𝑹𝑰𝑪𝑬 𝑭𝑶𝑹 𝑴𝑰𝑳𝑶𝑵𝑮𝑨:<br />\n$10 𝒇𝒐𝒓 𝒕𝒉𝒆 𝑴𝒊𝒍𝒐𝒏𝒈𝒂 𝒊𝒇 𝒚𝒐𝒖 𝒕𝒂𝒌𝒆 𝒂 𝒄𝒍𝒂𝒔𝒔.<br />\n$5 𝒇𝒐𝒓 𝒔𝒕𝒖𝒅𝒆𝒏𝒕𝒔</div>\n<div class=\"x11i5rnm xat24cr x1mh8g0r x1vvkbs xtlvy1s\">𝑺𝑷𝑬𝑪𝑰𝑨𝑳: $10 𝒊𝒇 𝒚𝒐𝒖 𝒂𝒓𝒆 𝒕𝒂𝒌𝒊𝒏𝒈 𝒕𝒉𝒆 𝒄𝒍𝒂𝒔𝒔𝒆𝒔 ***𝑺𝑻𝑼𝑫𝑬𝑵𝑻 𝑫𝑰𝑺𝑪𝑶𝑼𝑵𝑻 𝑭𝑶𝑹 𝑫𝑨𝑵𝑪𝑰𝑵𝑮 𝑶𝑵𝑳𝒀</div>\n<div class=\"x11i5rnm xat24cr x1mh8g0r x1vvkbs xtlvy1s\"></div>\n<div class=\"x11i5rnm xat24cr x1mh8g0r x1vvkbs xtlvy1s\"></div>\n<div class=\"x11i5rnm xat24cr x1mh8g0r x1vvkbs xtlvy1s\"><span class=\"x3nfvp2 x1j61x8r x1fcty0u xdj266r xhhsvwb xat24cr xgzva0m xxymvpz xlup9mm x1kky2od\"><img loading=\"lazy\" decoding=\"async\" class=\"xz74otr\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/t38/2/16/1f33a.png\" alt=\"🌺\" width=\"16\" height=\"16\" /></span><span class=\"x3nfvp2 x1j61x8r x1fcty0u xdj266r xhhsvwb xat24cr xgzva0m xxymvpz xlup9mm x1kky2od\"><img loading=\"lazy\" decoding=\"async\" class=\"xz74otr\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/t10/2/16/1f339.png\" alt=\"🌹\" width=\"16\" height=\"16\" /></span> 7-8𝒑𝒎 &#8212; 𝑩𝑬𝑮𝑰𝑵𝑵𝑬𝑹;<br />\n𝑻𝒉𝒆 𝑩𝒂𝒔𝒊𝒄 𝑻𝒂𝒏𝒈𝒐 𝑺𝒕𝒆𝒑𝒔 𝑰𝒇 𝒚𝒐𝒖 𝒉𝒂𝒗𝒆 𝒏𝒆𝒗𝒆𝒓 𝒕𝒂𝒌𝒆𝒏 𝒂 𝑻𝒂𝒏𝒈𝒐 𝒄𝒍𝒂𝒔𝒔, 𝒕𝒉𝒊𝒔 𝒊𝒔 𝒇𝒐𝒓 𝒚𝒐𝒖. 𝒀𝒐𝒖 𝒘𝒊𝒍𝒍 𝒃𝒆 𝒂𝒃𝒍𝒆 𝒕𝒐 𝒂𝒄𝒕𝒖𝒂𝒍𝒍𝒚 𝒈𝒆𝒕 𝒐𝒏 𝒕𝒉𝒆 𝒅𝒂𝒏𝒄𝒆 𝒇𝒍𝒐𝒐𝒓 𝒂𝒏𝒅 𝒔𝒉𝒐𝒘 𝒚𝒐𝒖𝒓 𝒇𝒓𝒊𝒆𝒏𝒅𝒔 𝒉𝒐𝒘 𝒕𝒐 𝑻𝒂𝒏𝒈𝒐!! 𝑨𝒏𝒅&#8212;𝒆𝒗𝒆𝒓𝒚𝒐𝒏𝒆 𝒏𝒆𝒆𝒅𝒔 𝒂 𝒍𝒊𝒕𝒕𝒍𝒆 ‘𝒃𝒆𝒈𝒊𝒏𝒏𝒆𝒓 𝒄𝒍𝒂𝒔𝒔’ 𝒊𝒏 𝒕𝒉𝒆𝒊𝒓 𝒍𝒊𝒗𝒆𝒔—𝒆𝒗𝒆𝒏 𝒕𝒉𝒐𝒔𝒆 𝒘𝒉𝒐 𝒂𝒓𝒆 𝒂𝒍𝒓𝒆𝒂𝒅𝒚 𝑻𝒂𝒏𝒈𝒐 𝒂𝒅𝒅𝒊𝒄𝒕𝒔.</div>\n<div class=\"x11i5rnm xat24cr x1mh8g0r x1vvkbs xtlvy1s\"></div>\n<div class=\"x11i5rnm xat24cr x1mh8g0r x1vvkbs xtlvy1s\"><span class=\"x3nfvp2 x1j61x8r x1fcty0u xdj266r xhhsvwb xat24cr xgzva0m xxymvpz xlup9mm x1kky2od\"><img loading=\"lazy\" decoding=\"async\" class=\"xz74otr\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/t38/2/16/1f33a.png\" alt=\"🌺\" width=\"16\" height=\"16\" /></span><span class=\"x3nfvp2 x1j61x8r x1fcty0u xdj266r xhhsvwb xat24cr xgzva0m xxymvpz xlup9mm x1kky2od\"><img loading=\"lazy\" decoding=\"async\" class=\"xz74otr\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/t10/2/16/1f339.png\" alt=\"🌹\" width=\"16\" height=\"16\" /></span> 8-9𝒑𝒎 &#8212; 𝑰𝑵𝑻𝑬𝑹𝑴𝑬𝑫𝑰𝑨𝑻𝑬 + 𝑻𝒂𝒏𝒈𝒐&#8211;<br />\n&#8221; Ganchos Internos&#8221; &#8212; see description above</div>\n<div class=\"x11i5rnm xat24cr x1mh8g0r x1vvkbs xtlvy1s\"></div>\n<div class=\"x11i5rnm xat24cr x1mh8g0r x1vvkbs xtlvy1s\"><span class=\"x3nfvp2 x1j61x8r x1fcty0u xdj266r xhhsvwb xat24cr xgzva0m xxymvpz xlup9mm x1kky2od\"><img loading=\"lazy\" decoding=\"async\" class=\"xz74otr\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/t38/2/16/1f33a.png\" alt=\"🌺\" width=\"16\" height=\"16\" /></span><span class=\"x3nfvp2 x1j61x8r x1fcty0u xdj266r xhhsvwb xat24cr xgzva0m xxymvpz xlup9mm x1kky2od\"><img loading=\"lazy\" decoding=\"async\" class=\"xz74otr\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/t10/2/16/1f339.png\" alt=\"🌹\" width=\"16\" height=\"16\" /></span><span class=\"x3nfvp2 x1j61x8r x1fcty0u xdj266r xhhsvwb xat24cr xgzva0m xxymvpz xlup9mm x1kky2od\"><img loading=\"lazy\" decoding=\"async\" class=\"xz74otr\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/t38/2/16/1f33a.png\" alt=\"🌺\" width=\"16\" height=\"16\" /></span><span class=\"x3nfvp2 x1j61x8r x1fcty0u xdj266r xhhsvwb xat24cr xgzva0m xxymvpz xlup9mm x1kky2od\"><img loading=\"lazy\" decoding=\"async\" class=\"xz74otr\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/t10/2/16/1f339.png\" alt=\"🌹\" width=\"16\" height=\"16\" /></span> 9:00𝒑𝒎-12:00𝒂𝒎—𝑫𝒂𝒏𝒄𝒊𝒏𝒈<br />\n𝑮𝒖𝒆𝒔t DJ: TOSHI</div>\n<div class=\"x11i5rnm xat24cr x1mh8g0r x1vvkbs xtlvy1s\"></div>\n<div class=\"x11i5rnm xat24cr x1mh8g0r x1vvkbs xtlvy1s\">𝑫𝒂𝒏𝒄𝒊𝒏𝒈 𝒊𝒔: $15/𝒑𝒆𝒓𝒔𝒐𝒏 &#8211;𝒊𝒇 𝒚𝒐𝒖 𝒂𝒓𝒆 𝒏𝒐𝒕 𝒕𝒂𝒌𝒊𝒏𝒈 𝒄𝒍𝒂𝒔𝒔𝒆𝒔<br />\n$10 𝒔𝒕𝒖𝒅𝒆𝒏𝒕𝒔</div>\n<div class=\"x11i5rnm xat24cr x1mh8g0r x1vvkbs xtlvy1s\">𝑺𝑷𝑬𝑪𝑰𝑨𝑳: $10 𝒊𝒇 𝒚𝒐𝒖 𝒂𝒓𝒆 𝒕𝒂𝒌𝒊𝒏𝒈 𝒕𝒉𝒆 𝒄𝒍𝒂𝒔𝒔𝒆𝒔 ***𝑺𝑻𝑼𝑫𝑬𝑵𝑻 𝑫𝑰𝑺𝑪𝑶𝑼𝑵𝑻 𝑭𝑶𝑹 𝑫𝑨𝑵𝑪𝑰𝑵𝑮 𝑶𝑵𝑳𝒀</div>\n<div class=\"x11i5rnm xat24cr x1mh8g0r x1vvkbs xtlvy1s\">_________</div>\n<div class=\"x11i5rnm xat24cr x1mh8g0r x1vvkbs xtlvy1s\">MILONGA PASS: $50 &#8211;only to be used on Wednesdays</div>\n<div class=\"x11i5rnm xat24cr x1mh8g0r x1vvkbs xtlvy1s\">In order to get the full benefit of our classes, we recommend that you advantage of one of the packages. However, drop in are welcome.</div>\n<div class=\"x11i5rnm xat24cr x1mh8g0r x1vvkbs xtlvy1s\">Class card is not refundable and must be used within the month it is bought.</div>\n<div class=\"x11i5rnm xat24cr x1mh8g0r x1vvkbs xtlvy1s\"></div>\n<div class=\"x11i5rnm xat24cr x1mh8g0r x1vvkbs xtlvy1s\">_<br />\n<span class=\"x3nfvp2 x1j61x8r x1fcty0u xdj266r xhhsvwb xat24cr xgzva0m xxymvpz xlup9mm x1kky2od\"><img loading=\"lazy\" decoding=\"async\" class=\"xz74otr\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/t2d/2/16/2665.png\" alt=\"♥\" width=\"16\" height=\"16\" /></span> <span class=\"x3nfvp2 x1j61x8r x1fcty0u xdj266r xhhsvwb xat24cr xgzva0m xxymvpz xlup9mm x1kky2od\"><img loading=\"lazy\" decoding=\"async\" class=\"xz74otr\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/t2d/2/16/2665.png\" alt=\"♥\" width=\"16\" height=\"16\" /></span><span class=\"x3nfvp2 x1j61x8r x1fcty0u xdj266r xhhsvwb xat24cr xgzva0m xxymvpz xlup9mm x1kky2od\"><img loading=\"lazy\" decoding=\"async\" class=\"xz74otr\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/t38/2/16/1f33a.png\" alt=\"🌺\" width=\"16\" height=\"16\" /></span><span class=\"x3nfvp2 x1j61x8r x1fcty0u xdj266r xhhsvwb xat24cr xgzva0m xxymvpz xlup9mm x1kky2od\"><img loading=\"lazy\" decoding=\"async\" class=\"xz74otr\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/t10/2/16/1f339.png\" alt=\"🌹\" width=\"16\" height=\"16\" /></span> <span class=\"x3nfvp2 x1j61x8r x1fcty0u xdj266r xhhsvwb xat24cr xgzva0m xxymvpz xlup9mm x1kky2od\"><img loading=\"lazy\" decoding=\"async\" class=\"xz74otr\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/t2d/2/16/2665.png\" alt=\"♥\" width=\"16\" height=\"16\" /></span> <span class=\"x3nfvp2 x1j61x8r x1fcty0u xdj266r xhhsvwb xat24cr xgzva0m xxymvpz xlup9mm x1kky2od\"><img loading=\"lazy\" decoding=\"async\" class=\"xz74otr\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/t2d/2/16/2665.png\" alt=\"♥\" width=\"16\" height=\"16\" /></span><span class=\"x3nfvp2 x1j61x8r x1fcty0u xdj266r xhhsvwb xat24cr xgzva0m xxymvpz xlup9mm x1kky2od\"><img loading=\"lazy\" decoding=\"async\" class=\"xz74otr\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/t38/2/16/1f33a.png\" alt=\"🌺\" width=\"16\" height=\"16\" /></span><span class=\"x3nfvp2 x1j61x8r x1fcty0u xdj266r xhhsvwb xat24cr xgzva0m xxymvpz xlup9mm x1kky2od\"><img loading=\"lazy\" decoding=\"async\" class=\"xz74otr\" src=\"https://static.xx.fbcdn.net/images/emoji.php/v9/t10/2/16/1f339.png\" alt=\"🌹\" width=\"16\" height=\"16\" /></span>__________________________</div>\n<div class=\"x11i5rnm xat24cr x1mh8g0r x1vvkbs xtlvy1s\">PAYMENT ONLINE:<br />\nCash<br />\nChecks<br />\nVenmo: @danceunionstudio</div>\n<div class=\"x11i5rnm xat24cr x1mh8g0r x1vvkbs xtlvy1s\">You can purchase a Milonga Pass and get a discount!<br />\nNo need to worry about carrying cash all the time when you can carry your milonga pass!</div>\n<div class=\"x11i5rnm xat24cr x1mh8g0r x1vvkbs xtlvy1s\">__________________________________</div>\n<div class=\"x11i5rnm xat24cr x1mh8g0r x1vvkbs xtlvy1s\">PROTOCOLS: PLEASE READ CAREFULLY<br />\nWe are doing our best to keep the studio clean and safe for everyone to enjoy, but we need your cooperation to make sure it stays safe at all times<br />\nll result in you not being allowed to participate in our events.</div>",
+      "excerpt": "",
+      "slug": "wednesday-tango-break-8pm-intermediate-tango-classes",
+      "image": {
+        "url": "https://i0.wp.com/bostontangocalendar.com/wp-content/uploads/2024/02/WTB-February-2024-1.jpg?fit=1640%2C924&ssl=1",
+        "id": 38260,
+        "extension": "jpg",
+        "width": 1640,
+        "height": 924,
+        "filesize": 170707,
+        "sizes": {
+          "medium": {
+            "width": 300,
+            "height": 169,
+            "mime-type": "image/jpeg",
+            "filesize": 16971,
+            "url": "https://i0.wp.com/bostontangocalendar.com/wp-content/uploads/2024/02/WTB-February-2024-1.jpg?fit=300%2C169&ssl=1"
+          },
+          "large": {
+            "width": 600,
+            "height": 338,
+            "mime-type": "image/jpeg",
+            "filesize": 41675,
+            "url": "https://i0.wp.com/bostontangocalendar.com/wp-content/uploads/2024/02/WTB-February-2024-1.jpg?fit=600%2C338&ssl=1"
+          },
+          "thumbnail": {
+            "width": 150,
+            "height": 150,
+            "mime-type": "image/jpeg",
+            "filesize": 11441,
+            "url": "https://i0.wp.com/bostontangocalendar.com/wp-content/uploads/2024/02/WTB-February-2024-1.jpg?resize=150%2C150&ssl=1"
+          },
+          "medium_large": {
+            "width": 768,
+            "height": 433,
+            "mime-type": "image/jpeg",
+            "filesize": 58375,
+            "url": "https://i0.wp.com/bostontangocalendar.com/wp-content/uploads/2024/02/WTB-February-2024-1.jpg?fit=768%2C433&ssl=1"
+          },
+          "1536x1536": {
+            "width": 1536,
+            "height": 865,
+            "mime-type": "image/jpeg",
+            "filesize": 146213,
+            "url": "https://i0.wp.com/bostontangocalendar.com/wp-content/uploads/2024/02/WTB-February-2024-1.jpg?fit=1536%2C865&ssl=1"
+          },
+          "thinkup-column1-1/4": {
+            "width": 1140,
+            "height": 285,
+            "mime-type": "image/jpeg",
+            "filesize": 43736,
+            "url": "https://i0.wp.com/bostontangocalendar.com/wp-content/uploads/2024/02/WTB-February-2024-1.jpg?resize=1140%2C285&ssl=1"
+          },
+          "thinkup-column2-2/3": {
+            "width": 570,
+            "height": 380,
+            "mime-type": "image/jpeg",
+            "filesize": 43430,
+            "url": "https://i0.wp.com/bostontangocalendar.com/wp-content/uploads/2024/02/WTB-February-2024-1.jpg?resize=570%2C380&ssl=1"
+          }
+        }
+      },
+      "all_day": false,
+      "start_date": "2025-06-11 20:00:00",
+      "start_date_details": {
+        "year": "2025",
+        "month": "06",
+        "day": "11",
+        "hour": "20",
+        "minutes": "00",
+        "seconds": "00"
+      },
+      "end_date": "2025-06-11 21:00:00",
+      "end_date_details": {
+        "year": "2025",
+        "month": "06",
+        "day": "11",
+        "hour": "21",
+        "minutes": "00",
+        "seconds": "00"
+      },
+      "utc_start_date": "2025-06-12 00:00:00",
+      "utc_start_date_details": {
+        "year": "2025",
+        "month": "06",
+        "day": "12",
+        "hour": "00",
+        "minutes": "00",
+        "seconds": "00"
+      },
+      "utc_end_date": "2025-06-12 01:00:00",
+      "utc_end_date_details": {
+        "year": "2025",
+        "month": "06",
+        "day": "12",
+        "hour": "01",
+        "minutes": "00",
+        "seconds": "00"
+      },
+      "timezone": "America/New_York",
+      "timezone_abbr": "EST",
+      "cost": "",
+      "cost_details": {
+        "currency_symbol": "",
+        "currency_code": "",
+        "currency_position": "",
+        "values": []
+      },
+      "website": "http://www.bostontango.org",
+      "show_map": true,
+      "show_map_link": true,
+      "hide_from_listings": false,
+      "sticky": false,
+      "featured": false,
+      "categories": [
+        {
+          "name": "Drop-in Class",
+          "slug": "drop-in-class",
+          "term_group": 0,
+          "term_taxonomy_id": 69,
+          "taxonomy": "tribe_events_cat",
+          "description": "",
+          "parent": 128,
+          "count": 437,
+          "filter": "raw",
+          "id": 69,
+          "urls": {
+            "self": "https://bostontangocalendar.com/wp-json/tribe/events/v1/categories/69",
+            "collection": "https://bostontangocalendar.com/wp-json/tribe/events/v1/categories",
+            "up": "https://bostontangocalendar.com/wp-json/tribe/events/v1/categories/128"
+          }
+        },
+        {
+          "name": "First Timer Friendly",
+          "slug": "first-timer-friendly",
+          "term_group": 0,
+          "term_taxonomy_id": 63,
+          "taxonomy": "tribe_events_cat",
+          "description": "No Experince Necessary",
+          "parent": 0,
+          "count": 353,
+          "filter": "raw",
+          "id": 63,
+          "urls": {
+            "self": "https://bostontangocalendar.com/wp-json/tribe/events/v1/categories/63",
+            "collection": "https://bostontangocalendar.com/wp-json/tribe/events/v1/categories"
+          }
+        },
+        {
+          "name": "Progressive Class",
+          "slug": "progressive-class",
+          "term_group": 0,
+          "term_taxonomy_id": 68,
+          "taxonomy": "tribe_events_cat",
+          "description": "Each week adds to the previous weeks lessons",
+          "parent": 128,
+          "count": 310,
+          "filter": "raw",
+          "id": 68,
+          "urls": {
+            "self": "https://bostontangocalendar.com/wp-json/tribe/events/v1/categories/68",
+            "collection": "https://bostontangocalendar.com/wp-json/tribe/events/v1/categories",
+            "up": "https://bostontangocalendar.com/wp-json/tribe/events/v1/categories/128"
+          }
+        }
+      ],
+      "tags": [
+        {
+          "name": "Advanced",
+          "slug": "advanced",
+          "term_group": 0,
+          "term_taxonomy_id": 64,
+          "taxonomy": "post_tag",
+          "description": "Many Years of Experience",
+          "parent": 0,
+          "count": 684,
+          "filter": "raw",
+          "id": 64,
+          "urls": {
+            "self": "https://bostontangocalendar.com/wp-json/tribe/events/v1/tags/64",
+            "collection": "https://bostontangocalendar.com/wp-json/tribe/events/v1/tags"
+          }
+        },
+        {
+          "name": "First Timer",
+          "slug": "first-timer",
+          "term_group": 0,
+          "term_taxonomy_id": 67,
+          "taxonomy": "post_tag",
+          "description": "First Timer",
+          "parent": 0,
+          "count": 285,
+          "filter": "raw",
+          "id": 67,
+          "urls": {
+            "self": "https://bostontangocalendar.com/wp-json/tribe/events/v1/tags/67",
+            "collection": "https://bostontangocalendar.com/wp-json/tribe/events/v1/tags"
+          }
+        },
+        {
+          "name": "Intermediate",
+          "slug": "intermediate",
+          "term_group": 0,
+          "term_taxonomy_id": 65,
+          "taxonomy": "post_tag",
+          "description": "Couple years of active experience",
+          "parent": 0,
+          "count": 784,
+          "filter": "raw",
+          "id": 65,
+          "urls": {
+            "self": "https://bostontangocalendar.com/wp-json/tribe/events/v1/tags/65",
+            "collection": "https://bostontangocalendar.com/wp-json/tribe/events/v1/tags"
+          }
+        },
+        {
+          "name": "tango",
+          "slug": "tango",
+          "term_group": 0,
+          "term_taxonomy_id": 125,
+          "taxonomy": "post_tag",
+          "description": "",
+          "parent": 0,
+          "count": 46,
+          "filter": "raw",
+          "id": 125,
+          "urls": {
+            "self": "https://bostontangocalendar.com/wp-json/tribe/events/v1/tags/125",
+            "collection": "https://bostontangocalendar.com/wp-json/tribe/events/v1/tags"
+          }
+        }
+      ],
+      "venue": {
+        "id": 365,
+        "author": "15",
+        "status": "publish",
+        "date": "2018-12-27 10:53:07",
+        "date_utc": "2018-12-27 15:53:07",
+        "modified": "2024-10-15 11:53:41",
+        "modified_utc": "2024-10-15 15:53:41",
+        "url": "https://bostontangocalendar.com/venue/dance-union/",
+        "venue": "Dance Union",
+        "description": "<p>Home of The Tango Society of Boston Events.</p>",
+        "slug": "dance-union",
+        "image": {
+          "url": "https://i0.wp.com/bostontangocalendar.com/wp-content/uploads/2018/12/Screenshot-2018-12-31-14.06.29.png?fit=615%2C465&ssl=1",
+          "id": 5756,
+          "extension": "png",
+          "width": 615,
+          "height": 465,
+          "sizes": {
+            "thumbnail": {
+              "width": 150,
+              "height": 150,
+              "mime-type": "image/png",
+              "url": "https://i0.wp.com/bostontangocalendar.com/wp-content/uploads/2018/12/Screenshot-2018-12-31-14.06.29.png?resize=150%2C150&ssl=1"
+            },
+            "medium": {
+              "width": 300,
+              "height": 227,
+              "mime-type": "image/png",
+              "url": "https://i0.wp.com/bostontangocalendar.com/wp-content/uploads/2018/12/Screenshot-2018-12-31-14.06.29.png?fit=300%2C227&ssl=1"
+            },
+            "large": {
+              "width": 600,
+              "height": 454,
+              "mime-type": "image/png",
+              "url": "https://i0.wp.com/bostontangocalendar.com/wp-content/uploads/2018/12/Screenshot-2018-12-31-14.06.29.png?fit=600%2C454&ssl=1"
+            }
+          }
+        },
+        "address": "16 bow street",
+        "city": "Somerville",
+        "country": "United States",
+        "province": "MA",
+        "state": "MA",
+        "zip": "02143",
+        "phone": "(617) 721-4872",
+        "stateprovince": "MA",
+        "geo_lat": 42.3807113,
+        "geo_lng": -71.0972088,
+        "show_map": true,
+        "show_map_link": false,
+        "global_id": "bostontangocalendar.com?id=365",
+        "global_id_lineage": [
+          "bostontangocalendar.com?id=365"
+        ]
+      },
+      "organizer": [
+        {
+          "id": 397,
+          "author": "2",
+          "status": "publish",
+          "date": "2018-12-27 14:24:38",
+          "date_utc": "2018-12-27 19:24:38",
+          "modified": "2019-07-17 16:56:51",
+          "modified_utc": "2019-07-17 20:56:51",
+          "url": "https://bostontangocalendar.com/organizer/tangosociety/",
+          "organizer": "Tango Society of Boston",
+          "description": "<h2><strong>Who Are We?</strong></h2>\n<p>The Tango Society of Boston was incorporated in June 1997 as a Massachusetts non-profit organization dedicated to the support and growth of the Argentine Tango. Within 5 months, it already had 250 members, and the numbers are growing weekly! While there are many facets to the Argentine Tango—the music and the culture being among the most prominent—it is the dance that brings most of us together.<br />\nThe Tango is a social and participant’s dance and is for everyone to learn and enjoy, regardless of dance background!</p>\n<p>Our membership has people from all walks of life, and has probably 20 or more countries represented! !</p>\n<h2><strong>What Do We Do?</strong></h2>\n<p>We are not just a paper organization! Our numerous activities fall into two broad categories:</p>\n<p><strong>1. Planning Tango events</strong></p>\n<p>Weekly Wednesday evening Tango dances at 16 Bow St, Union Sq, Somerville open to all, with a 1-hour lesson at the beginning<br />\nWeekend Tango seminars several times a year with the best Tango teachers in the world (usually from Argentina), such as the one with the renowned Pablo Veron, Fernanda Ghi and Guillermo Merlo, Daniela Arcuri, Hector Falcon, to name a few.<br />\nMilongas (Tango dance socials), some with live music<br />\nSpecial and unusual Tango events such as outdoor “Tango by Moonlight” nights in summer<br />\nOur Annual Boston Tango Festival in June</p>\n<p><strong>2. Supporting the growth of the Tango community</strong></p>\n<p>We sponsor TangoLine™, a 24-hour Tango hotline publicizing events for all Tango organizers in the Boston area&#8211;<br />\ntry it at 617-699-OCHO (-6246)<br />\nSupport local Tango organizers, musicians, etc., through our events, affiliations, and publicity and information channels<br />\nOutreach efforts via newspaper, radio and TV publicity<br />\nJoint events with other local and regional art and cultural institutions, both commercial and non-profit (e.g., Museum of Fine Arts, First Night Boston, movie houses showing Tango-related films, Tango festivals, etc.)</p>",
+          "slug": "tangosociety",
+          "image": {
+            "url": "https://i0.wp.com/bostontangocalendar.com/wp-content/uploads/2018/12/Screenshot-2018-12-27-14.22.34.png?fit=956%2C230&ssl=1",
+            "id": 398,
+            "extension": "png",
+            "width": 956,
+            "height": 230,
+            "sizes": {
+              "thumbnail": {
+                "width": 150,
+                "height": 150,
+                "mime-type": "image/png",
+                "url": "https://i0.wp.com/bostontangocalendar.com/wp-content/uploads/2018/12/Screenshot-2018-12-27-14.22.34.png?resize=150%2C150&ssl=1"
+              },
+              "medium": {
+                "width": 300,
+                "height": 72,
+                "mime-type": "image/png",
+                "url": "https://i0.wp.com/bostontangocalendar.com/wp-content/uploads/2018/12/Screenshot-2018-12-27-14.22.34.png?fit=300%2C72&ssl=1"
+              },
+              "medium_large": {
+                "width": 768,
+                "height": 185,
+                "mime-type": "image/png",
+                "url": "https://i0.wp.com/bostontangocalendar.com/wp-content/uploads/2018/12/Screenshot-2018-12-27-14.22.34.png?fit=768%2C185&ssl=1"
+              }
+            }
+          },
+          "phone": "617-699-OCHO",
+          "website": "http://www.bostontango.org/",
+          "email": "info@bostontango.org",
+          "global_id": "bostontangocalendar.com?id=397",
+          "global_id_lineage": [
+            "bostontangocalendar.com?id=397"
+          ]
+        }
+      ],
+      "is_virtual": false,
+      "virtual_url": null,
+      "virtual_video_source": ""
+    },
+    {
+      "id": 10011094,
+      "global_id": "bostontangocalendar.com?id=10011094",
+      "global_id_lineage": [
+        "bostontangocalendar.com?id=10011094"
+      ],
+      "author": "46",
+      "status": "publish",
+      "date": "2023-02-10 17:15:12",
+      "date_utc": "2023-02-10 22:15:12",
+      "modified": "2025-02-24 16:13:02",
+      "modified_utc": "2025-02-24 21:13:02",
+      "url": "https://bostontangocalendar.com/event/wednesday-tango-break-2/2025-06-11/",
+      "rest_url": "https://bostontangocalendar.com/wp-json/tribe/events/v1/events/10011094",
+      "title": "Wednesday Tango Break  –Dancing",
+      "description": "<p>The Tango Society of Boston sponsors Mid-week Tango Dance breaks every Wednesday. Boston&#8217;s largest informal Milonga (Tango social dance).</p>\n<p>9:00-12:00 (Midnight) Social Dance Break Milonga. Tango dancing till 12 Midnight.<br />\nGuest DJ&#8217;s every week.</p>\n<p>Features a lesson in Argentine Tango for Beginning to intermediate dancers (and open to newcomers). No prior experience or partner required.</p>\n<p>Schedule<br />\n7:00-8:00: Beginners Tango with Guillermo Merlo. This class is for beginners and those wishing to brush up some new techniques.<br />\n8:00-9:00: Adv-Intermediate Tango Class with Guillermo Merlo &#8211;Theme changes every month</p>\n<p>**See other posting for Tango Classes information.</p>\n<p>Call Vicky if you have any questions at 617-721-4872</p>\n<p>More information; www.bostontango.org</p>",
+      "excerpt": "<p>Boston&#8217;s largest informal Milonga</p>",
+      "slug": "wednesday-tango-break-2",
+      "image": {
+        "url": "https://i0.wp.com/bostontangocalendar.com/wp-content/uploads/2019/08/Wednesday-tango-break-2.jpg?fit=768%2C1024&ssl=1",
+        "id": 15974,
+        "extension": "jpg",
+        "width": 768,
+        "height": 1024,
+        "sizes": {
+          "thumbnail": {
+            "width": 150,
+            "height": 150,
+            "mime-type": "image/jpeg",
+            "url": "https://i0.wp.com/bostontangocalendar.com/wp-content/uploads/2019/08/Wednesday-tango-break-2.jpg?resize=150%2C150&ssl=1"
+          },
+          "medium": {
+            "width": 225,
+            "height": 300,
+            "mime-type": "image/jpeg",
+            "url": "https://i0.wp.com/bostontangocalendar.com/wp-content/uploads/2019/08/Wednesday-tango-break-2.jpg?fit=225%2C300&ssl=1"
+          },
+          "medium_large": {
+            "width": 768,
+            "height": 1024,
+            "mime-type": "image/jpeg",
+            "url": "https://i0.wp.com/bostontangocalendar.com/wp-content/uploads/2019/08/Wednesday-tango-break-2.jpg?fit=768%2C1024&ssl=1"
+          },
+          "large": {
+            "width": 450,
+            "height": 600,
+            "mime-type": "image/jpeg",
+            "url": "https://i0.wp.com/bostontangocalendar.com/wp-content/uploads/2019/08/Wednesday-tango-break-2.jpg?fit=450%2C600&ssl=1"
+          },
+          "thinkup-column1-1/4": {
+            "width": 768,
+            "height": 285,
+            "mime-type": "image/jpeg",
+            "url": "https://i0.wp.com/bostontangocalendar.com/wp-content/uploads/2019/08/Wednesday-tango-break-2.jpg?resize=768%2C285&ssl=1"
+          },
+          "thinkup-column2-2/3": {
+            "width": 570,
+            "height": 380,
+            "mime-type": "image/jpeg",
+            "url": "https://i0.wp.com/bostontangocalendar.com/wp-content/uploads/2019/08/Wednesday-tango-break-2.jpg?resize=570%2C380&ssl=1"
+          }
+        }
+      },
+      "all_day": false,
+      "start_date": "2025-06-11 21:00:00",
+      "start_date_details": {
+        "year": "2025",
+        "month": "06",
+        "day": "11",
+        "hour": "21",
+        "minutes": "00",
+        "seconds": "00"
+      },
+      "end_date": "2025-06-12 00:00:00",
+      "end_date_details": {
+        "year": "2025",
+        "month": "06",
+        "day": "12",
+        "hour": "00",
+        "minutes": "00",
+        "seconds": "00"
+      },
+      "utc_start_date": "2025-06-12 01:00:00",
+      "utc_start_date_details": {
+        "year": "2025",
+        "month": "06",
+        "day": "12",
+        "hour": "01",
+        "minutes": "00",
+        "seconds": "00"
+      },
+      "utc_end_date": "2025-06-12 04:00:00",
+      "utc_end_date_details": {
+        "year": "2025",
+        "month": "06",
+        "day": "12",
+        "hour": "04",
+        "minutes": "00",
+        "seconds": "00"
+      },
+      "timezone": "America/New_York",
+      "timezone_abbr": "EDT",
+      "cost": "",
+      "cost_details": {
+        "currency_symbol": "$",
+        "currency_code": "USD",
+        "currency_position": "prefix",
+        "values": []
+      },
+      "website": "http://www.bostontango.org",
+      "show_map": true,
+      "show_map_link": true,
+      "hide_from_listings": false,
+      "sticky": false,
+      "featured": false,
+      "categories": [
+        {
+          "name": "First Timer Friendly",
+          "slug": "first-timer-friendly",
+          "term_group": 0,
+          "term_taxonomy_id": 63,
+          "taxonomy": "tribe_events_cat",
+          "description": "No Experince Necessary",
+          "parent": 0,
+          "count": 353,
+          "filter": "raw",
+          "id": 63,
+          "urls": {
+            "self": "https://bostontangocalendar.com/wp-json/tribe/events/v1/categories/63",
+            "collection": "https://bostontangocalendar.com/wp-json/tribe/events/v1/categories"
+          }
+        },
+        {
+          "name": "Milonga",
+          "slug": "milonga",
+          "term_group": 0,
+          "term_taxonomy_id": 37,
+          "taxonomy": "tribe_events_cat",
+          "description": "Milonga typically are evening based, have a dress code, and no 'lessons' on the floor. Newbies may watch, but may have a hard time participating. Solid dance techniques and floor management is expected to attend.",
+          "parent": 0,
+          "count": 372,
+          "filter": "raw",
+          "id": 37,
+          "urls": {
+            "self": "https://bostontangocalendar.com/wp-json/tribe/events/v1/categories/37",
+            "collection": "https://bostontangocalendar.com/wp-json/tribe/events/v1/categories"
+          }
+        }
+      ],
+      "tags": [
+        {
+          "name": "First Timer",
+          "slug": "first-timer",
+          "term_group": 0,
+          "term_taxonomy_id": 67,
+          "taxonomy": "post_tag",
+          "description": "First Timer",
+          "parent": 0,
+          "count": 285,
+          "filter": "raw",
+          "id": 67,
+          "urls": {
+            "self": "https://bostontangocalendar.com/wp-json/tribe/events/v1/tags/67",
+            "collection": "https://bostontangocalendar.com/wp-json/tribe/events/v1/tags"
+          }
+        },
+        {
+          "name": "Open Level",
+          "slug": "open-level",
+          "term_group": 0,
+          "term_taxonomy_id": 71,
+          "taxonomy": "post_tag",
+          "description": "Anyone (Non-beginner) is open to come,",
+          "parent": 0,
+          "count": 435,
+          "filter": "raw",
+          "id": 71,
+          "urls": {
+            "self": "https://bostontangocalendar.com/wp-json/tribe/events/v1/tags/71",
+            "collection": "https://bostontangocalendar.com/wp-json/tribe/events/v1/tags"
+          }
+        }
+      ],
+      "venue": {
+        "id": 365,
+        "author": "15",
+        "status": "publish",
+        "date": "2018-12-27 10:53:07",
+        "date_utc": "2018-12-27 15:53:07",
+        "modified": "2024-10-15 11:53:41",
+        "modified_utc": "2024-10-15 15:53:41",
+        "url": "https://bostontangocalendar.com/venue/dance-union/",
+        "venue": "Dance Union",
+        "description": "<p>Home of The Tango Society of Boston Events.</p>",
+        "slug": "dance-union",
+        "image": {
+          "url": "https://i0.wp.com/bostontangocalendar.com/wp-content/uploads/2018/12/Screenshot-2018-12-31-14.06.29.png?fit=615%2C465&ssl=1",
+          "id": 5756,
+          "extension": "png",
+          "width": 615,
+          "height": 465,
+          "sizes": {
+            "thumbnail": {
+              "width": 150,
+              "height": 150,
+              "mime-type": "image/png",
+              "url": "https://i0.wp.com/bostontangocalendar.com/wp-content/uploads/2018/12/Screenshot-2018-12-31-14.06.29.png?resize=150%2C150&ssl=1"
+            },
+            "medium": {
+              "width": 300,
+              "height": 227,
+              "mime-type": "image/png",
+              "url": "https://i0.wp.com/bostontangocalendar.com/wp-content/uploads/2018/12/Screenshot-2018-12-31-14.06.29.png?fit=300%2C227&ssl=1"
+            },
+            "large": {
+              "width": 600,
+              "height": 454,
+              "mime-type": "image/png",
+              "url": "https://i0.wp.com/bostontangocalendar.com/wp-content/uploads/2018/12/Screenshot-2018-12-31-14.06.29.png?fit=600%2C454&ssl=1"
+            }
+          }
+        },
+        "address": "16 bow street",
+        "city": "Somerville",
+        "country": "United States",
+        "province": "MA",
+        "state": "MA",
+        "zip": "02143",
+        "phone": "(617) 721-4872",
+        "stateprovince": "MA",
+        "geo_lat": 42.3807113,
+        "geo_lng": -71.0972088,
+        "show_map": true,
+        "show_map_link": false,
+        "global_id": "bostontangocalendar.com?id=365",
+        "global_id_lineage": [
+          "bostontangocalendar.com?id=365"
+        ]
+      },
+      "organizer": [
+        {
+          "id": 397,
+          "author": "2",
+          "status": "publish",
+          "date": "2018-12-27 14:24:38",
+          "date_utc": "2018-12-27 19:24:38",
+          "modified": "2019-07-17 16:56:51",
+          "modified_utc": "2019-07-17 20:56:51",
+          "url": "https://bostontangocalendar.com/organizer/tangosociety/",
+          "organizer": "Tango Society of Boston",
+          "description": "<h2><strong>Who Are We?</strong></h2>\n<p>The Tango Society of Boston was incorporated in June 1997 as a Massachusetts non-profit organization dedicated to the support and growth of the Argentine Tango. Within 5 months, it already had 250 members, and the numbers are growing weekly! While there are many facets to the Argentine Tango—the music and the culture being among the most prominent—it is the dance that brings most of us together.<br />\nThe Tango is a social and participant’s dance and is for everyone to learn and enjoy, regardless of dance background!</p>\n<p>Our membership has people from all walks of life, and has probably 20 or more countries represented! !</p>\n<h2><strong>What Do We Do?</strong></h2>\n<p>We are not just a paper organization! Our numerous activities fall into two broad categories:</p>\n<p><strong>1. Planning Tango events</strong></p>\n<p>Weekly Wednesday evening Tango dances at 16 Bow St, Union Sq, Somerville open to all, with a 1-hour lesson at the beginning<br />\nWeekend Tango seminars several times a year with the best Tango teachers in the world (usually from Argentina), such as the one with the renowned Pablo Veron, Fernanda Ghi and Guillermo Merlo, Daniela Arcuri, Hector Falcon, to name a few.<br />\nMilongas (Tango dance socials), some with live music<br />\nSpecial and unusual Tango events such as outdoor “Tango by Moonlight” nights in summer<br />\nOur Annual Boston Tango Festival in June</p>\n<p><strong>2. Supporting the growth of the Tango community</strong></p>\n<p>We sponsor TangoLine™, a 24-hour Tango hotline publicizing events for all Tango organizers in the Boston area&#8211;<br />\ntry it at 617-699-OCHO (-6246)<br />\nSupport local Tango organizers, musicians, etc., through our events, affiliations, and publicity and information channels<br />\nOutreach efforts via newspaper, radio and TV publicity<br />\nJoint events with other local and regional art and cultural institutions, both commercial and non-profit (e.g., Museum of Fine Arts, First Night Boston, movie houses showing Tango-related films, Tango festivals, etc.)</p>",
+          "slug": "tangosociety",
+          "image": {
+            "url": "https://i0.wp.com/bostontangocalendar.com/wp-content/uploads/2018/12/Screenshot-2018-12-27-14.22.34.png?fit=956%2C230&ssl=1",
+            "id": 398,
+            "extension": "png",
+            "width": 956,
+            "height": 230,
+            "sizes": {
+              "thumbnail": {
+                "width": 150,
+                "height": 150,
+                "mime-type": "image/png",
+                "url": "https://i0.wp.com/bostontangocalendar.com/wp-content/uploads/2018/12/Screenshot-2018-12-27-14.22.34.png?resize=150%2C150&ssl=1"
+              },
+              "medium": {
+                "width": 300,
+                "height": 72,
+                "mime-type": "image/png",
+                "url": "https://i0.wp.com/bostontangocalendar.com/wp-content/uploads/2018/12/Screenshot-2018-12-27-14.22.34.png?fit=300%2C72&ssl=1"
+              },
+              "medium_large": {
+                "width": 768,
+                "height": 185,
+                "mime-type": "image/png",
+                "url": "https://i0.wp.com/bostontangocalendar.com/wp-content/uploads/2018/12/Screenshot-2018-12-27-14.22.34.png?fit=768%2C185&ssl=1"
+              }
+            }
+          },
+          "phone": "617-699-OCHO",
+          "website": "http://www.bostontango.org/",
+          "email": "info@bostontango.org",
+          "global_id": "bostontangocalendar.com?id=397",
+          "global_id_lineage": [
+            "bostontangocalendar.com?id=397"
+          ]
+        }
+      ],
+      "is_virtual": false,
+      "virtual_url": null,
+      "virtual_video_source": ""
+    }
+  ]
+}

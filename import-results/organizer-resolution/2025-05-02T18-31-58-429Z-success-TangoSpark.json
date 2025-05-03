@@ -1,0 +1,29 @@
+{
+  "timestamp": "2025-05-02T18:31:58.352Z",
+  "source": {
+    "id": 40608,
+    "name": "TangoSpark",
+    "email": "unknown"
+  },
+  "result": {
+    "id": "680669162f92688130212454",
+    "name": "Practica Spark",
+    "source": "btcNiceName"
+  },
+  "attempts": [
+    {
+      "method": "btcNiceName",
+      "query": "http://localhost:3010/api/organizers?appId=1&btcNiceName=TangoSpark",
+      "success": true,
+      "status": 200,
+      "resultCount": 44,
+      "result": {
+        "id": "680669162f92688130212454",
+        "name": "Practica Spark",
+        "source": "btcNiceName"
+      }
+    }
+  ],
+  "success": true,
+  "errorDetails": null
+}

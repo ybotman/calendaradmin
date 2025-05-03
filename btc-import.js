@@ -1,4 +1,4 @@
-// btc-import.js
+// btc-import.js 
 // Single-day test import from BTC WordPress to TangoTiempo
 
 import axios from 'axios';
@@ -58,9 +58,9 @@ const config = {
   
   // Entity resolution settings
   resolution: {
-    createMissingEntities: true, // Create entities that can't be resolved
+    createMissingEntities: false, // Always lookup only, never create missing entities
     allowPartialResolution: true, // Continue with partial entity matches
-    useMockIds: true, // Use mock IDs when entities can't be created
+    useMockIds: false, // Disable mock IDs for organizers
     fallbackToBoston: true, // Use Boston geography as a fallback
     maxRetries: 3 // Maximum retries for entity creation
   },
@@ -127,41 +127,42 @@ function getTestDate() {
  */
 async function fetchBtcEvents(date) {
   const logContext = { date };
-  
   ErrorLogger.logInfo(
     `Fetching BTC events for date: ${date}`,
     ImportStage.EXTRACTION,
     logContext
   );
-  
+
+  const allEvents = [];
+  let page = 1;
+  const perPage = 50;
+  let fetched = [];
+
   try {
-    const response = await apiHandler.executeWithRetry(
-      async () => {
-        return await axios.get(`${config.btcApiBase}/events`, {
-          params: {
-            start_date: date,
-            end_date: date,
-            per_page: 50 // Maximum per page
-          }
-        });
-      },
-      ImportStage.EXTRACTION,
-      logContext
-    );
-    
-    const events = response.data.events || [];
-    
-    ErrorLogger.logInfo(
-      `Retrieved ${events.length} events for date: ${date}`,
-      ImportStage.EXTRACTION,
-      { ...logContext, count: events.length }
-    );
-    
+    do {
+      const response = await apiHandler.executeWithRetry(
+        async () => await axios.get(`${config.btcApiBase}/events`, {
+          params: { start_date: date, end_date: date, per_page: perPage, page }
+        }),
+        ImportStage.EXTRACTION,
+        { ...logContext, page }
+      );
+
+      fetched = response.data.events || [];
+      allEvents.push(...fetched);
+      ErrorLogger.logInfo(
+        `Retrieved ${fetched.length} events for date: ${date} page: ${page}`,
+        ImportStage.EXTRACTION,
+        { ...logContext, count: fetched.length, page }
+      );
+      page++;
+    } while (fetched.length === perPage);
+
     // Save raw event data for reference
     const rawDataFile = path.join(config.outputDir, `btc-events-${date}.json`);
-    fs.writeFileSync(rawDataFile, JSON.stringify(response.data, null, 2));
-    
-    return events;
+    fs.writeFileSync(rawDataFile, JSON.stringify({ events: allEvents }, null, 2));
+
+    return allEvents;
   } catch (error) {
     ErrorLogger.logApiError(
       `Failed to fetch BTC events for date: ${date}`,
@@ -280,275 +281,34 @@ async function resolveEventEntities(btcEvent) {
   try {
     // VENUE RESOLUTION
     if (btcEvent.venue) {
-      try {
-        // With our improved resolveVenue function, this should rarely return null
         const venueId = await resolveVenue(btcEvent.venue);
-        
         if (venueId) {
-          result.entities.venueId = venueId;
-          resolutionStatus.venue = true;
-          
-          // Determine if this is a mock venue (added for robustness)
-          const isMockVenue = venueId.toString().startsWith('mock-venue-') || 
-                              venueId.toString().startsWith('error-venue-');
-          
-          // Get venue geography
-          try {
-            const geography = await getVenueGeography(venueId);
-            
-            if (geography) {
-              result.geography = geography;
-              resolutionStatus.geography = true;
-              
-              // If using a mock venue, use Boston geography defaults
-              if (isMockVenue && !geography.masteredCityId) {
-                result.geography = {
-                  ...geography,
-                  masteredCityId: BOSTON_DEFAULTS.masteredCityId,
-                  masteredCityName: BOSTON_DEFAULTS.masteredCityName,
-                  masteredDivisionId: BOSTON_DEFAULTS.masteredDivisionId,
-                  masteredDivisionName: BOSTON_DEFAULTS.masteredDivisionName,
-                  masteredRegionId: BOSTON_DEFAULTS.masteredRegionId,
-                  masteredRegionName: BOSTON_DEFAULTS.masteredRegionName,
-                  venueGeolocation: {
-                    type: "Point",
-                    coordinates: BOSTON_DEFAULTS.coordinates
-                  },
-                  masteredCityGeolocation: {
-                    type: "Point",
-                    coordinates: BOSTON_DEFAULTS.coordinates
-                  },
-                  isMockGeography: true
-                };
-                
-                result.warnings.push('Using mock geography with Boston defaults');
-              }
-            } else {
-              // If geography retrieval fails, create fallback using Boston defaults
-              const warning = `Failed to retrieve geography for venue: ${btcEvent.venue.venue} (${venueId}) - using defaults`;
-              result.warnings.push(warning);
-              
-              // Set Boston default geography
-              result.geography = {
-                venueGeolocation: {
-                  type: "Point",
-                  coordinates: BOSTON_DEFAULTS.coordinates
-                },
-                masteredCityId: BOSTON_DEFAULTS.masteredCityId,
-                masteredCityName: BOSTON_DEFAULTS.masteredCityName,
-                masteredDivisionId: BOSTON_DEFAULTS.masteredDivisionId,
-                masteredDivisionName: BOSTON_DEFAULTS.masteredDivisionName,
-                masteredRegionId: BOSTON_DEFAULTS.masteredRegionId,
-                masteredRegionName: BOSTON_DEFAULTS.masteredRegionName,
-                masteredCityGeolocation: {
-                  type: "Point",
-                  coordinates: BOSTON_DEFAULTS.coordinates
-                },
-                isDefaultGeography: true
-              };
-              
-              // Mark that we're using default geography
-              resolutionStatus.geography = 'default';
-            }
-          } catch (geoError) {
-            const error = `Error retrieving geography for venue: ${btcEvent.venue.venue} (${venueId})`;
-            result.errors.push(error);
-            ErrorLogger.logEntityError(
-              error,
-              ImportStage.ENTITY_RESOLUTION,
-              { ...logContext, venueId, venueName: btcEvent.venue.venue, error: geoError.message }
-            );
-            
-            // Set Boston default geography as fallback
-            result.geography = {
-              venueGeolocation: {
-                type: "Point",
-                coordinates: BOSTON_DEFAULTS.coordinates
-              },
-              masteredCityId: BOSTON_DEFAULTS.masteredCityId,
-              masteredCityName: BOSTON_DEFAULTS.masteredCityName,
-              masteredDivisionId: BOSTON_DEFAULTS.masteredDivisionId,
-              masteredDivisionName: BOSTON_DEFAULTS.masteredDivisionName,
-              masteredRegionId: BOSTON_DEFAULTS.masteredRegionId,
-              masteredRegionName: BOSTON_DEFAULTS.masteredRegionName,
-              masteredCityGeolocation: {
-                type: "Point",
-                coordinates: BOSTON_DEFAULTS.coordinates
-              },
-              isErrorGeography: true
-            };
-            
-            result.warnings.push('Using fallback geography due to error');
-            resolutionStatus.geography = 'fallback';
-          }
+            result.entities.venueId = venueId;
+            resolutionStatus.venue = true;
         } else {
-          // This should rarely happen now with our improved resolveVenue
-          const error = `Venue not found: ${btcEvent.venue.venue}`;
-          result.errors.push(error);
-          ErrorLogger.logEntityError(
-            error,
-            ImportStage.ENTITY_RESOLUTION,
-            { ...logContext, venueName: btcEvent.venue.venue }
-          );
-          
-          // Create a mock venue ID and mark partial resolution
-          result.partialResolution = true;
-          
-          // Generate a mock venue ID
-          const mockVenueId = `mock-venue-${Math.random().toString(36).substring(2, 9)}`;
-          result.entities.venueId = mockVenueId;
-          result.warnings.push(`Using generated mock venue ID: ${mockVenueId}`);
-          
-          // Set Boston default geography
-          result.geography = {
-            venueGeolocation: {
-              type: "Point",
-              coordinates: BOSTON_DEFAULTS.coordinates
-            },
-            masteredCityId: BOSTON_DEFAULTS.masteredCityId,
-            masteredCityName: BOSTON_DEFAULTS.masteredCityName,
-            masteredDivisionId: BOSTON_DEFAULTS.masteredDivisionId,
-            masteredDivisionName: BOSTON_DEFAULTS.masteredDivisionName,
-            masteredRegionId: BOSTON_DEFAULTS.masteredRegionId,
-            masteredRegionName: BOSTON_DEFAULTS.masteredRegionName,
-            masteredCityGeolocation: {
-              type: "Point",
-              coordinates: BOSTON_DEFAULTS.coordinates
-            },
-            isMockGeography: true
-          };
+            // Fallback to UNKNOWN venue
+            result.entities.venueId = 'UNKNOWN';
+            resolutionStatus.venue = true;
         }
-      } catch (venueError) {
-        const error = `Error resolving venue: ${btcEvent.venue.venue}`;
-        result.errors.push(error);
-        ErrorLogger.logEntityError(
-          error,
-          ImportStage.ENTITY_RESOLUTION,
-          { ...logContext, venueName: btcEvent.venue.venue, error: venueError.message }
-        );
-        
-        // Create a mock venue ID for robustness
-        const mockVenueId = `error-venue-${Math.random().toString(36).substring(2, 9)}`;
-        result.entities.venueId = mockVenueId;
-        result.warnings.push(`Using error fallback mock venue ID: ${mockVenueId}`);
-        result.partialResolution = true;
-        
-        // Set Boston default geography
-        result.geography = {
-          venueGeolocation: {
-            type: "Point",
-            coordinates: BOSTON_DEFAULTS.coordinates
-          },
-          masteredCityId: BOSTON_DEFAULTS.masteredCityId,
-          masteredCityName: BOSTON_DEFAULTS.masteredCityName,
-          masteredDivisionId: BOSTON_DEFAULTS.masteredDivisionId,
-          masteredDivisionName: BOSTON_DEFAULTS.masteredDivisionName,
-          masteredRegionId: BOSTON_DEFAULTS.masteredRegionId,
-          masteredRegionName: BOSTON_DEFAULTS.masteredRegionName,
-          masteredCityGeolocation: {
-            type: "Point",
-            coordinates: BOSTON_DEFAULTS.coordinates
-          },
-          isErrorGeography: true
-        };
-      }
     } else {
-      const error = 'No venue provided for event';
-      result.errors.push(error);
-      ErrorLogger.logEntityError(
-        error,
-        ImportStage.ENTITY_RESOLUTION,
-        logContext
-      );
-      
-      // Create a mock venue ID for robustness
-      const mockVenueId = `missing-venue-${Math.random().toString(36).substring(2, 9)}`;
-      result.entities.venueId = mockVenueId;
-      result.warnings.push(`Using mock venue ID for missing venue: ${mockVenueId}`);
-      result.partialResolution = true;
-      
-      // Set Boston default geography
-      result.geography = {
-        venueGeolocation: {
-          type: "Point",
-          coordinates: BOSTON_DEFAULTS.coordinates
-        },
-        masteredCityId: BOSTON_DEFAULTS.masteredCityId,
-        masteredCityName: BOSTON_DEFAULTS.masteredCityName,
-        masteredDivisionId: BOSTON_DEFAULTS.masteredDivisionId,
-        masteredDivisionName: BOSTON_DEFAULTS.masteredDivisionName,
-        masteredRegionId: BOSTON_DEFAULTS.masteredRegionId,
-        masteredRegionName: BOSTON_DEFAULTS.masteredRegionName,
-        masteredCityGeolocation: {
-          type: "Point",
-          coordinates: BOSTON_DEFAULTS.coordinates
-        },
-        isMissingVenueGeography: true
-      };
+        // Default to UNKNOWN venue if no venue is provided
+        result.entities.venueId = 'UNKNOWN';
+        resolutionStatus.venue = true;
     }
     
     // ORGANIZER RESOLUTION
-    if (btcEvent.organizer) {
-      try {
-        // Handle organizer as array or direct object
-        const organizerToUse = Array.isArray(btcEvent.organizer) && btcEvent.organizer.length > 0 
-          ? btcEvent.organizer[0] 
-          : btcEvent.organizer;
-        
-        const organizerInfo = await resolveOrganizer(organizerToUse);
-        if (organizerInfo) {
-          result.entities.organizerId = organizerInfo.id;
-          result.entities.organizerName = organizerInfo.name;
-          resolutionStatus.organizer = true;
-        } else {
-          const organizerName = organizerToUse.organizer || 'unknown';
-          const error = `Organizer not found: ${organizerName}`;
-          result.errors.push(error);
-          ErrorLogger.logEntityError(
-            error,
-            ImportStage.ENTITY_RESOLUTION,
-            { ...logContext, organizerName }
-          );
-          
-          // Create mock organizer for robustness
-          const mockOrganizerId = `mock-organizer-${Math.random().toString(36).substring(2, 9)}`;
-          result.entities.organizerId = mockOrganizerId;
-          result.entities.organizerName = organizerName || 'Unknown Organizer';
-          result.warnings.push(`Using mock organizer ID: ${mockOrganizerId}`);
-          result.partialResolution = true;
-        }
-      } catch (organizerError) {
-        const organizerName = btcEvent.organizer.organizer || 'unknown';
-        const error = `Error resolving organizer: ${organizerName}`;
-        result.errors.push(error);
-        ErrorLogger.logEntityError(
-          error,
-          ImportStage.ENTITY_RESOLUTION,
-          { ...logContext, organizerName, error: organizerError.message }
-        );
-        
-        // Create mock organizer for robustness
-        const mockOrganizerId = `error-organizer-${Math.random().toString(36).substring(2, 9)}`;
-        result.entities.organizerId = mockOrganizerId;
-        result.entities.organizerName = organizerName || 'Error Organizer';
-        result.warnings.push(`Using error fallback mock organizer ID: ${mockOrganizerId}`);
-        result.partialResolution = true;
-      }
+    const organizerToUse = Array.isArray(btcEvent.organizer) && btcEvent.organizer.length > 0
+        ? btcEvent.organizer[0]
+        : btcEvent.organizer;
+    
+    const organizerInfo = await resolveOrganizer(organizerToUse);
+    if (organizerInfo) {
+        result.entities.organizerId = organizerInfo.id;
     } else {
-      const error = 'No organizer provided for event';
-      result.errors.push(error);
-      ErrorLogger.logEntityError(
-        error,
-        ImportStage.ENTITY_RESOLUTION,
-        logContext
-      );
-      
-      // Create mock organizer for robustness
-      const mockOrganizerId = `missing-organizer-${Math.random().toString(36).substring(2, 9)}`;
-      result.entities.organizerId = mockOrganizerId;
-      result.entities.organizerName = 'Unknown Organizer';
-      result.warnings.push(`Using mock organizer ID for missing organizer: ${mockOrganizerId}`);
-      result.partialResolution = true;
+        // Fallback to Unknown Organizer
+        result.entities.organizerId = 'UNKNOWN';
+        result.entities.organizerFullName = 'Unknown';
+        result.entities.organizerShortName = 'UNKNOWN';
     }
     
     // CATEGORY RESOLUTION

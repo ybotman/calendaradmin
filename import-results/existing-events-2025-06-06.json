@@ -1,0 +1,74 @@
+[
+  {
+    "masteredCityGeolocation": {
+      "type": "Point",
+      "coordinates": [
+        -71.0589,
+        42.3601
+      ]
+    },
+    "venueGeolocation": {
+      "type": "Point"
+    },
+    "_id": "68150b820f9408fe83fe64d7",
+    "appId": "1",
+    "title": "asdfas",
+    "description": "asdf",
+    "startDate": "2025-06-06T04:00:00.000Z",
+    "endDate": "2025-06-06T06:00:00.000Z",
+    "categoryFirst": "Class",
+    "categorySecond": "",
+    "categoryThird": "",
+    "categoryFirstId": "66c4d370a87a956db06c49eb",
+    "ownerOrganizerID": "680669172f9268813021246f",
+    "grantedOrganizerName": "",
+    "alternateOrganizerName": "",
+    "locationName": "Balera School of Ballroom",
+    "ownerOrganizerName": "TobinPatrick Balsley",
+    "masteredRegionName": "Northeast",
+    "masteredDivisionName": "New England",
+    "masteredCityName": "Boston",
+    "seriesImages": [],
+    "venueID": {
+      "geolocation": {
+        "type": "Point",
+        "coordinates": [
+          -71.242456,
+          42.358273
+        ]
+      },
+      "_id": "680c511aef6308b31e5b5719",
+      "appId": "1",
+      "name": "Balera School of Ballroom",
+      "shortName": "",
+      "address1": "105 Rumford Ave",
+      "address2": "",
+      "address3": "",
+      "city": "Newton, Ma",
+      "state": "MA",
+      "zip": "02466",
+      "phone": "",
+      "comments": "",
+      "latitude": 42.358273,
+      "longitude": -71.242456,
+      "isValidVenueGeolocation": false,
+      "masteredCityId": "6751f58a5db435dd8005e46a",
+      "masteredDivisionId": "6751f58a5db435dd8005e460",
+      "masteredRegionId": "6751f58a5db435dd8005e45b",
+      "masteredCountryId": "6751f57e2e74d97609e7dca0",
+      "isActive": true,
+      "createdAt": "2025-04-26T03:20:58.541Z",
+      "updatedAt": "2025-04-26T03:20:58.542Z",
+      "__v": 0
+    },
+    "isDiscovered": false,
+    "isOwnerManaged": true,
+    "isActive": true,
+    "isFeatured": false,
+    "isCanceled": false,
+    "isRepeating": false,
+    "cost": "",
+    "expiresAt": "2026-06-06T06:00:00.000Z",
+    "__v": 0
+  }
+]

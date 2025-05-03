@@ -1,0 +1,26 @@
+{
+  "timestamp": "2025-05-02T18:36:12.924Z",
+  "source": {
+    "id": 40961,
+    "name": "Milonga Sal Azul Team",
+    "email": "tural.nt.1@gmail.com"
+  },
+  "result": {
+    "id": "680669162f92688130212454",
+    "name": "Practica Spark",
+    "source": "btcNiceName"
+  },
+  "attempts": [
+    {
+      "method": "cache",
+      "success": true,
+      "target": {
+        "id": "680669162f92688130212454",
+        "name": "Practica Spark",
+        "source": "btcNiceName"
+      }
+    }
+  ],
+  "success": true,
+  "errorDetails": null
+}

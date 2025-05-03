@@ -1,4 +1,4 @@
-# FEATURE_VenueGeolocationValidation
+# FEATURE_3002_VenueGeolocationValidation
 
 ## Summary
 This feature implements a system to validate venue geolocation data imported from BTC and update the `isValidVenueGeolocation` flag on venues with confirmed, accurate coordinates. It adds validation functionality to the venue management interface and provides a batch process to update existing venues.
