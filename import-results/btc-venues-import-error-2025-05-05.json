@@ -1,0 +1,26 @@
+{
+  "timestamp": "2025-05-05",
+  "options": {
+    "uniqueNameCheck": true,
+    "updateExisting": false,
+    "validateGeo": true,
+    "fallbackToDefaults": true
+  },
+  "error": "Request failed with status code 404",
+  "logs": [
+    {
+      "type": "info",
+      "message": "Starting BTC venues import",
+      "details": "Options: {\"uniqueNameCheck\":true,\"updateExisting\":false,\"validateGeo\":true,\"fallbackToDefaults\":true}"
+    },
+    {
+      "type": "info",
+      "message": "Fetching BTC venues"
+    },
+    {
+      "type": "error",
+      "message": "Error fetching or processing BTC venues",
+      "details": "Request failed with status code 404"
+    }
+  ]
+}
